@@ -1,0 +1,117 @@
+// Chart Chooser
+// ---------
+
+h1 {
+  font-size: 20px;
+  font-weight: 200;
+}
+
+h1 small {
+    padding: 0 20px;
+    font-size: 80%;
+    font-weight: 200;
+}
+
+h1 small a{
+    padding: 0 5px;
+}
+
+.section {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.dark {
+    background-color: #CCC;
+}
+
+
+// --------- LEADERBOARD
+//-------------------------------------------------
+#leaderboard {
+    font-family: 'Gudea', sans-serif;
+    font-size: 13px;
+    color: #404040;
+    position:relative;
+}
+.leaderboard-column {
+    position:absolute;
+    text-align: center;
+}
+.leaderboard-cell {
+    padding: 5px;
+    border: 1px solid #D0D2D3; 
+    text-align: left;
+    cursor: pointer;
+    background-color: #FFF;
+    
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    -o-transition: all .5s ease;
+    transition: all .5s ease;
+
+    div{
+    	/*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
+    	pointer-events: none;
+    }
+
+    
+
+    .val-container {
+	    position:relative;
+	    height:20px;
+
+	    .rank{
+		    display:none;
+		    position: absolute;
+		    left: 0px;
+		    bottom: 0px;
+		}
+
+	    .value{
+		    font-size: 18px;
+		    font-weight: bold;
+		    width:100%;
+		    text-align: right;
+		    position: absolute;
+		    left: 0px;
+		    bottom: 0px;
+		}
+	}
+}
+
+.leaderboard-cell.hovered {
+    background-color: #DFDFDF; 
+    cursor: pointer;
+}
+
+.leaderboard-cell.selected {
+    background-color: #6AB6DA;
+    color: white;
+}
+
+.cell-out-of-range {
+    display: none;
+    
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: all 0s ease;
+    transition: none;
+
+    .title {
+	    display:none;
+	}
+
+	.value {
+	    font-size: 13px;
+	    font-weight: normal;
+	    padding-bottom: 2px;
+	}
+}
+	
+.leaderboard-cell.cell-out-of-range.selected, .leaderboard-cell.cell-out-of-range.hovered {
+    display: block;
+}
+
+.leaderboard-cell.hovered .rank, .leaderboard-cell.selected .rank{
+    display: block;
+}
