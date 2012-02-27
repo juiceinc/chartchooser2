@@ -13,12 +13,14 @@
 
 	<meta name="viewport" content="width=device-width">
 
-	
+
 	<!-- Use SimpLESS (Win/Linux/Mac) or LESS.app (Mac) to compile your .less files
 	to style.css-->
 
+  <link rel="stylesheet" href="js/libs/tangle/TangleKit/TangleKit.css" type="text/css">
 	<link rel="stylesheet" href="less/style.css">
-	 
+
+
 
 	<script src="js/libs/modernizr-2.5.2-respond-1.1.0.min.js"></script>
 </head>
@@ -48,45 +50,59 @@
 
     <!-- Chart and its description -->
     <div class="row show-grid">
+
       <div class="span8">
-        
-        <div id="toolbar">
-          <form class="well form-search">
-            
-              <input type = "text" title="Search by name" placeholder="search name" id="searchInput"/>
-              <button type="submit" class="btn" id="searchBtn">Search by name</button>
-   
-              <span style="margin-left: 30px">Show:</span>
-              <a id="desc" class="btn" href="#">Leaders</a>
-              or
-              <a id="asc" class ="btn" href="#">Laggards</a>
-
-          </form>
-          
-        </div>
-
+        <h1 class="well">Leaderboard</h1>
         <div id="leaderboard">
         </div>
       </div>
+
       <div class="span4">
-        <h1>Showing Flows</h1>
-        lorem ipsum
+        <div class="well">
+          <h1>Showing Flows</h1>
+
+          <div id="toolbar">
+            <form class="form-search">
+
+              <input type = "text" title="Search by name" placeholder="search name" id="searchInput"/>
+              <button type="submit" class="btn" id="searchBtn">Search</button>
+
+              <div id="leaderboard-direction">
+                <span>Show:</span>
+                <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
+                  <span>Leaders</span>
+                  <span>Laggards</span>
+                </span>
+                <br/>
+                <br/>
+                <a id="desc" class="btn" href="#">Leaders</a>
+                or
+                <a id="asc" class ="btn" href="#">Laggards</a>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-  
-  
+
+
     <!-- Raw data -->
     <div class="section">
       <h1>Data
         <small>Put your own data in here (?)</small>
         <small> <a href="#about">Reset</a> <a href="#about">Update</a> </small>
       </h1>
-    
+
       <div class="row">
         <div class="span8">
-          <div class="thumbnail">
-          <img src="http://placehold.it/740x200" alt="">
-          <p>data</p>
+
+          <div id="data-input">
+            <form action="#" id="input-form">
+              <div><textarea class="span8" rows="10" id="csv-data"></textarea></div>
+              <div><input type="submit" value="submit" class="btn" /></div>
+            </form>
+          </div>
+
         </div>
           </div>
          <div class="span4">
@@ -95,7 +111,7 @@
       </div>
     </div>
 
-  
+
     <footer>
     </footer>
 
@@ -128,8 +144,12 @@
 <script src="js/libs/bootstrap/transition.js"></script>
 <script src="js/libs/bootstrap/collapse.js"></script>
 <script src="js/libs/d3/d3.js"></script>
-
+<script src="js/libs/d3/d3.csv.js"></script>
 <script src="js/plugins.js"></script>
+
+<script src="js/libs/juice.leaderboard.js"></script>
+<script src="js/leaderboard.js"></script>
+
 <script src="js/script.js"></script>
 <!-- end scripts-->
 
