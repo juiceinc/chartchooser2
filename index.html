@@ -66,7 +66,7 @@
 
               <div>
                 <p>Filter down your data:</p>
-                <input type = "text" title="filter" placeholder="column:value" id="filterInput"/>
+                <input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
                 <button type="submit" class="btn">Filter</button>
               </div>
               <div id="applied-filters">
@@ -106,7 +106,7 @@
     <div class="section">
       <h1>Data
         <small>Put your own data in here (?)</small>
-        <small> <a href="#about">Reset</a> <a href="#about">Update</a> </small>
+        <small> <a id="clear-data-btn" href="#">Reset</a> <a id="data-update-btn" href="#">Update</a> </small>
       </h1>
 
       <div class="row">
@@ -115,7 +115,6 @@
           <div id="data-input">
             <form action="#" id="input-form">
               <div><textarea class="span8" rows="10" id="csv-data"></textarea></div>
-              <div><input type="submit" value="submit" class="btn" /></div>
             </form>
           </div>
 

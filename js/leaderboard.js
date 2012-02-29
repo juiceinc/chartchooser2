@@ -35,7 +35,9 @@ $(function() {
 
     $('#leaders').click(function (e) {updateSort(true); return false; });
     $('#laggards').click(function (e) {updateSort(false); return false; });
-    $('#input-form').submit(function() { dataUpdated(); return false; });
+
+    $('#data-update-btn').click(function() { updateData(); });
+    $('#clear-data-btn').click(function() {$('#csv-data').val(''); });
   }
 
 
@@ -47,7 +49,7 @@ $(function() {
 
 
   //input text with raw data has been updated
-  function dataUpdated(){
+  function updateData(){
     resetFilters();
 
     var csv = $('#csv-data').val();
@@ -262,7 +264,7 @@ $(function() {
   function loadSampleData(){
     $.ajax({
       url: SAMPLE_DATA_URL,
-      success: function(data) { $('#csv-data').val(data); $('#input-form').submit();},
+      success: function(data) { $('#csv-data').val(data); $('#data-update-btn').click();},
       error: function(err) { }
     });
   }
