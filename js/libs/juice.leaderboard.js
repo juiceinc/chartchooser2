@@ -10,13 +10,15 @@ juice.leaderboard = function(conf){
     key = _conf.key || "name",
     container = _conf.container || "#leaderboard",
     displayTop = true,
+    maxTitleLength = 18,
 
     formats = _conf.formats || {
                           SYMBOL_FLOAT          : "d",
                           SYMBOL_INT            : "i",
                           SYMBOL_CURRENCY       : "$",
                           SYMBOL_PERCENT        : "%",
-                          SYMBOL_STRING         : "s"
+                          SYMBOL_STRING         : "s",
+                          SYMBOL_NAN            : "--"
                         },
 
     data = _conf.data || {},
@@ -26,14 +28,17 @@ juice.leaderboard = function(conf){
     cells
   ;
 
+  function NaNOrFormat(d, f){
+    return isNaN(d) ? formats.SYMBOL_NAN : f(d);
+  }
 
   var getFormatter = function (format){
     switch(format){
-      case formats.SYMBOL_INT      : return {'format': d3.format(",.0f") };
-      case formats.SYMBOL_CURRENCY : return {'format': function(d) { return "$" + d3.format("0,.2f")(d); } };
-      case formats.SYMBOL_FLOAT    : return {'format': d3.format("0,.2f")};
-      case formats.SYMBOL_PERCENT  : return {'format': d3.format("%")};
-      default                      : return {'format': function (d) { return d; }};
+      case formats.SYMBOL_INT      : return {'format': function(d) { return NaNOrFormat(d,  d3.format(",.0f")); }};
+      case formats.SYMBOL_CURRENCY : return {'format': function(d) { return NaNOrFormat(d, "$" + d3.format("0,.2f")(d)); }};
+      case formats.SYMBOL_FLOAT    : return {'format': function(d) { return NaNOrFormat(d, d3.format("0,.2f")); }};
+      case formats.SYMBOL_PERCENT  : return {'format': function(d) { return NaNOrFormat(d, d3.format("%")); }};
+      default                      : return {'format': function(d) { return d; }};
     }
   };
 
@@ -207,8 +212,8 @@ juice.leaderboard = function(conf){
           .classed("title", true)
           .text(function(d,i,j) {
             var title = d[key];
-            if(title.length > 10)
-              title = title.substr(0, 18) + '...';
+            if(title.length > maxTitleLength)
+              title = title.substr(0, maxTitleLength-2);
 
             return title;
           });
@@ -227,7 +232,7 @@ juice.leaderboard = function(conf){
               .classed("value", true)
               .text(function(d,i,j) {
                 var myColumn = displayedColumns[j];
-                return getFormatter(myColumn.format).format(d[myColumn.name]);//money(d[displayedColumns[j].name]);
+                return getFormatter(myColumn.format).format(d[myColumn.name]);
           });
 
 
@@ -266,13 +271,28 @@ juice.leaderboard = function(conf){
   }
 
   function ascendingIngoreNulls(a, b){
-    if(typeof(a) !== 'number')
+    if(typeof(a) !== 'number' || isNaN(a))
       return 1;
 
-    if(typeof(b) !== 'number')
+    if(typeof(b) !== 'number' || isNaN(b))
       return -1;
 
     return d3.ascending(a,b);
+  }
+  function descendingIngoreNulls(a, b){
+    if(typeof(a) !== 'number' || isNaN(a))
+      return 1;
+
+    if(typeof(b) !== 'number' || isNaN(b))
+      return -1;
+
+    return d3.descending(a,b);
+  }
+
+  function applySort(moreIsBetter, columnName, a, b){
+    return ((displayTop && moreIsBetter) || (!displayTop && !moreIsBetter)) ?
+                descendingIngoreNulls(a[columnName], b[columnName]) :
+                ascendingIngoreNulls(a[columnName], b[columnName]);
   }
 
   function reloadCells(){
@@ -280,14 +300,10 @@ juice.leaderboard = function(conf){
       cells =
           columns.selectAll(".leaderboard-cell")
               .data(
-                function(displayedColumns ){
-                  //data sorted by the current displayedColumns
-
+                function(displayedColumn){
+                  //data sorted by the current displayedColumn
                   return data.sort(function(a, b){
-                    return ((displayTop && displayedColumns.moreIsBetter) ||
-                            (!displayTop && !displayedColumns.moreIsBetter)) ?
-                      d3.descending(a[displayedColumns.name], b[displayedColumns.name]) :
-                      ascendingIngoreNulls(a[displayedColumns.name], b[displayedColumns.name]);
+                    return applySort(displayedColumn.moreIsBetter, displayedColumn.name, a, b);
                   });
                 },
                 function (d) { return d[key]; }

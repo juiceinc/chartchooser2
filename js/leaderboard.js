@@ -16,7 +16,8 @@ $(function() {
     SYMBOL_INT            : "i",
     SYMBOL_CURRENCY       : "$",
     SYMBOL_PERCENT        : "%",
-    SYMBOL_STRING         : "s"
+    SYMBOL_STRING         : "s",
+    SYMBOL_NAN            : "--"
   };
 
   //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=0&output=csv';
@@ -56,12 +57,12 @@ $(function() {
 
     displayedColumns = _.rest(columns, 1);
     //all displayedColumns should be numeric, just double checking
-    var numericColumns = _.filter(displayedColumns, function(column){return column.format !== null;});
+    var numericColumns = _.filter(displayedColumns, function(column){return column.format !== microformat.SYMBOL_STRING;});
 
     //convert columns to numerics
     _.each(data, function(row){
       _.each(numericColumns, function(column){
-        row[column.name] = (!row[column.name] || row[column.name] === '') ? null : row[column.name] * 1;
+        row[column.name] = (!row[column.name] || row[column.name] === '') ? NaN : row[column.name] * 1;
       });
     });
     leaderboard.refresh({data: data, displayedColumns: displayedColumns, key: key});
