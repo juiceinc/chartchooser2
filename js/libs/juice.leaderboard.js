@@ -11,23 +11,30 @@ juice.leaderboard = function(conf){
     container = _conf.container || "#leaderboard",
     displayTop = true,
 
+    formats = _conf.formats || {
+                          SYMBOL_FLOAT          : "d",
+                          SYMBOL_INT            : "i",
+                          SYMBOL_CURRENCY       : "$",
+                          SYMBOL_PERCENT        : "%",
+                          SYMBOL_STRING         : "s"
+                        },
+
     data = _conf.data || {},
-    displayedColumns = conf.displayedColumns || {},
+    displayedColumns = conf.displayedColumns,
 
     columns,
     cells
   ;
 
-  var formatters = {
-    'i' : {'format': d3.format(",.0f") }, //integers
-    'm' : {'format': function(d) { return "$" + d3.format("0,.1f")(d); } }, //currency
-    'f' : {'format': d3.format("0,.2f")}, //float
-    'p' : {'format': d3.format("%")}, //percent
-    'default': {'format': function (d) { return d; }}
-  };
 
-  var getFormatter = function (f){
-    return (formatters[f]) ? formatters[f] : formatters['default'];
+  var getFormatter = function (format){
+    switch(format){
+      case formats.SYMBOL_INT      : return {'format': d3.format(",.0f") };
+      case formats.SYMBOL_CURRENCY : return {'format': function(d) { return "$" + d3.format("0,.2f")(d); } };
+      case formats.SYMBOL_FLOAT    : return {'format': d3.format("0,.2f")};
+      case formats.SYMBOL_PERCENT  : return {'format': d3.format("%")};
+      default                      : return {'format': function (d) { return d; }};
+    }
   };
 
 
@@ -61,7 +68,7 @@ juice.leaderboard = function(conf){
   //select cells by partially matching the first occurrence of keyValue
   leaderboard.selectByKey = function (keyValue){
     cells.classed('selected', false);
-    if(!keyValue || keyValue.length == 0)
+    if(!keyValue || keyValue.length === 0)
       return;
 
     keyValue = keyValue.toLowerCase();

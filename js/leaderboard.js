@@ -2,15 +2,26 @@
 //when dom is ready
 $(function() {
 
-  var DISPLAYED_ROWS = 5;
+  //Styling and appearance
   var HOVER_DURATION = 1000;
   var CELL_WIDTH = 150;
-  var NUM_COLUMNS = 6;
+  var NUM_COLUMNS = 5;
+  var DISPLAYED_ROWS = 5; //TODO: make dynamic
+
+  //header microformat symbols
+  var microformat= {
+    SYMBOL_PRIMARY_KEY    : "*",
+    SYMBOL_REVERSE_ORDER  : "-",
+    SYMBOL_FLOAT          : "d",
+    SYMBOL_INT            : "i",
+    SYMBOL_CURRENCY       : "$",
+    SYMBOL_PERCENT        : "%",
+    SYMBOL_STRING         : "s"
+  };
+
   //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=0&output=csv';
   //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=1&output=csv';
   var SAMPLE_DATA_URL = 'data/nfl_combine.csv';
-
-
 
   var displayedColumns = [],
       data = [],
@@ -27,7 +38,17 @@ $(function() {
   }
 
 
+  function resetFilters(){
+    $('.datafilter').remove();
+    $('#filterInput').val('');
+    $('#searchInput').val('');
+  }
+
+
+  //input text with raw data has been updated
   function dataUpdated(){
+    resetFilters();
+
     var csv = $('#csv-data').val();
     data = d3.csv.parse(csv);
     var columns = findColumns(data);
@@ -84,7 +105,6 @@ $(function() {
   }
 
 
-
   function filterData(){
     var newData = data;
     var filters = $('.datafilter');
@@ -107,9 +127,18 @@ $(function() {
     leaderboard.refresh({"displayTop": displayTop});
   }
 
+  function getBlankColumnMetadata(name){
+    return {
+      name          : name,
+      label         : name,
+      moreIsBetter  : true,
+      order         : 10000,
+      format        : microformat.SYMBOL_INT
+    };
+  }
 
   function findColumns(data){
-    var columns = []; //array of {name: "abc[1/-]", label:"abc",  }
+    var columns = []; //array of {name: "abc[1-]", label:"abc",  }
 
     var rawColumns = _.keys(data[0]);
     var specialColumns = _.filter(rawColumns, function(col){
@@ -118,110 +147,142 @@ $(function() {
 
     //process special columns
     _.each(specialColumns, function(col){
+      //parse header microformat, eg. myColumn[-3$]
+      var headerFormat = col.substring(col.lastIndexOf('['), col.lastIndexOf(']'));
 
-      var microFormat = col.substring(col.lastIndexOf('['), col.lastIndexOf(']'));//.split('/');
+      var columnFormat = getBlankColumnMetadata(col);
+      columnFormat.label = col.substring(0, col.lastIndexOf('['));
 
-      var columnFormat = {
-        name       : col,
-        label         : col.substring(0, col.lastIndexOf('[')),
-        moreIsBetter  : microFormat.indexOf('-') == -1,
-        order         : 100000,
-        format        : null
-      };
+      //primary key
+      if(headerFormat.indexOf(microformat.SYMBOL_PRIMARY_KEY) > -1){
+        columnFormat.order = -1;
+        columnFormat.format = microformat.SYMBOL_STRING;
+        columnFormat.moreIsBetter = false;
+      }
+      else {
+        //order
+        var numbers = headerFormat.match(/\d+/g); //get all the numbers, returned as array
+        if(numbers && !isNaN(numbers[0] * 1) ) //the first item is the order #
+          columnFormat.order = numbers[0] * 1;
 
-      //order
-      var numbers = microFormat.match(/\d+/g); //get the numbers, returned in array
-      if(! isNaN(numbers[0] * 1) )
-        columnFormat.order = numbers[0] * 1;
+        //more is better ?
+        columnFormat.moreIsBetter = headerFormat.indexOf('-') == -1;
 
-      //int
-      if(microFormat.indexOf('i') > -1)
-        columnFormat.format='i';
-      //money
-      else if(microFormat.indexOf('m') > -1)
-        columnFormat.format='m';
-      //float
-      else if(microFormat.indexOf('f') > -1)
-        columnFormat.format='f';
-      //percentage
-      else if(microFormat.indexOf('%') > -1)
-        columnFormat.format='p';
-
+        //money
+        if(headerFormat.indexOf(microformat.SYMBOL_CURRENCY) > -1)
+          columnFormat.format = microformat.SYMBOL_CURRENCY;
+        //float
+        else if(headerFormat.indexOf(microformat.SYMBOL_FLOAT) > -1)
+          columnFormat.format = microformat.SYMBOL_FLOAT;
+        //percentage
+        else if(headerFormat.indexOf(microformat.SYMBOL_PERCENT) > -1)
+          columnFormat.format=microformat.SYMBOL_PERCENT;
+        //default is integer
+        else
+          columnFormat.format = microformat.SYMBOL_INT;
+      }
       columns.push(columnFormat);
     });
 
     //add non-special columns
-    var nonSpecialColumns = _.difference(rawColumns, specialColumns);
-    var i = 0;
-    while(columns.length < NUM_COLUMNS)
-    {
-      var columnFormat = {
-        name       : nonSpecialColumns[i],
-        label         : nonSpecialColumns[i],
-        moreIsBetter  : true, //default is more is better
-        order         : 100000 + i,
-        format        : 'i' //default is int
-      };
+    var unprocessedColumns = _.difference(rawColumns, specialColumns);
 
-      if(columns[0].format !== null){
-        columnFormat.format = null;
-        columns.unshift(columnFormat);
+    //find primary key column first if not already set
+    var hasPrimaryKey = _.any(columns, function(column){return column.order === -1; /*only PK has order of -1*/});
+
+    //add primary key if doesn't exist
+    if(!hasPrimaryKey){
+      var primaryKeyColumnName = findSpecificColumn(unprocessedColumns, data, nonNumericChecker);
+      if(primaryKeyColumnName){
+        var columnMetaData = getBlankColumnMetadata(primaryKeyColumnName);
+        columnMetaData.moreIsBetter = false;
+        columnMetaData.order = -1;
+        columnMetaData.format = microformat.SYMBOL_STRING;
+
+        columns.push(columnMetaData);
+        unprocessedColumns = _.difference(unprocessedColumns, [primaryKeyColumnName]);
       }
-      else
-        columns.push(columnFormat);
-      i++;
+      else{
+        //leaderboard can't function properly without primary key
+        return null;
+      }
+    }
+
+    var i = 0;
+    //fill in other numeric columns
+    while(unprocessedColumns.length > 0 && columns.length <= NUM_COLUMNS )
+    {
+      var numericColumnName = findSpecificColumn(unprocessedColumns, data, numericChecker);
+      if(numericColumnName)
+      {
+        var columnMetaData = getBlankColumnMetadata(numericColumnName);
+        columnMetaData.order += i++;
+        columns.push(columnMetaData);
+        unprocessedColumns = _.difference(unprocessedColumns, [numericColumnName]);
+      }
+      else{
+        //no more numeric columns left
+        unprocessedColumns = [];
+      }
     }
 
     //sort by order
     columns = _.sortBy(columns, function(column){ return column.order; });
-    _.each(columns, function (column, index) {
-      if(index === 0)
-        column.format = null;
-      else if(column.format === null)
-        column.format = 'i';
-    });
-
     return columns;
   }
 
+  //non numeric value checker
+  function nonNumericChecker(value){
+    return value ? isNaN(value * 1) : true;
+  }
+
+  //numeric value checker
+  function numericChecker(value){
+    return value ? !isNaN(value * 1) : true;
+  }
+
+  //finds the first column whose values (only a certain amount of) satisfy checkFunction
+  function findSpecificColumn(columnNames, data, checkFunction){
+    var SAMPLE_SIZE = 10;
+
+    //check only first SAMPLE_SIZE items
+    var sample = _.first(data, SAMPLE_SIZE);
+
+    //find the first column that matches criteria
+    return _.find(columnNames, function(columnName){
+      var values = _.pluck(sample, columnName); //column values
+      return _.any(values) /*at least one value should be valid*/ && _.all(values, checkFunction); //check if all values meet criteria
+    });
+  }
 
 
   //----------------------------------------------- Data
 
   function loadSampleData(){
-      // for ( var num in d3.range(DATA_SIZE)){
-      //     var datum = {name: "Name "+ num};
-      //     for( var i in displayedColumns){
-      //         datum[displayedColumns[i].name] = Math.random() * 100000;
-      //         if(Math.random()  > 0.7 )
-      //           datum[displayedColumns[i].name] =  null;
-      //     }
-      //     data.push(datum);
-      // }
-
-      $.ajax({
-        url: SAMPLE_DATA_URL,
-        success: function(data) { $('#csv-data').val(data); $('#input-form').submit();},
-        error: function(err) { }
-      });
+    $.ajax({
+      url: SAMPLE_DATA_URL,
+      success: function(data) { $('#csv-data').val(data); $('#input-form').submit();},
+      error: function(err) { }
+    });
   }
 
   //-----------------------------------------------Start
   function start(){
-      addHandlers();
+    addHandlers();
 
-      leaderboard = juice.leaderboard({
-        numberOfDisplayedRows: 5,
-        cellWidth: CELL_WIDTH,
-        key: "name",
-        container : "#leaderboard",
-        displayedColumns: displayedColumns,
-        data: data
-      });
+    leaderboard = juice.leaderboard({
+      numberOfDisplayedRows : DISPLAYED_ROWS,
+      cellWidth             : CELL_WIDTH,
+      key                   : "name",
+      container             : "#leaderboard",
+      displayedColumns      : displayedColumns,
+      data                  : data,
+      formats               : microformat
+    });
 
-      loadSampleData();
-
+    loadSampleData();
   }
+
   start();
 
 });
