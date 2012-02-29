@@ -107,7 +107,7 @@ juice.leaderboard = function(conf){
 
   //animates selection to hovered state (used for "out of range" cells)
   function animateToHovered(selection){
-      if(selection.empty()) return;
+      if(selection.empty() || selection.classed('selected')) return;
 
       var _height = selection.style('height');
 

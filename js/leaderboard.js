@@ -35,7 +35,9 @@ $(function() {
 
     $('#leaders').click(function (e) {updateSort(true); return false; });
     $('#laggards').click(function (e) {updateSort(false); return false; });
-    $('#input-form').submit(function() { dataUpdated(); return false; });
+
+    $('#data-update-btn').click(function() { updateData(); });
+    $('#clear-data-btn').click(function() {$('#csv-data').val(''); });
   }
 
 
@@ -47,7 +49,7 @@ $(function() {
 
 
   //input text with raw data has been updated
-  function dataUpdated(){
+  function updateData(){
     resetFilters();
 
     var csv = $('#csv-data').val();
@@ -88,20 +90,30 @@ $(function() {
     if(columnName === undefined)
       return;
 
-    var newFilter = $(document.createElement('div'));
-    var closeBtn = $('<a class = "close">&times;</a>');
+    //before adding a new filter button, check if is already among existing ones
+    var existingFilter = $('.datafilter[data-column="' + columnName + '"]');
+    if( existingFilter.length > 0 ){
+      var newValue = existingFilter.attr('data-value') + ',' + $.trim(input[1]);
+      existingFilter.attr('data-value', newValue);
+      var newText = $('span',existingFilter).text() + ', '+$.trim(input[1]);
+      $('span',existingFilter).text(newText);
+    }
+    //add new filter button
+    else{
+      var newFilter = $(document.createElement('div'));
+      var closeBtn = $('<a class = "close">&times;</a>');
 
-    newFilter.append(closeBtn);
-    newFilter.append(filterStr);
-    newFilter.addClass('alert alert-info datafilter');
-    newFilter.data('column', columnName);
-    newFilter.data('value', $.trim(input[1]));
-    newFilter.appendTo($('#applied-filters'));
-    closeBtn.click(function(){
-      newFilter.remove();
-      filterData();
-    });
-
+      newFilter.append(closeBtn);
+      newFilter.append($('<span>'+filterStr+'</a>'));
+      newFilter.addClass('alert alert-info span2 datafilter');
+      newFilter.attr('data-column', columnName);
+      newFilter.attr('data-value', $.trim(input[1]));
+      newFilter.appendTo($('#applied-filters'));
+      closeBtn.click(function(){
+        newFilter.remove();
+        filterData();
+      });
+    }
     filterData();
   }
 
@@ -110,8 +122,8 @@ $(function() {
     var newData = data;
     var filters = $('.datafilter');
     _.each(filters, function(filterObj){
-      var column = $(filterObj).data('column');
-      var values = $(filterObj).data('value').toLowerCase().split(','); //QB,RB,OL
+      var column = $(filterObj).attr('data-column');
+      var values = $(filterObj).attr('data-value').toLowerCase().split(','); //QB,RB,OL
 
       var cleanValues = [];
       _.each(values, function(value){cleanValues.push($.trim(value).toLowerCase()); });
@@ -262,7 +274,7 @@ $(function() {
   function loadSampleData(){
     $.ajax({
       url: SAMPLE_DATA_URL,
-      success: function(data) { $('#csv-data').val(data); $('#input-form').submit();},
+      success: function(data) { $('#csv-data').val(data); $('#data-update-btn').click();},
       error: function(err) { }
     });
   }
