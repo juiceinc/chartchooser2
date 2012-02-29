@@ -219,16 +219,16 @@ juice.leaderboard = function(conf){
           });
 
       //cell rank+value container
-      var vals = cells.append('div')
-              .classed("val-container", true);
+//      var vals = cells.append('div')
+//              .classed("val-container", true);
           //rank
-          vals.append('div')
+          cells.append('div')
               .classed("rank", true)
               .text(function(d,i,j) {
                   return rank(i+1);
           });
           //value
-          vals.append('div')
+          cells.append('div')
               .classed("value", true)
               .text(function(d,i,j) {
                 var myColumn = displayedColumns[j];
