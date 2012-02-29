@@ -33,8 +33,8 @@ $(function() {
     $('#search-form').submit(function (e) { searchItems(); return false; });
     $('#filter-form').submit(function (e) { filterItems(); return false; });
 
-    $('#leaders').click(function (e) {updateSort(true); return false; });
-    $('#laggards').click(function (e) {updateSort(false); return false; });
+    $('#leaderboard-direction').change(function (e) {updateSort(); });
+    $('#leaderboard-visible-rows').change(function (e) {updateVisibleItems(); });
 
     $('#data-update-btn').click(function() { updateData(); });
     $('#clear-data-btn').click(function() {$('#csv-data').val(''); });
@@ -67,7 +67,7 @@ $(function() {
         row[column.name] = (!row[column.name] || row[column.name] === '') ? NaN : row[column.name] * 1;
       });
     });
-    leaderboard.refresh({data: data, displayedColumns: displayedColumns, key: key});
+    refreshLeaderboard({data: data, displayedColumns: displayedColumns, key: key});
   }
 
   function searchItems(){
@@ -131,13 +131,25 @@ $(function() {
       newData = _.filter(newData, function(row){ return (_.include(cleanValues, row[column].toLowerCase()) );});
     });
 
-    leaderboard.refresh({data: newData, displayedColumns: displayedColumns});
+    refreshLeaderboard({data: newData, displayedColumns: displayedColumns});
+  }
+
+  function refreshLeaderboard(conf){
+    leaderboard.refresh(conf);
+
+    var totalText = (data.length > 0) ? 'out of '+ data.length + ' items' : '';
+    $('#total-population').text(totalText);
   }
 
 
 
-  function updateSort(displayTop){
+  function updateSort(){
+    var displayTop = $('#leaderboard-direction').val() == 'top';
     leaderboard.refresh({"displayTop": displayTop});
+  }
+
+  function updateVisibleItems(){
+    leaderboard.refresh({"numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
   }
 
   function getBlankColumnMetadata(name){

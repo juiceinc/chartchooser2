@@ -60,10 +60,14 @@ juice.leaderboard = function(conf){
     if(conf.key !== undefined)
       key = conf.key;
 
+    if(conf.numberOfDisplayedRows !== undefined)
+      numberOfDisplayedRows = conf.numberOfDisplayedRows;
 
 
-    if(conf.displayedColumns !== undefined)
-      //columns have changed, recreate leaderboard
+
+    if(conf.displayedColumns !== undefined ||
+      conf.numberOfDisplayedRows !== undefined)
+      //columns or displayed rows have changed, recreate leaderboard
       init();
     else
       //only cells have changed, just refresh them
@@ -171,7 +175,7 @@ juice.leaderboard = function(conf){
   function init(){
 
       // FIXME : don't set explicit height
-      d3.select(container).style('height', numberOfDisplayedRows * 60 + 30 + 'px');
+      d3.select(container).style('height', numberOfDisplayedRows * 30 + 30 + 'px');
 
       //Columns
       columns = d3.select(container)

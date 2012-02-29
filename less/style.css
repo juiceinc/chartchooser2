@@ -6132,3 +6132,6 @@ h1 small a {
 .leaderboard-cell.hovered .rank, .leaderboard-cell.selected .rank {
   display: block;
 }
+select {
+  width: auto;
+}

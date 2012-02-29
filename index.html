@@ -83,7 +83,7 @@
 
               <br/>
               <br/>
-              <div id="leaderboard-direction">
+              <div>
                 <span>Show:</span>
                 <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
                   <span>Leaders</span>
@@ -91,9 +91,20 @@
                 </span>
                 <br/>
                 <br/> -->
-                <a id="leaders" class="btn" href="#">Leaders</a>
-                or
-                <a id="laggards" class ="btn" href="#">Laggards</a>
+                <select id="leaderboard-direction">
+                  <option>top</option>
+                  <option>bottom</option>
+                </select>
+
+                <select id="leaderboard-visible-rows">
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                </select>
+                <div style="clear:both"/>
+
+                <p id="total-population">out of 20</p>
               </div>
             </form>
           </div>
@@ -103,7 +114,7 @@
 
 
     <!-- Raw data -->
-    <div class="section">
+    <div class="section span8">
       <h1>Data
         <small>Put your own data in here (?)</small>
         <small> <a id="clear-data-btn" href="#">Reset</a> <a id="data-update-btn" href="#">Update</a> </small>
