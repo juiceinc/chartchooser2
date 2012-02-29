@@ -9,28 +9,38 @@ juice.leaderboard = function(conf){
     cellWidth = _conf.cellWidth || 200,
     key = _conf.key || "name",
     container = _conf.container || "#leaderboard",
-    modeASC = false,
+    displayTop = true,
 
     data = _conf.data || {},
-    columnObj = conf.columnObj || {},
+    displayedColumns = conf.displayedColumns || {},
 
     columns,
     cells
   ;
 
-  //TODO: externalize or remove
-  //money format function
-  var number = d3.format("0,.2f");
+  var formatters = {
+    'i' : {'format': d3.format(",.0f") }, //integers
+    'm' : {'format': function(d) { return "$" + d3.format("0,.1f")(d); } }, //currency
+    'f' : {'format': d3.format("0,.2f")}, //float
+    'p' : {'format': d3.format("%")}, //percent
+    'default': {'format': function (d) { return d; }}
+  };
+
+  var getFormatter = function (f){
+    return (formatters[f]) ? formatters[f] : formatters['default'];
+  };
+
+
 
   init();
-  
+
 
   leaderboard.refresh = function (conf){
-    if(conf.modeASC !== undefined)
-      modeASC = conf.modeASC;
+    if(conf.displayTop !== undefined)
+      displayTop = conf.displayTop;
 
-    if(conf.columnObj !== undefined)
-      columnObj = conf.columnObj;
+    if(conf.displayedColumns !== undefined)
+      displayedColumns = conf.displayedColumns;
 
     if(conf.data !== undefined)
       data = conf.data;
@@ -40,7 +50,7 @@ juice.leaderboard = function(conf){
 
 
 
-    if(conf.columnObj !== undefined)
+    if(conf.displayedColumns !== undefined)
       //columns have changed, recreate leaderboard
       init();
     else
@@ -48,11 +58,31 @@ juice.leaderboard = function(conf){
       reloadCells();
   };
 
+  //select cells by partially matching the first occurrence of keyValue
   leaderboard.selectByKey = function (keyValue){
     cells.classed('selected', false);
+    if(!keyValue || keyValue.length == 0)
+      return;
 
-    cells.filter(function(cellData){return cellData[key].toLowerCase() === keyValue.toLowerCase();})
-        .classed('selected', true);
+    keyValue = keyValue.toLowerCase();
+
+    var matchedValue = null;
+
+    //find the first occurrence of the searched keyValue
+    var selectedCells = cells.select(function(d, i) {
+      if(matchedValue){
+        //enforce strict matching for others since we already found the first matched cell
+        return d[key] == matchedValue ? this : null;
+      }
+      else{
+        if(d[key].toLowerCase().indexOf(keyValue) > -1){
+          matchedValue = d[key];
+          return this;
+        }
+        else return null;
+      }
+    });
+    selectedCells.classed('selected', true);
   };
 
   //removes styles attribute
@@ -66,7 +96,7 @@ juice.leaderboard = function(conf){
   //animates selection to hovered state (used for "out of range" cells)
   function animateToHovered(selection){
       if(selection.empty()) return;
-      
+
       var _height = selection.style('height');
 
       selection.style('height', '0px');
@@ -87,9 +117,9 @@ juice.leaderboard = function(conf){
 
   //animates selection to selected state (used for "out of range" cells)
   function animateToSelected(selection){
-      
+
       if(selection.empty()) return;
-      
+
       var _bgcolor = selection.style('background-color');
       var _color = selection.style('color');
 
@@ -134,8 +164,8 @@ juice.leaderboard = function(conf){
       //Columns
       columns = d3.select(container)
           .selectAll(".leaderboard-column")
-             .data(columnObj)
-             .text(function(d){ return d['name'];})
+             .data(displayedColumns)
+             .text(function(d){ return d['label'];})
              ;
 
       //Enter
@@ -144,7 +174,7 @@ juice.leaderboard = function(conf){
           .style("width", function (d, i) { return cellWidth +"px"; })
           .style("left", function (d, i) { return i * cellWidth +"px"; })
           .classed("leaderboard-column", true)
-          .text(function(d){ return d['name']; })
+          .text(function(d){ return d['label']; })
           ;
       //Exit
       columns.exit()
@@ -169,7 +199,11 @@ juice.leaderboard = function(conf){
       cells.append('div')
           .classed("title", true)
           .text(function(d,i,j) {
-              return d[key];
+            var title = d[key];
+            if(title.length > 10)
+              title = title.substr(0, 18) + '...';
+
+            return title;
           });
 
       //cell rank+value container
@@ -185,7 +219,8 @@ juice.leaderboard = function(conf){
           vals.append('div')
               .classed("value", true)
               .text(function(d,i,j) {
-                  return (columnObj[j].numeric) ? number(d[columnObj[j].name]) : d[columnObj[j].name];//money(d[columnObj[j].name]);
+                var myColumn = displayedColumns[j];
+                return getFormatter(myColumn.format).format(d[myColumn.name]);//money(d[displayedColumns[j].name]);
           });
 
 
@@ -204,7 +239,7 @@ juice.leaderboard = function(conf){
           //animate color for those out of range
           columns.selectAll('.leaderboard-cell.cell-out-of-range.selected').call(animateToSelected);
       });
-      
+
       //cell mouse over
       cells.on("mouseover", function(d, i){
                var hovered = cells.filter(function(cellData){ return d === cellData;})
@@ -214,7 +249,7 @@ juice.leaderboard = function(conf){
                   //fade in those out of range
                   columns.selectAll('.leaderboard-cell.cell-out-of-range.hovered').call(animateToHovered);
       });
-      
+
       //cell mouse out
       cells.on("mouseout", function(d, i){
               var hovered = cells.filter(function(cellData){ return d === cellData;})
@@ -223,19 +258,30 @@ juice.leaderboard = function(conf){
           });
   }
 
+  function ascendingIngoreNulls(a, b){
+    if(typeof(a) !== 'number')
+      return 1;
+
+    if(typeof(b) !== 'number')
+      return -1;
+
+    return d3.ascending(a,b);
+  }
 
   function reloadCells(){
       //Cells
       cells =
           columns.selectAll(".leaderboard-cell")
               .data(
-                function(columnObj){
-                  //data sorted by the current columnObj
+                function(displayedColumns ){
+                  //data sorted by the current displayedColumns
+
                   return data.sort(function(a, b){
-                      return modeASC ?
-                        d3.ascending(a[columnObj[key]], b[columnObj[key]])
-                        : d3.descending(a[columnObj[key]], b[columnObj[key]]);
-                      });
+                    return ((displayTop && displayedColumns.moreIsBetter) ||
+                            (!displayTop && !displayedColumns.moreIsBetter)) ?
+                      d3.descending(a[displayedColumns.name], b[displayedColumns.name]) :
+                      ascendingIngoreNulls(a[displayedColumns.name], b[displayedColumns.name]);
+                  });
                 },
                 function (d) { return d[key]; }
               )
@@ -243,7 +289,7 @@ juice.leaderboard = function(conf){
                 return i >= numberOfDisplayedRows;
               })
               ;
-              
+
       cells.order();
   }
 
