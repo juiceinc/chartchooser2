@@ -62,22 +62,38 @@
           <h1>Showing Flows</h1>
 
           <div id="toolbar">
-            <form class="form-search">
+            <form id="filter-form" class="form-search">
 
-              <input type = "text" title="Search by name" placeholder="search name" id="searchInput"/>
-              <button type="submit" class="btn" id="searchBtn">Search</button>
+              <div>
+                <p>Filter down your data:</p>
+                <input type = "text" title="filter" placeholder="Position:QB" id="filterInput"/>
+                <button type="submit" class="btn">Filter</button>
+              </div>
+              <div id="applied-filters">
+              </div>
+            </form>
 
+            <form id="search-form" class="form-search">
+
+              <div>
+                <p>Search</p>
+                <input type = "text" placeholder="search name" id="searchInput"/>
+                <button type="submit" class="btn">Search</button>
+              </div>
+
+              <br/>
+              <br/>
               <div id="leaderboard-direction">
                 <span>Show:</span>
-                <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
+                <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
                   <span>Leaders</span>
                   <span>Laggards</span>
                 </span>
                 <br/>
-                <br/>
-                <a id="desc" class="btn" href="#">Leaders</a>
+                <br/> -->
+                <a id="leaders" class="btn" href="#">Leaders</a>
                 or
-                <a id="asc" class ="btn" href="#">Laggards</a>
+                <a id="laggards" class ="btn" href="#">Laggards</a>
               </div>
             </form>
           </div>
