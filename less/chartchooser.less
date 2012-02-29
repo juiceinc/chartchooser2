@@ -37,13 +37,16 @@ h1 small a{
     position:absolute;
     text-align: center;
 }
+
 .leaderboard-cell {
-    padding: 5px;
-    border: 1px solid #D0D2D3; 
+    padding: 0px;
+    border-left: 1px solid #D0D2D3;
     text-align: left;
     cursor: pointer;
+    position: relative;
+    height: 25px;
     background-color: #FFF;
-    
+
     -webkit-transition: all .5s ease;
     -moz-transition: all .5s ease;
     -o-transition: all .5s ease;
@@ -54,44 +57,63 @@ h1 small a{
     	pointer-events: none;
     }
 
-    
 
-    .val-container {
-	    position:relative;
-	    height:20px;
+    .rank {
+        display:none;
+        position: absolute;
+        left: 6px;
+        top: 1px;
+        font-size: 10px;
+        line-height: 10px;
+        height: 10px;
+        color: #787878;
+        padding: 1px;
+    }
 
-	    .rank{
-		    display:none;
-		    position: absolute;
-		    left: 0px;
-		    bottom: 0px;
-		}
+    .title {
+        position: absolute;
+        left: 6px;
+        bottom: 0px;
+        font-size: 12px;
+        line-height: 12px;
+        color: #666;
+        font-weight: 200;
+    }
 
-	    .value{
-		    font-size: 18px;
-		    font-weight: bold;
-		    width:100%;
-		    text-align: right;
-		    position: absolute;
-		    left: 0px;
-		    bottom: 0px;
-		}
-	}
+    .value {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: right;
+        position: absolute;
+        right: 4px;
+        bottom: 0px;
+    }
+
 }
 
 .leaderboard-cell.hovered {
-    background-color: #DFDFDF; 
+    background-color: #f2f3f4;
     cursor: pointer;
 }
 
 .leaderboard-cell.selected {
-    background-color: #6AB6DA;
-    color: white;
+    border-left: 5px solid #6AB6DA;
+    /*background-color: #6AB6DA;*/
+    /*color: white;*/
+    .rank {
+        color: #6AB6DA;
+    }
+    .title {
+        color: #6AB6DA;
+    }
+    .value {
+        color: #6AB6DA;
+    }
 }
 
 .cell-out-of-range {
     display: none;
-    
+
     -webkit-transition: none;
     -moz-transition: none;
     -o-transition: all 0s ease;
@@ -107,7 +129,7 @@ h1 small a{
 	    padding-bottom: 2px;
 	}
 }
-	
+
 .leaderboard-cell.cell-out-of-range.selected, .leaderboard-cell.cell-out-of-range.hovered {
     display: block;
 }
