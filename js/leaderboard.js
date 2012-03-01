@@ -137,7 +137,7 @@ $(function() {
   function refreshLeaderboard(conf){
     leaderboard.refresh(conf);
 
-    var totalText = (data.length > 0) ? 'out of '+ data.length + ' items' : '';
+    var totalText = (conf.data && conf.data.length > 0) ? 'out of '+ conf.data.length + ' items' : '';
     $('#total-population').text(totalText);
   }
 
