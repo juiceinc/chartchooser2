@@ -117,7 +117,7 @@ $(function() {
       return;
 
     var rawColumnName = $.trim(input[0].toLowerCase());
-    var columnName = _.find(_.keys(data[0]), function(colName){ return colName.toLowerCase().indexOf(rawColumnName) > -1; });
+    var columnName = _.find(_.keys(data[0]), function(colName){ return colName.toLowerCase().indexOf(rawColumnName) === 0; });
 
     //column name is invalid, skip it
     if(columnName === undefined)
