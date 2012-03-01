@@ -4,7 +4,7 @@ $(function() {
 
   //Styling and appearance
   var HOVER_DURATION = 1000;
-  var CELL_WIDTH = 170;
+  var CELL_WIDTH = 162;
   var NUM_COLUMNS = 5;
   var DISPLAYED_ROWS = 5; //TODO: make dynamic
 
