@@ -208,7 +208,7 @@ juice.leaderboard = function(conf){
           })
           .classed('no-data', function(d, i, j){
             var myColumn = displayedColumns[j];
-            return isNaN(d[myColumn]);
+            return isNaN(d[myColumn.name]);
           })
           ;
       //Exit
