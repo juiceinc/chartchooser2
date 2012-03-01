@@ -6152,6 +6152,12 @@ h1 small a {
   font-size: 13px;
   bottom: 0px;
 }
+.no-data {
+  opacity: 0.4;
+}
+.no-data .rank {
+  display: none !important;
+}
 .leaderboard-cell.cell-out-of-range.selected, .leaderboard-cell.cell-out-of-range.hovered {
   display: block;
 }
