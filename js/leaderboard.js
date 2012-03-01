@@ -36,8 +36,11 @@ $(function() {
     $('#leaderboard-direction').change(function (e) {updateSort(); });
     $('#leaderboard-visible-rows').change(function (e) {updateVisibleItems(); });
     $('#csv-data').keyup(function(e) {
-        $('#clear-data-btn').addClass('btn-info');
-        updateData();
+        // Arrow keys
+        if (e.keyCode != 39 && e.keyCode != 37 && e.keyCode != 40 && e.keyCode != 38) {
+            $('#clear-data-btn').addClass('btn-info');
+            updateData();
+        }
     });
 
     $('#clear-data-btn').click(function() {
