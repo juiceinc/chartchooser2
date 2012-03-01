@@ -206,6 +206,10 @@ juice.leaderboard = function(conf){
           .classed('cell-out-of-range', function(d, i){
               return i >= numberOfDisplayedRows;
           })
+          .classed('no-data', function(d, i, j){
+            var myColumn = displayedColumns[j];
+            return isNaN(d[myColumn]);
+          })
           ;
       //Exit
       cells.exit()
@@ -222,9 +226,6 @@ juice.leaderboard = function(conf){
             return title;
           });
 
-      //cell rank+value container
-//      var vals = cells.append('div')
-//              .classed("val-container", true);
           //rank
           cells.append('div')
               .classed("rank", true)
@@ -237,7 +238,8 @@ juice.leaderboard = function(conf){
               .text(function(d,i,j) {
                 var myColumn = displayedColumns[j];
                 return getFormatter(myColumn.format).format(d[myColumn.name]);
-          });
+              })
+          ;
 
 
       //------------------------Cell Event handlers
