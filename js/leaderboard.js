@@ -40,6 +40,22 @@ $(function() {
     $('#clear-data-btn').click(function() {$('#csv-data').val(''); });
   }
 
+  //updates leaderboard divider text and position
+  function updateLabels(conf){
+    //total rows text
+    if(conf && conf.data){
+      var totalText = conf.data.length > 0 ? 'out of '+ conf.data.length + ' items' : 'No data available';
+      $('#total-population').text(totalText);
+    }
+
+    //direction in the leaderboard divider line
+    $('.divider-direction').text($('#leaderboard-direction').val());
+
+    //num of visible rows  and position of the leaderboard divider line
+    var numberOfDisplayedRows = $('#leaderboard-visible-rows').val() * 1;
+    $('.divider-visible-rows-number').text(numberOfDisplayedRows);
+    $('#leaderboard-divider').css('top', (numberOfDisplayedRows +1 /*header*/) * 25 /*row height*/);
+  }
 
   function resetFilters(){
     $('.datafilter').remove();
@@ -64,6 +80,7 @@ $(function() {
     //convert columns to numerics
     _.each(data, function(row){
       _.each(numericColumns, function(column){
+        //convert to number or NaN
         row[column.name] = (!row[column.name] || row[column.name] === '') ? NaN : row[column.name] * 1;
       });
     });
@@ -137,19 +154,16 @@ $(function() {
   function refreshLeaderboard(conf){
     leaderboard.refresh(conf);
 
-    var totalText = (conf.data && conf.data.length > 0) ? 'out of '+ conf.data.length + ' items' : '';
-    $('#total-population').text(totalText);
+    updateLabels(conf);
   }
-
-
 
   function updateSort(){
     var displayTop = $('#leaderboard-direction').val() == 'top';
-    leaderboard.refresh({"displayTop": displayTop});
+    refreshLeaderboard({"displayTop": displayTop});
   }
 
   function updateVisibleItems(){
-    leaderboard.refresh({"numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
+    refreshLeaderboard({"numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
   }
 
   function getBlankColumnMetadata(name){
@@ -296,12 +310,12 @@ $(function() {
     addHandlers();
 
     leaderboard = juice.leaderboard({
-      numberOfDisplayedRows : DISPLAYED_ROWS,
+      numberOfDisplayedRows : $('#leaderboard-visible-rows').val() * 1,
       cellWidth             : CELL_WIDTH,
       key                   : "name",
       container             : "#leaderboard",
-      displayedColumns      : displayedColumns,
-      data                  : data,
+      displayedColumns      : [],
+      data                  : [],
       formats               : microformat
     });
 
