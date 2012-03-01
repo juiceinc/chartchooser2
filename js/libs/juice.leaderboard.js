@@ -175,7 +175,7 @@ juice.leaderboard = function(conf){
   function init(){
 
       // FIXME : don't set explicit height
-      d3.select(container).style('height', numberOfDisplayedRows * 30 + 30 + 'px');
+      d3.select(container).style('height', (numberOfDisplayedRows * 25 + 30 + 70) + 'px');
 
       //Columns
       columns = d3.select(container)
