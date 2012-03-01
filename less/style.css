@@ -3446,6 +3446,14 @@ h1 {
   /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
 
   pointer-events: none;
+  border-bottom: 1px dotted #white;
+  /* abbr tag still needs to fire events to be able to display abbreviated text */
+
+}
+.leaderboard-cell div abbr {
+  pointer-events: auto;
+  border-bottom: 1px dotted #DDD;
+  text-transform: none;
 }
 .leaderboard-cell .rank {
   font-weight: normal;
