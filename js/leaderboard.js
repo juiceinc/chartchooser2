@@ -104,7 +104,7 @@ $(function() {
       var closeBtn = $('<a class = "close">&times;</a>');
 
       newFilter.append(closeBtn);
-      newFilter.append($('<span>'+filterStr+'</a>'));
+      newFilter.append($('<span>'+ columnName + ': ' + $.trim(input[1]) + '</a>'));
       newFilter.addClass('alert alert-info span2 datafilter');
       newFilter.attr('data-column', columnName);
       newFilter.attr('data-value', $.trim(input[1]));
