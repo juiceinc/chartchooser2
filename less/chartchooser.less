@@ -69,10 +69,6 @@ h1 small a{
     height: 25px;
     background-color: #FFF;
 
-    -webkit-transition: all .5s ease;
-    -moz-transition: all .5s ease;
-    -o-transition: all .5s ease;
-    transition: all .5s ease;
 
     div{
     	/*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
@@ -120,18 +116,20 @@ h1 small a{
 }
 
 .leaderboard-cell.selected {
-    border-left: 6px solid #ea5156;
-    box-shadow: inset 0px 0px 5px #ea5156;
+    border-left: 0px solid #ea5156;
+    box-shadow: inset 1px 1px 4px white, inset -1px -1px 3px rgba(0.7,0.2,0.2,0.2);
+    background-color: #ea5156;
+    color: white !important;
     /*background-color: #6AB6DA;*/
     /*color: white;*/
     .rank {
-        color: #ea5156;
+        color: white;
     }
     .title {
-        color: #ea5156;
+        color: white;
     }
     .value {
-        color: #ea5156;
+        color: white;
     }
 }
 
