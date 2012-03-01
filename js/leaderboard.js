@@ -26,6 +26,7 @@ $(function() {
 
   var displayedColumns = [],
       data = [],
+      allColumnsMetaData = [],
       leaderboard;
   //----------------------------------------------- handlers, util functions
 
@@ -85,10 +86,10 @@ $(function() {
         data = data.slice(0,500);
     }
 
-    var columns = findColumns(data);
-    var key = columns[0].name;
+    allColumnsMetaData = findColumns(data);
+    var key = allColumnsMetaData[0].name;
 
-    displayedColumns = _.rest(columns, 1);
+    displayedColumns = _.rest(allColumnsMetaData, 1);
     //all displayedColumns should be numeric, just double checking
     var numericColumns = _.filter(displayedColumns, function(column){return column.format !== microformat.SYMBOL_STRING;});
 
@@ -135,9 +136,14 @@ $(function() {
       var newFilter = $(document.createElement('div'));
       var closeBtn = $('<a class = "close">&times;</a>');
 
+      //find a user friendly column name, if available
+      var displayedColumn = _.find(allColumnsMetaData, function(column){ console.log(column); console.log(columnName);return column.name === columnName; });
+      var niceColumnName =  displayedColumn && displayedColumn.name ? displayedColumn.label : columnName;
+
+
       newFilter.append(closeBtn);
-      newFilter.append($('<span>'+ columnName + ': ' + $.trim(input[1]) + '</a>'));
-      newFilter.addClass('alert alert-info span2 datafilter');
+      newFilter.append($('<span>'+ niceColumnName + ': ' + $.trim(input[1]) + '</a>'));
+      newFilter.addClass('alert alert-info span3 datafilter');
       newFilter.attr('data-column', columnName);
       newFilter.attr('data-value', $.trim(input[1]));
       newFilter.appendTo($('#applied-filters'));
@@ -160,7 +166,7 @@ $(function() {
       var cleanValues = [];
       _.each(values, function(value){cleanValues.push($.trim(value).toLowerCase()); });
 
-      newData = _.filter(newData, function(row){ return (_.include(cleanValues, row[column].toLowerCase()) );});
+      newData = _.filter(newData, function(row){ return (_.include(cleanValues, (row[column]+'').toLowerCase()) );});
     });
 
     refreshLeaderboard({data: newData, displayedColumns: displayedColumns});
