@@ -4430,14 +4430,6 @@ a.thumbnail:hover {
     background-position: 40px 0;
   }
 }
-@keyframes progress-bar-stripes {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 40px 0;
-  }
-}
 .progress {
   overflow: hidden;
   height: 18px;
@@ -6058,7 +6050,6 @@ h1 small a {
   text-align: right;
   border-top: 1px dashed #d0d2d3;
   width: 100%;
-  font-size: 80%;
   font-size: 10px;
   line-height: 10px;
   height: 10px;
@@ -6124,10 +6115,6 @@ h1 small a {
   box-shadow: inset 1px 1px 4px #ffffff, inset -1px -1px 3px rgba(1, 0, 0, 0.2);
   background-color: #ea5156;
   color: white !important;
-  /*background-color: #6AB6DA;*/
-
-  /*color: white;*/
-
 }
 .leaderboard-cell.selected .rank {
   color: white;
