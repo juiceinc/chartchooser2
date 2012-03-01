@@ -78,7 +78,13 @@ $(function() {
     resetFilters();
 
     var csv = $('#csv-data').val();
+
     data = d3.csv.parse(csv);
+    var originalLen = data.length;
+    if (originalLen > 500) {
+        data = data.slice(0,500);
+    }
+
     var columns = findColumns(data);
     var key = columns[0].name;
 
@@ -276,7 +282,7 @@ $(function() {
 
     //sort by order
     columns = _.sortBy(columns, function(column){ return column.order; });
-    return columns;
+    return columns.slice(0, NUM_COLUMNS+1);
   }
 
   //non numeric value checker
