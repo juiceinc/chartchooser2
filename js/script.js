@@ -1,7 +1,8 @@
 //leaderboard.js
 //when dom is ready
 $(function() {
-    $('#datainfo').popover({});
+    $('.popup').popover({});
+    $('.popupbottom').popover({placement: 'bottom'});
 });
 
 
