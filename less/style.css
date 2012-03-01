@@ -6042,10 +6042,14 @@ h1 small a {
   position: relative;
 }
 .leaderboard-column {
-  position: absolute;
   text-align: center;
+  position: absolute;
+  color: #787a7c;
+  font-variant: small-caps;
+  font-weight: bold;
 }
 .leaderboard-cell {
+  font-variant: normal;
   padding: 0px;
   border-left: 1px solid #D0D2D3;
   text-align: left;
@@ -6064,10 +6068,11 @@ h1 small a {
   pointer-events: none;
 }
 .leaderboard-cell .rank {
+  font-weight: normal;
   display: none;
   position: absolute;
-  left: 6px;
-  top: 1px;
+  left: 7px;
+  top: 0px;
   font-size: 10px;
   line-height: 10px;
   height: 10px;
@@ -6076,8 +6081,8 @@ h1 small a {
 }
 .leaderboard-cell .title {
   position: absolute;
-  left: 6px;
-  bottom: 0px;
+  left: 7px;
+  bottom: 2px;
   font-size: 12px;
   line-height: 12px;
   color: #666;
@@ -6088,43 +6093,48 @@ h1 small a {
   font-weight: bold;
   text-align: right;
   position: absolute;
-  right: 4px;
-  bottom: 0px;
+  right: 5px;
+  bottom: 2px;
 }
 .leaderboard-cell.hovered {
   background-color: #f2f3f4;
   cursor: pointer;
 }
 .leaderboard-cell.selected {
-  border-left: 5px solid #6AB6DA;
+  border-left: 6px solid #ea5156;
+  box-shadow: inset 0px 0px 5px #ea5156;
   /*background-color: #6AB6DA;*/
 
   /*color: white;*/
 
 }
 .leaderboard-cell.selected .rank {
-  color: #6AB6DA;
+  color: #ea5156;
 }
 .leaderboard-cell.selected .title {
-  color: #6AB6DA;
+  color: #ea5156;
 }
 .leaderboard-cell.selected .value {
-  color: #6AB6DA;
+  color: #ea5156;
 }
 .cell-out-of-range {
+  margin-top: 10px;
   display: none;
+  height: 18px;
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: all 0s ease;
   transition: none;
+}
+.cell-out-of-range .rank {
+  top: 3px;
 }
 .cell-out-of-range .title {
   display: none;
 }
 .cell-out-of-range .value {
   font-size: 13px;
-  font-weight: normal;
-  padding-bottom: 2px;
+  bottom: 0px;
 }
 .leaderboard-cell.cell-out-of-range.selected, .leaderboard-cell.cell-out-of-range.hovered {
   display: block;
