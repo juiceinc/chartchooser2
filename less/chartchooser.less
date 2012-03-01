@@ -31,7 +31,24 @@ h1 small a{
     font-family: 'Gudea', sans-serif;
     font-size: 13px;
     color: #404040;
-    position:relative;
+    position: relative;
+}
+
+#leaderboard-wrapper {
+    position: relative;
+}
+
+#leaderboard-divider {
+    position: absolute;
+    top: 150px;
+    text-align: right;
+    border-top: 1px dashed #d0d2d3;
+    width: 100%;
+    font-size: 80%;
+    font-size: 10px;
+    line-height: 10px;
+    height: 10px;
+    color: #787878;
 }
 
 .leaderboard-column {
@@ -119,14 +136,18 @@ h1 small a{
 }
 
 .cell-out-of-range {
-    margin-top: 10px;
+    margin-top: 20px;
     display: none;
     height: 18px;
 
-    -webkit-transition: none;
-    -moz-transition: none;
+    -webkit-transition: all 0s ease;
+    -moz-transition: all 0s ease;
     -o-transition: all 0s ease;
-    transition: none;
+    transition: all 0s ease;
+    /*-webkit-transition: none;*/
+    /*-moz-transition: none;*/
+    /*-o-transition: all 0s ease;*/
+    /*transition: none;*/
 
     .rank {
         top: 3px;
@@ -148,4 +169,8 @@ h1 small a{
 
 .leaderboard-cell.hovered .rank, .leaderboard-cell.selected .rank{
     display: block;
+}
+
+.format-choice {
+    font-family: "Courier New", Courier, fixed;
 }
