@@ -1,4 +1,4 @@
-Year,Name[*],College,POS,Height (in),Weight (lbs),Wonderlic,40 Yard[-3f],Bench Press[4],Vert Leap (in)[5],Broad Jump (in)[6],Shuttle[-2f],3Cone
+Year,Name[*],College,POS,Height (in),Weight (lbs),Wonderlic,40 Yard[-3d],Bench Press[4],Vert Leap (in)[5],Broad Jump (in)[6],Shuttle[-2d],3Cone
 2012,Emmanuel Acho,Texas,OLB,73,238,,4.73,24,35,118
 2012,Joe Adams,Arkansas,WR,71,179,,4.55,,36,123,,7.09
 2012,Mike Adams,Ohio State,OT,79,323,,5.4,19,28,100,4.95,7.94

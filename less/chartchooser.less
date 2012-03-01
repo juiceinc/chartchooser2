@@ -31,14 +31,36 @@ h1 small a{
     font-family: 'Gudea', sans-serif;
     font-size: 13px;
     color: #404040;
-    position:relative;
+    position: relative;
 }
+
+#leaderboard-wrapper {
+    position: relative;
+}
+
+#leaderboard-divider {
+    position: absolute;
+    top: 150px;
+    text-align: right;
+    border-top: 1px dashed #d0d2d3;
+    width: 100%;
+    font-size: 80%;
+    font-size: 10px;
+    line-height: 10px;
+    height: 10px;
+    color: #787878;
+}
+
 .leaderboard-column {
-    position:absolute;
     text-align: center;
+    position: absolute;
+    color: #787a7c;
+    font-variant: small-caps;
+    font-weight: bold;
 }
 
 .leaderboard-cell {
+    font-variant: normal;
     padding: 0px;
     border-left: 1px solid #D0D2D3;
     text-align: left;
@@ -47,10 +69,6 @@ h1 small a{
     height: 25px;
     background-color: #FFF;
 
-    -webkit-transition: all .5s ease;
-    -moz-transition: all .5s ease;
-    -o-transition: all .5s ease;
-    transition: all .5s ease;
 
     div{
     	/*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
@@ -59,10 +77,11 @@ h1 small a{
 
 
     .rank {
-        display:none;
+        font-weight: normal;
+        display: none;
         position: absolute;
-        left: 6px;
-        top: 1px;
+        left: 7px;
+        top: 0px;
         font-size: 10px;
         line-height: 10px;
         height: 10px;
@@ -72,8 +91,8 @@ h1 small a{
 
     .title {
         position: absolute;
-        left: 6px;
-        bottom: 0px;
+        left: 7px;
+        bottom: 2px;
         font-size: 12px;
         line-height: 12px;
         color: #666;
@@ -85,8 +104,8 @@ h1 small a{
         font-weight: bold;
         text-align: right;
         position: absolute;
-        right: 4px;
-        bottom: 0px;
+        right: 5px;
+        bottom: 2px;
     }
 
 }
@@ -97,27 +116,40 @@ h1 small a{
 }
 
 .leaderboard-cell.selected {
-    border-left: 5px solid #6AB6DA;
+    border-left: 0px solid #ea5156;
+    box-shadow: inset 1px 1px 4px white, inset -1px -1px 3px rgba(0.7,0.2,0.2,0.2);
+    background-color: #ea5156;
+    color: white !important;
     /*background-color: #6AB6DA;*/
     /*color: white;*/
     .rank {
-        color: #6AB6DA;
+        color: white;
     }
     .title {
-        color: #6AB6DA;
+        color: white;
     }
     .value {
-        color: #6AB6DA;
+        color: white;
     }
 }
 
 .cell-out-of-range {
+    margin-top: 20px;
     display: none;
+    height: 18px;
 
-    -webkit-transition: none;
-    -moz-transition: none;
+    -webkit-transition: all 0s ease;
+    -moz-transition: all 0s ease;
     -o-transition: all 0s ease;
-    transition: none;
+    transition: all 0s ease;
+    /*-webkit-transition: none;*/
+    /*-moz-transition: none;*/
+    /*-o-transition: all 0s ease;*/
+    /*transition: none;*/
+
+    .rank {
+        top: 3px;
+    }
 
     .title {
 	    display:none;
@@ -125,8 +157,7 @@ h1 small a{
 
 	.value {
 	    font-size: 13px;
-	    font-weight: normal;
-	    padding-bottom: 2px;
+        bottom: 0px;
 	}
 }
 
@@ -140,4 +171,7 @@ h1 small a{
 
 select {
     width: auto;
+}
+.format-choice {
+    font-family: "Courier New", Courier, fixed;
 }

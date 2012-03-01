@@ -53,8 +53,13 @@
 
       <div class="span8">
         <h1>Leaderboard</h1>
-        <div id="leaderboard">
-        </div>
+          <div id="leaderboard-wrapper">
+              <div id="leaderboard-divider">
+                  below the top 10
+              </div>
+              <div id="leaderboard">
+              </div>
+          </div>
       </div>
 
       <div class="span4">
@@ -116,7 +121,10 @@
     <!-- Raw data -->
     <div class="section span8">
       <h1>Data
-        <small>Put your own data in here (?)</small>
+        <small>Use your own data. <a id="datainfo" href="#" class="" rel="popover"
+                                   data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
+                                   data-original-title="Adding your own data">Learn how.</a></small>
+
         <small> <a id="clear-data-btn" href="#">Reset</a> <a id="data-update-btn" href="#">Update</a> </small>
       </h1>
 
@@ -169,6 +177,8 @@
 <!-- scripts concatenated and minified via ant build script-->
 <script src="js/libs/bootstrap/transition.js"></script>
 <script src="js/libs/bootstrap/collapse.js"></script>
+<script src="js/libs/bootstrap/tooltip.js"></script>
+<script src="js/libs/bootstrap/popover.js"></script>
 <script src="js/libs/d3/d3.js"></script>
 <script src="js/libs/d3/d3.csv.js"></script>
 <script src="js/libs/underscore.js"></script>
