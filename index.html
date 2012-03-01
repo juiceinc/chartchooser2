@@ -17,10 +17,7 @@
 	<!-- Use SimpLESS (Win/Linux/Mac) or LESS.app (Mac) to compile your .less files
 	to style.css-->
 
-  <link rel="stylesheet" href="js/libs/tangle/TangleKit/TangleKit.css" type="text/css">
 	<link rel="stylesheet" href="less/style.css">
-
-
 
 	<script src="js/libs/modernizr-2.5.2-respond-1.1.0.min.js"></script>
 </head>
@@ -122,7 +119,9 @@
                                    data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
                                    data-original-title="Adding your own data">Learn how.</a></small>
 
-        <small> <a id="clear-data-btn" href="#">Reset</a> <a id="data-update-btn" href="#">Update</a> </small>
+        <div style="float: right;">
+            <small> <a id="clear-data-btn" class="btn" href="#">Reset to sample data</a></small>
+        </div>
       </h1>
 
       <div class="row">

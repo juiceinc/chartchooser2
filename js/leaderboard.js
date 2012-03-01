@@ -35,9 +35,18 @@ $(function() {
 
     $('#leaderboard-direction').change(function (e) {updateSort(); });
     $('#leaderboard-visible-rows').change(function (e) {updateVisibleItems(); });
+    $('#csv-data').keyup(function(e) {
+        // Arrow keys
+        if (e.keyCode != 39 && e.keyCode != 37 && e.keyCode != 40 && e.keyCode != 38) {
+            $('#clear-data-btn').addClass('btn-info');
+            updateData();
+        }
+    });
 
-    $('#data-update-btn').click(function() { updateData(); });
-    $('#clear-data-btn').click(function() {$('#csv-data').val(''); });
+    $('#clear-data-btn').click(function() {
+        $('#clear-data-btn').removeClass('btn-info');
+        loadSampleData();
+    });
   }
 
   //updates leaderboard divider text and position
@@ -300,7 +309,10 @@ $(function() {
   function loadSampleData(){
     $.ajax({
       url: SAMPLE_DATA_URL,
-      success: function(data) { $('#csv-data').val(data); $('#data-update-btn').click();},
+      success: function(data) {
+          $('#csv-data').val(data);
+          updateData();
+      },
       error: function(err) { }
     });
   }
