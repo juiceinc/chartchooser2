@@ -137,7 +137,7 @@ $(function() {
       var closeBtn = $('<a class = "close">&times;</a>');
 
       //find a user friendly column name, if available
-      var displayedColumn = _.find(allColumnsMetaData, function(column){ console.log(column); console.log(columnName);return column.name === columnName; });
+      var displayedColumn = _.find(allColumnsMetaData, function(column){ return column.name === columnName; });
       var niceColumnName =  displayedColumn && displayedColumn.name ? displayedColumn.label : columnName;
 
 
