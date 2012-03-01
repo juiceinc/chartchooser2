@@ -24,96 +24,76 @@
 <body>
 <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
 
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        <a class="brand" href="#">Chart Chooser Redux</a>
-        <div class="nav-collapse">
-          <ul class="nav">
-            <li class="active"><a href="#leaderboard">Leaderboard</a></li>
-            <li><a href="#sankey">Sankey</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-  </div>
-
   <div class="container">
 
-    <!-- Chart and its description -->
-    <div class="row show-grid">
+    <!-- Filter row -->
+    <div class="row">
 
-      <div class="span8">
-        <h1>Leaderboard</h1>
-          <div id="leaderboard-wrapper">
-              <div id="leaderboard-divider">
-                  below the <span class='divider-direction'>top</span> <span class='divider-visible-rows-number'>10</span>
-              </div>
-              <div id="leaderboard">
-              </div>
-          </div>
+      <!-- Direction/visibility form -->
+      <div class="span4 visibility-filter">
+        <span>Show</span>
+
+        <select id="leaderboard-direction">
+          <option>top</option>
+          <option>bottom</option>
+        </select>
+
+        <select id="leaderboard-visible-rows">
+          <option>5</option>
+          <option selected>10</option>
+          <option>15</option>
+          <option>20</option>
+        </select>
+        <span id="total-population">out of 20</span>
       </div>
 
       <div class="span4">
-        <div class="well">
-          <div id="toolbar">
-            <form id="filter-form" class="form-search">
-              <div>
-                Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
-                                                   data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
-                                                   data-original-title="How to filter your data">Learn how.</a>
-                <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
-                <button type="submit" class="btn">Filter</button></p>
-              </div>
-              <div id="applied-filters" class="row">
-              </div>
-            </form>
-
-            <form id="search-form" class="form-search">
-
-              <div>
-                Search:
-                <p><input type = "text" placeholder="search name" id="searchInput"/>
-                <button type="submit" class="btn">Search</button></p>
-              </div>
-
-              <br/>
-              <div>
-                <span>Show</span>
-                <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
-                  <span>Leaders</span>
-                  <span>Laggards</span>
-                </span>
-                <br/>
-                <br/> -->
-                <select id="leaderboard-direction">
-                  <option>top</option>
-                  <option>bottom</option>
-                </select>
-
-                <select id="leaderboard-visible-rows">
-                  <option>5</option>
-                  <option selected>10</option>
-                  <option>15</option>
-                  <option>20</option>
-                </select>
-                <span id="total-population">out of 20</span>
-                <div style="clear:both"/>
-              </div>
-            </form>
+        <!-- Filter form -->
+        <form id="filter-form" class="form-search">
+          <div>
+            Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
+                                               data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
+                                               data-original-title="How to filter your data">Learn how.</a>
+            <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
+            <button type="submit" class="btn">Filter</button></p>
           </div>
+          <div id="applied-filters" class="row">
+          </div>
+        </form>
+      </div>
+
+      <!-- Search form -->
+      <div class="span4">
+      <form id="search-form" class="form-search">
+        <div>
+          Search:
+          <p><input type = "text" placeholder="search name" id="searchInput"/>
+          <button type="submit" class="btn">Search</button></p>
+        </div>
+      </form>
+      </div>
+
+
+    </div>
+
+    <!-- Chart -->
+    <div class="row">
+      <div class="span12">
+        <h1>Leaderboard</h1>
+        <div id="leaderboard-wrapper">
+            <div id="leaderboard-divider">
+                below the <span class='divider-direction'>top</span> <span class='divider-visible-rows-number'>10</span>
+            </div>
+            <div id="leaderboard">
+            </div>
         </div>
       </div>
     </div>
 
 
     <!-- Raw data -->
-    <div class="section span8">
+    <div class="row">
+      <div class="span12">
       <h1>Data
         <small>Use your own data. <a class="popup" href="#" class="" rel="popover"
                                    data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
@@ -124,46 +104,19 @@
         </div>
       </h1>
 
-      <div class="row">
-        <div class="span8">
-
-          <div id="data-input">
-            <form action="#" id="input-form">
-              <div><textarea class="span8" rows="10" id="csv-data"></textarea></div>
-            </form>
-          </div>
-
-        </div>
-          </div>
-         <div class="span4">
-          <p>Nothing much here</p>
-         </div>
+      <div id="data-input">
+        <form action="#" id="input-form">
+          <div><textarea class="span8" rows="10" id="csv-data"></textarea></div>
+        </form>
       </div>
     </div>
+    </div>
+  </div>
 
 
     <footer>
     </footer>
 
-  </div> <!-- /container -->
-
-  <div class="well">
-    <div class="container section">
-      <div class="row">
-        <div class="span3">
-          <div>FAQ</div>
-          <div>Troubleshooting</div>
-          <div>Contact us</div>
-          <div>Created by Juice inc, &copy; 2012 </div>
-        </div>
-        <div class="span3">
-          <div>You may also be interested in</div>
-          <div>Chart Chooser</div>
-          <div>Dashboard design services</div>
-          <div>Slice: easy as pie</div>
-        </div>
-      </div>
-    </div>
   </div>
 
 

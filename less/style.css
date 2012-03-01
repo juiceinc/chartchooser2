@@ -6016,6 +6016,10 @@ body {
 /* ===== Primary Styles ========================================================
    Author: Djam
    ========================================================================== */
+body {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
 h1 {
   font-size: 20px;
   font-weight: 200;
@@ -6034,6 +6038,9 @@ h1 small a {
 }
 .dark {
   background-color: #CCC;
+}
+.alert {
+  margin-bottom: 5px;
 }
 #leaderboard {
   font-family: 'Gudea', sans-serif;
@@ -6169,4 +6176,7 @@ select {
 }
 .format-choice {
   font-family: "Courier New", Courier, fixed;
+}
+.visibility-filter {
+  padding-top: 15px;
 }
