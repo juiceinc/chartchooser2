@@ -143,7 +143,7 @@ $(function() {
 
       newFilter.append(closeBtn);
       newFilter.append($('<span>'+ niceColumnName + ': ' + $.trim(input[1]) + '</a>'));
-      newFilter.addClass('alert alert-info span3 datafilter');
+      newFilter.addClass('alert alert-info datafilter');
       newFilter.attr('data-column', columnName);
       newFilter.attr('data-value', $.trim(input[1]));
       newFilter.appendTo($('#applied-filters'));
