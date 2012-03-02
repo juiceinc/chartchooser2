@@ -10,7 +10,7 @@ juice.leaderboard = function(conf){
     key = _conf.key || "name",
     container = _conf.container || "#leaderboard",
     displayTop = true,
-    maxTitleLength = 18,
+    maxTitleLength = 15,
 
     formats = _conf.formats || {
                           SYMBOL_FLOAT          : "d",
@@ -215,31 +215,35 @@ juice.leaderboard = function(conf){
       cells.exit()
           .remove();
 
-      //cell title
-      cells.append('div')
+        //cell title
+        var titles = cells.append('div') //name could be too long, use <abbr> to truncate
           .classed("title", true)
-          .text(function(d,i,j) {
-            var title = d[key];
-            if(title.length > maxTitleLength)
-              title = title.substr(0, maxTitleLength-2);
-
-            return title;
-          });
-
-          //rank
-          cells.append('div')
-              .classed("rank", true)
-              .text(function(d,i,j) {
-                  return rank(i+1);
-          });
-          //value
-          cells.append('div')
-              .classed("value", true)
-              .text(function(d,i,j) {
-                var myColumn = displayedColumns[j];
-                return getFormatter(myColumn.format).format(d[myColumn.name]);
-              })
+          .classed("abbreviated", function(d) { return d[key].length > maxTitleLength;})
+          .text(function(d) { return d[key];})
           ;
+
+          //adjust abbreviated cells
+          cells.select('.title.abbreviated')
+              .text('')  //empty div text
+              .append('abbr') //add abbr tag
+              .text(function(d) { return d[key].substr(0, maxTitleLength-2) + '...' ;}) //abbreviate text
+              .attr('title', function(d) { return d[key];}) //set title as the full text
+              ;
+
+        //rank
+        cells.append('div')
+            .classed("rank", true)
+            .text(function(d,i,j) {
+                return rank(i+1);
+        });
+        //value
+        cells.append('div')
+            .classed("value", true)
+            .text(function(d,i,j) {
+              var myColumn = displayedColumns[j];
+              return getFormatter(myColumn.format).format(d[myColumn.name]);
+            })
+        ;
 
 
       //------------------------Cell Event handlers

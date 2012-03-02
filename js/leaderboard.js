@@ -331,7 +331,6 @@ $(function() {
 
   //-----------------------------------------------Start
   function start(){
-    addHandlers();
 
     leaderboard = juice.leaderboard({
       numberOfDisplayedRows : $('#leaderboard-visible-rows').val() * 1,
@@ -343,7 +342,14 @@ $(function() {
       formats               : microformat
     });
 
-    loadSampleData();
+    if ( $.browser.msie && parseInt($.browser.version, 10) < 9) {
+      $('#ie-user-warning').show();
+    }
+    else{
+      $('#ie-user-warning').hide();
+      addHandlers();
+      loadSampleData();
+    }
   }
 
   start();
