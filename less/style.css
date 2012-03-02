@@ -3081,14 +3081,6 @@ a.thumbnail:hover {
     background-position: 40px 0;
   }
 }
-@keyframes progress-bar-stripes {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 40px 0;
-  }
-}
 .progress {
   overflow: hidden;
   height: 18px;
@@ -3372,14 +3364,14 @@ body {
 body {
   padding-top: 0px;
   padding-bottom: 0px;
-  width: 900px;
-  max-width: 900px;
-  min-width: 900px;
+  width: 890px;
+  max-width: 890px;
+  min-width: 890px;
 }
 .container, .row, #leaderboard-divider {
-  width: 900px;
-  max-width: 900px;
-  min-width: 900px;
+  width: 890px;
+  max-width: 890px;
+  min-width: 890px;
   margin: 0;
 }
 h1 {
@@ -3407,7 +3399,6 @@ h1 {
   margin-bottom: 5px;
 }
 #leaderboard {
-  font-family: 'Gudea', sans-serif;
   font-size: 13px;
   color: #404040;
   position: relative;
@@ -3419,24 +3410,24 @@ h1 {
   position: absolute;
   top: 150px;
   text-align: right;
-  border-top: 1px dashed #d0d2d3;
+  border-top: 1px dashed #a0a2a3;
   width: 100%;
-  font-size: 10px;
-  line-height: 10px;
-  height: 10px;
-  color: #787878;
+  font-size: 11px;
+  line-height: 11px;
+  height: 11px;
+  color: #676a6c;
 }
 .leaderboard-column {
   text-align: center;
   position: absolute;
-  color: #787a7c;
+  color: #676a6c;
   font-variant: small-caps;
   font-weight: bold;
 }
 .leaderboard-cell {
   font-variant: normal;
   padding: 0px;
-  border-left: 1px solid #D0D2D3;
+  border-left: 1px solid #c0c2c3;
   text-align: left;
   cursor: pointer;
   position: relative;
@@ -3480,6 +3471,7 @@ h1 {
 .leaderboard-cell .value {
   font-size: 18px;
   font-weight: bold;
+  color: #333;
   text-align: right;
   position: absolute;
   right: 5px;
