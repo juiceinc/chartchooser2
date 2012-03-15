@@ -1,7 +1,23 @@
 (function( $ ){
 
-  var methods = {
+//settings
+  var settings = {
+      'microformat' : {
+        SYMBOL_PRIMARY_KEY    : "*",
+        SYMBOL_REVERSE_ORDER  : "-",
+        SYMBOL_FLOAT          : "d",
+        SYMBOL_INT            : "i",
+        SYMBOL_CURRENCY       : "$",
+        SYMBOL_PERCENT        : "%",
+        SYMBOL_STRING         : "s",
+        SYMBOL_NAN            : "--",
+        AGGR_AVERAGE        : "avg",
+        AGGR_SUM            : "sum"
+      },
+      numberOfColumnsToProcess: 20
+    };
 
+  var methods = {
 
     init : function( options ) {
       return $(this);
@@ -12,20 +28,19 @@
       if(!data || data.length < 1)
         return [];
 
-      //settings
-      var settings = $.extend({
-          'microformat' : {
-            SYMBOL_PRIMARY_KEY    : "*",
-            SYMBOL_REVERSE_ORDER  : "-",
-            SYMBOL_FLOAT          : "d",
-            SYMBOL_INT            : "i",
-            SYMBOL_CURRENCY       : "$",
-            SYMBOL_PERCENT        : "%",
-            SYMBOL_STRING         : "s",
-            SYMBOL_NAN            : "--"
-          },
-          numberOfColumnsToProcess: 20
-        }, options);
+      //returns a blank column meta data
+      var getBlankColumnMetadata = function (name, format){
+        return {
+          name          : name,
+          label         : name,
+          moreIsBetter  : true,
+          order         : 10000,
+          format        : format,
+          aggregation   : settings.microformat.AGGR_AVERAGE
+        };
+      };
+
+    settings = $.extend(settings, options);
 
 
 
@@ -39,9 +54,9 @@
       //process special columns
       _.each(specialColumns, function(col){
         //parse header microformat, eg. myColumn[-3$]
-        var headerFormat = col.substring(col.lastIndexOf('['), col.lastIndexOf(']'));
+        var headerFormat = col.substring(col.lastIndexOf('[')+1, col.lastIndexOf(']')).toLowerCase();
 
-        var columnFormat = methods.getBlankColumnMetadata(col, settings.microformat.SYMBOL_INT);
+        var columnFormat = getBlankColumnMetadata(col, settings.microformat.SYMBOL_INT);
         columnFormat.label = col.substring(0, col.lastIndexOf('['));
 
         //primary key
@@ -53,12 +68,23 @@
         else
         {
           //order
-          var numbers = headerFormat.match(/\d+/g); //get allsettings.microformat.SYMBOL_INTnumbers, returned as array
+          var numbers = headerFormat.match(/\d+/g); //get all numbers, returned as array
           if(numbers && !isNaN(numbers[0] * 1) ) //the first item is the order #
             columnFormat.order = numbers[0] * 1;
 
           //more is better ?
           columnFormat.moreIsBetter = headerFormat.indexOf('-') == -1;
+
+          //aggregation function
+          if(headerFormat.indexOf(settings.microformat.AGGR_AVERAGE) > -1)
+            columnFormat.aggregation = settings.microformat.AGGR_AVERAGE;
+          else if(headerFormat.indexOf(settings.microformat.AGGR_SUM) > -1)
+            columnFormat.aggregation = settings.microformat.AGGR_SUM;
+
+          //remove from header format the aggregation symbols so they are not coincided
+          //with the data formats
+          headerFormat = headerFormat.replace(settings.microformat.AGGR_AVERAGE, '');
+          headerFormat = headerFormat.replace(settings.microformat.AGGR_SUM, '');
 
           //money
           if(headerFormat.indexOf(settings.microformat.SYMBOL_CURRENCY) > -1)
@@ -86,7 +112,7 @@
       if(!hasPrimaryKey){
         var primaryKeyColumnName = methods.findSpecificColumn(unprocessedColumns, data, methods.nonNumericChecker);
         if(primaryKeyColumnName){
-          var columnMetaData = methods.getBlankColumnMetadata(primaryKeyColumnName, settings.microformat.SYMBOL_STRING);
+          var columnMetaData = getBlankColumnMetadata(primaryKeyColumnName, settings.microformat.SYMBOL_STRING);
           columnMetaData.moreIsBetter = false;
           columnMetaData.order = -1;
 
@@ -106,7 +132,7 @@
         var numericColumnName = methods.findSpecificColumn(unprocessedColumns, data, methods.numericChecker);
         if(numericColumnName)
         {
-          var metadata = methods.getBlankColumnMetadata(numericColumnName, settings.microformat.SYMBOL_INT);
+          var metadata = getBlankColumnMetadata(numericColumnName, settings.microformat.SYMBOL_INT);
           metadata.order += i++;
           columns.push(metadata);
           unprocessedColumns = _.difference(unprocessedColumns, [numericColumnName]);
@@ -120,17 +146,6 @@
       //sort by order
       columns = _.sortBy(columns, function(column){ return column.order; });
       return columns;
-    },
-
-    //returns a blank column meta data
-    getBlankColumnMetadata: function(name, format) {
-      return {
-        name          : name,
-        label         : name,
-        moreIsBetter  : true,
-        order         : 10000,
-        format        : format
-      };
     },
 
     //numeric value checker
@@ -172,7 +187,7 @@
         var groupedRow;
         _.each(rows, function(row) {
           keyValue = row[key];
-          if(!lookup[keyValue]) {
+          if(lookup[keyValue] === undefined) {
             lookup[keyValue] = {};
             lookup[keyValue][key] = keyValue;
           }
@@ -182,26 +197,30 @@
           //group by each column in this row
           _.each(columns, function(column){
 
-            if(!groupedRow[column.name]) {
+            if(groupedRow[column.name] === undefined) {
               groupedRow[column.name] = 0;
-              groupedRow[column.name + '_cnt'] = 0;
+              groupedRow[column.name + '_items'] = [];
             }
 
             //summarize the value
-            if (!isNaN(row[column.name])) {
-              groupedRow[column.name] += row[column.name] * 1;
-              groupedRow[column.name + '_cnt']++;
-            }
+            if (!isNaN(row[column.name]))
+              groupedRow[column.name + '_items'].push(row[column.name] * 1);
           });
         });
 
         groupedRows = [];
         _.each(lookup, function(obj) {
 
-          //update averages
+          //update aggregation values
           _.each(columns, function(column){
-            if(obj[column.name+'_cnt'] > 0 )
-              obj[column.name] = obj[column.name] / obj[column.name+'_cnt'];});
+            if(column.aggregation === settings.microformat.AGGR_AVERAGE)
+              obj[column.name] = methods.average(obj[column.name+'_items']);
+            else if(column.aggregation === settings.microformat.AGGR_SUM)
+              obj[column.name] = methods.sum(obj[column.name+'_items']);
+
+            //remove items stored for aggregation in this group
+            //obj[column.name+'_items'] = undefined;
+          });
           groupedRows.push(obj); });
       }
 
@@ -209,16 +228,17 @@
     },
 
     unique : function (rows, key) {
-      return _.uniq(_.map(rows, function (row){ return row[key]; }));
+      return _.uniq(_.pluck(rows, key));
     },
 
-    sum : function (rows, key) {
-      return _.reduce(rows, function(memo, row) { return memo + row[key]*1; }, 0);
+    sum : function (values) {
+      return _.reduce(values, function(memo, num) { return memo + num; }, 0);
     },
 
-    average : function (rows, key) {
-      return (rows.length > 0) ? methods.sum (rows, key) / rows.length : 0;
+    average : function (values) {
+      return (values.length > 0) ? methods.sum (values) / values.length : 0;
     }
+
 
   };
 

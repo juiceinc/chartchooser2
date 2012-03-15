@@ -40,8 +40,6 @@ $(function() {
     });
   }
 
-
-
   //input text with raw data has been updated
   function updateData(){
     var csv = $('#csv-data').val();
