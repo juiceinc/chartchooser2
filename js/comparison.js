@@ -12,8 +12,8 @@ $(function() {
       key = 'name', //key column
       displayedColumns = [], //columns to be displayed
       summaryLeft = {},
-      summaryRight = {}
-      du = $(this).datautils();
+      summaryRight = {},
+      du = $(this).datautils()
       ;
   //----------------------------------------------- handlers, util functions
 
@@ -48,6 +48,9 @@ $(function() {
     rawData = d3.csv.parse(csv);
     rawData = rawData.slice(0,MAX_ROWS_CSV);
 
+    var oldKey = key;
+    var oldColumns = displayedColumns;
+
     //find key and metric columns
     var columns = du.datautils('findColumns', rawData);
     if(columns.length > 1){
@@ -59,10 +62,12 @@ $(function() {
     }
 
     //group rawData by key
-    data = du.datautils('groupby', rawData, key, displayedColumns);
+    if(oldKey !== key)
+      data = du.datautils('groupby', rawData, key, displayedColumns);
 
     //update key dropdown selectors
-    updateKeySelectors();
+    if(oldKey !== key)
+      updateKeySelectors();
 
     summaryLeft = getSummaryObject($("#left-names").val());
     summaryRight = getSummaryObject($("#right-names").val());
@@ -142,11 +147,21 @@ $(function() {
   //refreshes the chart
   function refreshChart(comparisons){
 
-    var temp = '<div class="row-fluid show-grid comprarison-row">' +
-      '<div class="span2 metric-title left"> {{metricName}} </div>' +
-      '<div class="span3 {{leftClassName}} center"> {{leftValue}} </div>' +
-      '<div class="span4 {{diffClassName}} center"> {{diff}} </div>' +
-      '<div class="span3 {{rightClassName}} center"> {{rightValue}} </div>' +
+    var temp =
+    '<div class="row comprarison-row">' +
+
+      '<div class="span3 comparison-cell {{leftClassName}} center">' +
+        '<div class="title"> {{metricName}} </div>' +
+        '<div class="value"> {{leftValue}} </div>' +
+      '</div>' +
+
+      '<div class="span4 value {{diffClassName}} center"> {{diff}} </div>' +
+
+      '<div class="span3 comparison-cell {{rightClassName}} center">' +
+        '<div class="title"> {{metricName}} </div>' +
+        '<div class="value"> {{rightValue}} </div>' +
+      '</div>' +
+
     '</div>';
 
     var template = _.template(temp);

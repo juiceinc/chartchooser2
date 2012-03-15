@@ -3388,12 +3388,15 @@ h1 small a {
 .dark {
   background-color: #CCC;
 }
-.comprarison-row {
-  font-size: 20px;
+#chart {
+  font-family: 'Gudea', sans-serif;
+  font-size: 13px;
+  color: #404040;
 }
 .comprarison-row div {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  /*padding-top: 5px;
+        padding-bottom: 5px;*/
+
 }
 .comprarison-row .loser, .comprarison-row .negative {
   color: red;
@@ -3409,6 +3412,59 @@ h1 small a {
 }
 .comprarison-row .center {
   text-align: center;
+}
+.comprarison-row .value {
+  font-size: 18px;
+  font-weight: bold;
+}
+.comparison-cell {
+  font-variant: normal;
+  padding: 0px;
+  /*border-left: 1px solid #D0D2D3;*/
+
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  height: 25px;
+  background-color: #FFF;
+}
+.comparison-cell div {
+  /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
+
+  pointer-events: none;
+}
+.comparison-cell .rank {
+  font-weight: normal;
+  display: none;
+  position: absolute;
+  left: 7px;
+  top: 0px;
+  font-size: 10px;
+  line-height: 10px;
+  height: 10px;
+  color: #787878;
+  padding: 1px;
+}
+.comparison-cell .title {
+  position: absolute;
+  left: 7px;
+  bottom: 2px;
+  font-size: 12px;
+  line-height: 12px;
+  color: #666;
+  font-weight: 200;
+}
+.comparison-cell .value {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  position: absolute;
+  right: 5px;
+  bottom: 2px;
+}
+.comparison-cell:hover {
+  background-color: #f2f3f4;
+  cursor: pointer;
 }
 #leaderboard {
   font-family: 'Gudea', sans-serif;
