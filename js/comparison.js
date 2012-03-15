@@ -13,6 +13,7 @@ $(function() {
       displayedColumns = [], //columns to be displayed
       summaryLeft = {},
       summaryRight = {}
+      du = $(this).datautils();
       ;
   //----------------------------------------------- handlers, util functions
 
@@ -48,7 +49,7 @@ $(function() {
     rawData = rawData.slice(0,MAX_ROWS_CSV);
 
     //find key and metric columns
-    var columns = $(this).datautils('findColumns', rawData);
+    var columns = du.datautils('findColumns', rawData);
     if(columns.length > 1){
       //first column is a key column, all others are displayable metric columns
       displayedColumns = columns.slice(1);
@@ -58,7 +59,7 @@ $(function() {
     }
 
     //group rawData by key
-    data = $(this).datautils('groupby', rawData, key, displayedColumns);
+    data = du.datautils('groupby', rawData, key, displayedColumns);
 
     //update key dropdown selectors
     updateKeySelectors();
@@ -83,7 +84,7 @@ $(function() {
 
   //updates the left and right name selectors
   function updateKeySelectors() {
-    var uniqueKeyValues = $(this).datautils('unique', data, key);
+    var uniqueKeyValues = du.datautils('unique', data, key);
     uniqueKeyValues.sort();
     var html = '';
 

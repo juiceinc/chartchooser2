@@ -20,6 +20,7 @@
   var methods = {
 
     init : function( options ) {
+      settings = $.extend(settings, options);
       return $(this);
     },
 
@@ -27,6 +28,8 @@
 
       if(!data || data.length < 1)
         return [];
+
+      settings = $.extend(settings, options);
 
       //returns a blank column meta data
       var getBlankColumnMetadata = function (name, format){
@@ -39,10 +42,6 @@
           aggregation   : settings.microformat.AGGR_AVERAGE
         };
       };
-
-    settings = $.extend(settings, options);
-
-
 
       var columns = []; //array of {name: "abc[1-]", label:"abc",  }
 
