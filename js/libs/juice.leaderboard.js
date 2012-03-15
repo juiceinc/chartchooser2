@@ -29,7 +29,9 @@ juice.leaderboard = function(conf){
   ;
 
   function NaNOrFormat(d, f){
-    return isNaN(d) ? formats.SYMBOL_NAN : f(d);
+    if( isNaN(d) )
+      return formats.SYMBOL_NAN;
+    return (typeof(f) === 'function') ? f(d) : f;
   }
 
   var getFormatter = function (format){

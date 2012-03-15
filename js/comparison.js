@@ -127,6 +127,11 @@ $(function() {
         obj.rightClassName = 'tied' ;
         obj.diffClassName = 'tied' ;
       }
+      //format values
+      obj.leftValue = du.datautils('format', obj.leftValue, column.format, d3.format);
+      obj.rightValue = du.datautils('format', obj.rightValue, column.format, d3.format);
+      obj.diff = du.datautils('format', obj.diff, column.format, d3.format);
+
       comparisons.push( obj );
     });
 

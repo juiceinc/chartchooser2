@@ -236,8 +236,23 @@
 
     average : function (values) {
       return (values.length > 0) ? methods.sum (values) / values.length : 0;
-    }
+    },
 
+    NaNOrFormat : function (value, fx){
+      if(isNaN(value))
+        return settings.microformat.SYMBOL_NAN;
+      return (typeof(fx) === 'function') ? fx(value) : fx;
+    },
+
+    format : function (value, fmt, formatFx){
+      switch (fmt) {
+        case settings.microformat.SYMBOL_INT      : return methods.NaNOrFormat(value, formatFx(",.0f"));
+        case settings.microformat.SYMBOL_CURRENCY : return methods.NaNOrFormat(value, "$" + formatFx("0,.2f")(value));
+        case settings.microformat.SYMBOL_FLOAT    : return methods.NaNOrFormat(value, formatFx("0,.2f"));
+        case settings.microformat.SYMBOL_PERCENT  : return methods.NaNOrFormat(value, formatFx('%'));
+      }
+      return value;
+    }
 
   };
 
