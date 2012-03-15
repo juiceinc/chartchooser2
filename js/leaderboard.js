@@ -5,7 +5,7 @@ $(function() {
   //Styling and appearance
   var HOVER_DURATION = 1000;
   var CELL_WIDTH = 150;
-  var NUM_COLUMNS = 5;
+  var NUM_COLUMNS = 4;
   var DISPLAYED_ROWS = 5; //TODO: make dynamic
 
   //header microformat symbols
