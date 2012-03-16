@@ -27,91 +27,103 @@ h1 small a{
 
 // --------- COMPARISON
 //-------------------------------------------------
-
-#chart {
-    font-family: 'Gudea', sans-serif;
-    font-size: 13px;
-    color: #404040;
-}
-
-.comprarison-row {
-    div {
-        /*padding-top: 5px;
-        padding-bottom: 5px;*/
-    }
-    .loser, .negative {
-        color: red;
-    }
-    .winner, .positive {
-        color: green;
-    }
-    .left {
-        text-align: left;
-    }
-    .right {
-        text-align: right;
-    }
-    .center {
-        text-align: center;
-    }
-    .value {
-        font-size: 18px;
-        font-weight: bold;
-    }
-}
-
-.comparison-cell {
-    font-variant: normal;
-    padding: 0px;
-    /*border-left: 1px solid #D0D2D3;*/
-    text-align: left;
-    cursor: pointer;
+.chart-wrapper {
     position: relative;
-    height: 25px;
-    background-color: #FFF;
 
-
-    div{
-        /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
-        pointer-events: none;
+    .comparison-chart {
+        font-family: 'Gudea', sans-serif;
+        font-size: 13px;
+        color: #404040;
+        min-height: 350px;
     }
 
-    .rank {
-        font-weight: normal;
-        display: none;
+    .match-up-overlay{
         position: absolute;
-        left: 7px;
         top: 0px;
-        font-size: 10px;
-        line-height: 10px;
-        height: 10px;
-        color: #787878;
-        padding: 1px;
+        display: none;
     }
 
-    .title {
-        position: absolute;
-        left: 7px;
-        bottom: 2px;
-        font-size: 12px;
-        line-height: 12px;
-        color: #666;
-        font-weight: 200;
+    .comprarison-row {
+        div {
+            /*padding-top: 5px;
+            padding-bottom: 5px;*/
+        }
+        .loser, .negative {
+            color: red;
+        }
+        .winner, .positive {
+            color: green;
+        }
+        .left {
+            text-align: left;
+        }
+        .right {
+            text-align: right;
+        }
+        .center {
+            text-align: center;
+        }
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+        }
     }
 
-    .value {
-        font-size: 18px;
-        font-weight: bold;
-        text-align: right;
-        position: absolute;
-        right: 5px;
-        bottom: 2px;
+    .comparison-cell {
+        font-variant: normal;
+        padding: 0px;
+        /*border-left: 1px solid #D0D2D3;*/
+        text-align: left;
+        cursor: pointer;
+        position: relative;
+        height: 25px;
+        background-color: #FFF;
+
+
+        div{
+            /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
+            pointer-events: none;
+        }
+
+        .rank {
+            font-weight: normal;
+            display: none;
+            position: absolute;
+            left: 7px;
+            top: 0px;
+            font-size: 10px;
+            line-height: 10px;
+            height: 10px;
+            color: #787878;
+            padding: 1px;
+        }
+
+        .title {
+            position: absolute;
+            left: 7px;
+            bottom: 2px;
+            font-size: 12px;
+            line-height: 12px;
+            color: #666;
+            font-weight: 200;
+        }
+
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            position: absolute;
+            right: 5px;
+            bottom: 2px;
+        }
+    }
+    .comparison-cell.hovered {
+        background-color: #f2f3f4;
+        cursor: pointer;
     }
 }
-.comparison-cell:hover {
-    background-color: #f2f3f4;
-    cursor: pointer;
-}
+
+
 
 // --------- LEADERBOARD
 //-------------------------------------------------

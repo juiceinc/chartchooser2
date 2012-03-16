@@ -2,9 +2,9 @@
 //when dom is ready
 $(function() {
 
-  var SAMPLE_DATA_URL = 'data/nfl_combine.csv';
-  var NUM_COLUMNS = 2; //minimum of metrics to display
-  var MAX_ROWS_CSV = 500; //max number of rows to process from text input
+  var SAMPLE_DATA_URL = 'data/nfl_combine.csv',
+      NUM_COLUMNS = 2, //minimum of metrics to display
+      MAX_ROWS_CSV = 500; //max number of rows to process from text input
 
   var
       rawData = [], //JSON representation of what's in the input box
@@ -13,7 +13,8 @@ $(function() {
       displayedColumns = [], //columns to be displayed
       summaryLeft = {},
       summaryRight = {},
-      du = $(this).datautils()
+      du = $(this).datautils(),
+      matchUpChart //a d3 chart that matches the metric values on either sides
       ;
   //----------------------------------------------- handlers, util functions
 
@@ -39,6 +40,13 @@ $(function() {
       summaryRight = getSummaryObject($("#right-names").val());
       updateChart();
     });
+
+    $('#chart').on('mouseenter',function(){
+       $('#chart-match-up').fadeIn(500);
+     });
+    $('#chart').on('mouseleave',function(){
+       $('#chart-match-up').fadeOut(500);
+     });
   }
 
   //input text with raw data has been updated
@@ -79,6 +87,7 @@ $(function() {
   function updateChart() {
     var comparisons = createComparisons();
     refreshChart(comparisons);
+
   }
 
   function getSummaryObject(name) {
@@ -111,7 +120,8 @@ $(function() {
     _.each(displayedColumns, function(column){
 
       var obj = {
-        'metricName' : column.label,
+        'metricLabel' : column.label,
+        'metricName' : column.name,
         'leftValue' : summaryLeft[column.name],
         'rightValue' : summaryRight[column.name]
       };
@@ -147,18 +157,21 @@ $(function() {
   //refreshes the chart
   function refreshChart(comparisons){
 
+    //remove all handlers
+    $('.comparison-cell').off();
+
     var temp =
     '<div class="row comprarison-row">' +
 
-      '<div class="span3 comparison-cell {{leftClassName}} center">' +
-        '<div class="title"> {{metricName}} </div>' +
+      '<div class="span3 comparison-cell {{leftClassName}} center" data-metric="{{metricName}}">' +
+        '<div class="title"> {{metricLabel}} </div>' +
         '<div class="value"> {{leftValue}} </div>' +
       '</div>' +
 
       '<div class="span4 value {{diffClassName}} center"> {{diff}} </div>' +
 
-      '<div class="span3 comparison-cell {{rightClassName}} center">' +
-        '<div class="title"> {{metricName}} </div>' +
+      '<div class="span3 comparison-cell {{rightClassName}} center" data-metric="{{metricName}}">' +
+        '<div class="title"> {{metricLabel}} </div>' +
         '<div class="value"> {{rightValue}} </div>' +
       '</div>' +
 
@@ -172,6 +185,18 @@ $(function() {
       html +=  template(comparison);
     });
     $('#chart').html(html);
+
+    //add mouse over/out handlers to add hovered effect
+    $('.comparison-cell').on('mouseenter',function(){
+      var metricName = $(this).data('metric');
+      $('.comparison-cell[data-metric="'+metricName+'"]').addClass('hovered');
+
+      matchUpChart.update(data, metricName, summaryLeft, summaryRight);
+    });
+    $('.comparison-cell').on('mouseleave',function(){
+      var metricName = $(this).data('metric');
+      $('.comparison-cell[data-metric="'+metricName+'"]').removeClass('hovered');
+    });
   }
 
   //----------------------------------------------- Data
@@ -188,11 +213,17 @@ $(function() {
 
   //-----------------------------------------------Start
   function start(){
+
+    //chosen plugin
     $(".chzn-select").chosen();
 
     _.templateSettings = {
       interpolate : /\{\{(.+?)\}\}/g
     };
+
+    matchUpChart = juice.comparison({
+      container             : "#chart-match-up"
+    });
 
     addHandlers();
     loadSampleData();

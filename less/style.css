@@ -3388,36 +3388,45 @@ h1 small a {
 .dark {
   background-color: #CCC;
 }
-#chart {
+.chart-wrapper {
+  position: relative;
+}
+.chart-wrapper .comparison-chart {
   font-family: 'Gudea', sans-serif;
   font-size: 13px;
   color: #404040;
+  min-height: 350px;
 }
-.comprarison-row div {
+.chart-wrapper .match-up-overlay {
+  position: absolute;
+  top: 0px;
+  display: none;
+}
+.chart-wrapper .comprarison-row div {
   /*padding-top: 5px;
-        padding-bottom: 5px;*/
+            padding-bottom: 5px;*/
 
 }
-.comprarison-row .loser, .comprarison-row .negative {
+.chart-wrapper .comprarison-row .loser, .chart-wrapper .comprarison-row .negative {
   color: red;
 }
-.comprarison-row .winner, .comprarison-row .positive {
+.chart-wrapper .comprarison-row .winner, .chart-wrapper .comprarison-row .positive {
   color: green;
 }
-.comprarison-row .left {
+.chart-wrapper .comprarison-row .left {
   text-align: left;
 }
-.comprarison-row .right {
+.chart-wrapper .comprarison-row .right {
   text-align: right;
 }
-.comprarison-row .center {
+.chart-wrapper .comprarison-row .center {
   text-align: center;
 }
-.comprarison-row .value {
+.chart-wrapper .comprarison-row .value {
   font-size: 18px;
   font-weight: bold;
 }
-.comparison-cell {
+.chart-wrapper .comparison-cell {
   font-variant: normal;
   padding: 0px;
   /*border-left: 1px solid #D0D2D3;*/
@@ -3428,12 +3437,12 @@ h1 small a {
   height: 25px;
   background-color: #FFF;
 }
-.comparison-cell div {
+.chart-wrapper .comparison-cell div {
   /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
 
   pointer-events: none;
 }
-.comparison-cell .rank {
+.chart-wrapper .comparison-cell .rank {
   font-weight: normal;
   display: none;
   position: absolute;
@@ -3445,7 +3454,7 @@ h1 small a {
   color: #787878;
   padding: 1px;
 }
-.comparison-cell .title {
+.chart-wrapper .comparison-cell .title {
   position: absolute;
   left: 7px;
   bottom: 2px;
@@ -3454,7 +3463,7 @@ h1 small a {
   color: #666;
   font-weight: 200;
 }
-.comparison-cell .value {
+.chart-wrapper .comparison-cell .value {
   font-size: 18px;
   font-weight: bold;
   text-align: right;
@@ -3462,7 +3471,7 @@ h1 small a {
   right: 5px;
   bottom: 2px;
 }
-.comparison-cell:hover {
+.chart-wrapper .comparison-cell.hovered {
   background-color: #f2f3f4;
   cursor: pointer;
 }
