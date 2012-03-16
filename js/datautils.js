@@ -10,6 +10,8 @@
         SYMBOL_CURRENCY       : "$",
         SYMBOL_PERCENT        : "%",
         SYMBOL_STRING         : "s",
+        SYMBOL_THOUSANDS      : "k",
+        SYMBOL_MILLIONS       : "m",
         SYMBOL_NAN            : "--",
         AGGR_AVERAGE        : "avg",
         AGGR_SUM            : "sum"
@@ -202,7 +204,7 @@
             }
 
             //summarize the value
-            if (!isNaN(row[column.name]))
+            if (row[column.name] !== '' && !isNaN(row[column.name]))
               groupedRow[column.name + '_items'].push(row[column.name] * 1);
           });
         });
@@ -221,6 +223,17 @@
             //obj[column.name+'_items'] = undefined;
           });
           groupedRows.push(obj); });
+      }
+      else {
+        //just convert strings to numbers
+        _.each(rows, function(row){
+          _.each(columns, function(column){
+                if (row[column.name] !== '' && !isNaN(row[column.name]))
+                  row[column.name] = row[column.name] *1;
+                else
+                  row[column.name] = NaN;
+              });
+            });
       }
 
       return groupedRows;
