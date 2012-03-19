@@ -219,7 +219,9 @@
 
           //update aggregation values
           _.each(columns, function(column){
-            if(column.aggregation === settings.microformat.AGGR_AVERAGE)
+            if(obj[column.name+'_items'].length === 0)
+              obj[column.name] = undefined;
+            else if(column.aggregation === settings.microformat.AGGR_AVERAGE)
               obj[column.name] = methods.average(obj[column.name+'_items']);
             else if(column.aggregation === settings.microformat.AGGR_SUM)
               obj[column.name] = methods.sum(obj[column.name+'_items']);
