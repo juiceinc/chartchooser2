@@ -183,6 +183,7 @@
       var groupedRows = rows;
       var lookup = {};
 
+      //key is not unique in each row, needs to be aggregated
       if(uniqueKeys.length !== rows.length) {
         var keyValue = '';
         var groupedRow;
@@ -220,13 +221,14 @@
               obj[column.name] = methods.sum(obj[column.name+'_items']);
 
             //remove items stored for aggregation in this group
-            //obj[column.name+'_items'] = undefined;
+            obj[column.name+'_items'] = undefined;
           });
           groupedRows.push(obj); });
       }
+      //no need to aggregate
       else {
         //just convert strings to numbers
-        _.each(rows, function(row){
+        _.each(groupedRows, function(row){
           _.each(columns, function(column){
                 if (row[column.name] !== '' && !isNaN(row[column.name]))
                   row[column.name] = row[column.name] *1;
@@ -257,12 +259,13 @@
       return (typeof(fx) === 'function') ? fx(value) : fx;
     },
 
-    format : function (value, fmt, formatFx){
+    format : function (value, fmt, formatFx, enforceSign) {
+      var sign = ( enforceSign ) ? '+' : '';
       switch (fmt) {
-        case settings.microformat.SYMBOL_INT      : return methods.NaNOrFormat(value, formatFx(",.0f"));
-        case settings.microformat.SYMBOL_CURRENCY : return methods.NaNOrFormat(value, "$" + formatFx("0,.2f")(value));
-        case settings.microformat.SYMBOL_FLOAT    : return methods.NaNOrFormat(value, formatFx("0,.2f"));
-        case settings.microformat.SYMBOL_PERCENT  : return methods.NaNOrFormat(value, formatFx('%'));
+        case settings.microformat.SYMBOL_INT      : return methods.NaNOrFormat(value, formatFx(sign + ",.0f"));
+        case settings.microformat.SYMBOL_CURRENCY : return methods.NaNOrFormat(value, "$" + formatFx(sign + "0,.2f")(value));
+        case settings.microformat.SYMBOL_FLOAT    : return methods.NaNOrFormat(value, formatFx(sign + "0,.2f"));
+        case settings.microformat.SYMBOL_PERCENT  : return methods.NaNOrFormat(value, formatFx(sign + '%'));
       }
       return value;
     }

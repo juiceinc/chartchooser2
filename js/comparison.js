@@ -41,6 +41,7 @@ $(function() {
       updateChart();
     });
 
+    // show/hide match-up
     $('#chart').on('mouseenter',function(){
        $('#chart-match-up').fadeIn(500);
      });
@@ -69,9 +70,8 @@ $(function() {
       key = columns[0].name;
     }
 
-    //group rawData by key
-    if(oldKey !== key)
-      data = du.datautils('groupby', rawData, key, displayedColumns);
+    //group rawData by the key
+    data = du.datautils('groupby', rawData, key, displayedColumns);
 
     //update key dropdown selectors
     if(oldKey !== key)
@@ -83,6 +83,7 @@ $(function() {
     updateChart();
 
   }
+
 
   function updateChart() {
     var comparisons = createComparisons();
@@ -127,12 +128,14 @@ $(function() {
       };
       obj.diff = obj.leftValue - obj.rightValue;
 
-      if(obj.diff > 0) {
+      var relativeDiff = (column.moreIsBetter) ? obj.diff : -1 * obj.diff;
+
+      if(relativeDiff > 0) {
         obj.leftClassName = 'winner' ;
         obj.rightClassName = 'loser' ;
         obj.diffClassName = 'positive' ;
       }
-      else if(obj.diff < 0) {
+      else if(relativeDiff < 0) {
         obj.leftClassName = 'loser' ;
         obj.rightClassName = 'winner' ;
         obj.diffClassName = 'negative' ;
@@ -145,7 +148,7 @@ $(function() {
       //format values
       obj.leftValue = du.datautils('format', obj.leftValue, column.format, d3.format);
       obj.rightValue = du.datautils('format', obj.rightValue, column.format, d3.format);
-      obj.diff = du.datautils('format', obj.diff, column.format, d3.format);
+      obj.diff = du.datautils('format', obj.diff, column.format, d3.format, true);
 
       comparisons.push( obj );
     });
@@ -191,13 +194,19 @@ $(function() {
       var metricName = $(this).data('metric');
       $('.comparison-cell[data-metric="'+metricName+'"]').addClass('hovered');
 
-      matchUpChart.update(data, metricName, summaryLeft, summaryRight);
+      //find metric column
+      var metricColumn = _.find(displayedColumns, function(column){return column.name === metricName; });
+
+      //update chart
+      matchUpChart.update(data, metricColumn, summaryLeft, summaryRight);
     });
+
     $('.comparison-cell').on('mouseleave',function(){
       var metricName = $(this).data('metric');
       $('.comparison-cell[data-metric="'+metricName+'"]').removeClass('hovered');
     });
   }
+
 
   //----------------------------------------------- Data
   function loadSampleData(){

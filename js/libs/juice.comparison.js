@@ -9,17 +9,31 @@ juice.comparison = function(conf){
       margin = {'top': 30, 'right': 10, 'bottom': 10, 'left': 50},
       boundaryLineColor = '#333',
       connectorLineColor = '#999',
-      comparison = {}
+      comparison = {},
+      microformat = {
+        SYMBOL_FLOAT          : "d",
+        SYMBOL_INT            : "i",
+        SYMBOL_CURRENCY       : "$",
+        SYMBOL_PERCENT        : "%",
+        SYMBOL_NAN            : "--"
+      }
       ;
   var INVALID_VALUE_OPACITY = 0;
   var chart = comparisonChart();
 
 
-  comparison.update = function(data, metric, summaryLeft, summaryRight){
+  comparison.update = function(data, metricColumn, summaryLeft, summaryRight, formatFx){
 
+    var metric = metricColumn.name;
 
-    var max = d3.max(data, function(d) { return d[metric] ; });
-    var min = d3.min(data, function(d) { return d[metric] ; });
+    var minMax = [
+      d3.min(data, function(d) { return d[metric] ; }),
+      d3.max(data, function(d) { return d[metric] ; })
+      ];
+
+    //min and max takes into account if more is better
+    var min = ( metricColumn.moreIsBetter ) ? minMax[0] : minMax[1];
+    var max = ( metricColumn.moreIsBetter ) ? minMax[1] : minMax[0];
 
     if(max === undefined || max === '')
       max = 0;
@@ -30,26 +44,31 @@ juice.comparison = function(conf){
       .domain([min, max])
       .range([height-margin.top - margin.bottom, margin.top]);
 
-    var conditionalY = function (d) { return isNaN(d) ? y(min) : y(d); };
-    var value = function (d) { return isNaN(d) ? '' : d; };
-    var alpha = function (d) { return isNaN(d) ? INVALID_VALUE_OPACITY : 1; };
-    var leftData = summaryLeft[metric];
-    var rightData = summaryRight[metric];
+    var metricFormat = metricColumn.format;
+
+    //maps any given value to Y axis, will return minimum of Y if value is invalid
+    var conditionalY = function (d) { return isNaN(d.value) ? y(min) : y(d.value); };
+    var formatValue = function (d) { return NaNOrFormat(d.value, d.format); };
+    var alpha = function (d) { return isNaN(d.value) ? INVALID_VALUE_OPACITY : 1; };
+    var leftData = {'value': summaryLeft[metric], 'format':  metricFormat};
+    var rightData = {'value': summaryRight[metric], 'format': metricFormat};
 
 
+    var formattedMax = NaNOrFormat(max, metricFormat);
+    var formattedMin = NaNOrFormat(min, metricFormat);
     //update min/max labels
-    d3.selectAll(".axis-top").data([max,max]).text(String);
-    d3.selectAll(".axis-bottom").data([min, min]).text(String);
+    d3.selectAll(".axis-top").data([formattedMax, formattedMax]).text(String);
+    d3.selectAll(".axis-bottom").data([formattedMin, formattedMin]).text(String);
 
     //update left/right value labels and their positions
     d3.selectAll(".left-value").data([leftData])
     .transition()
       .attr('y',conditionalY)
-      .text(value);
+      .text(formatValue);
     d3.selectAll(".right-value").data([rightData])
       .transition()
       .attr('y',conditionalY)
-      .text(value);
+      .text(formatValue);
 
     //update left/right value indicators (circles)
     d3.selectAll(".left-value-indicator").data([leftData])
@@ -67,16 +86,7 @@ juice.comparison = function(conf){
 
     //draw a connector line from left to right
     var connectorLine = chart.selectAll(".connector")
-          .data([{'from' : leftData, 'to': rightData}]);
-
-    function updateConnector(selection){
-      selection
-        .transition()
-          .attr('y1', function(d){ return conditionalY(d.from);})
-          .attr('y2', function(d){ return conditionalY(d.to);})
-          .attr('stroke-opacity', function (d, i) { return isNaN(d.to) || isNaN(d.from) ? INVALID_VALUE_OPACITY : 1; })
-          ;
-    }
+          .data([{'from' : leftData.value, 'to': rightData.value, 'format': metricFormat}]);
 
       connectorLine
         .enter().append('line')
@@ -89,6 +99,30 @@ juice.comparison = function(conf){
 
       connectorLine.call(updateConnector);
       connectorLine.exit().remove();
+
+
+    function updateConnector(selection){
+      selection
+        .transition()
+          .attr('y1', function(d){return conditionalY({'value': d.from});})
+          .attr('y2', function(d){ return conditionalY({'value': d.to});})
+          .attr('stroke-opacity', function (d, i) { return isNaN(d.to) || isNaN(d.from) ? INVALID_VALUE_OPACITY : 1; })
+          ;
+    }
+
+    function NaNOrFormat (value, fmt){
+      return (isNaN(value)) ? '' : format(value, fmt);
+    }
+    function format (value, fmt) {
+      switch (fmt) {
+        case microformat.SYMBOL_INT      : return d3.format(",.0f")(value);
+        case microformat.SYMBOL_CURRENCY : return "$" + d3.format( "0,.2f")(value);
+        case microformat.SYMBOL_FLOAT    : return d3.format("0,.2f")(value);
+        case microformat.SYMBOL_PERCENT  : return d3.format('%')(value);
+      }
+      return value;
+    }
+
   };
 
   function comparisonChart() {
@@ -158,7 +192,7 @@ juice.comparison = function(conf){
         .attr('y', function (d, i) {return d.y; } )
         .attr('dy', 5 )
         .attr("text-anchor", function (d, i) { return d.align; })
-        .text(function (d, i) { return d.value; })
+        //.text(function (d, i) { return d.value; })
         ;
 
     return chart;
