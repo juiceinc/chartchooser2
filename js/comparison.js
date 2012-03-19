@@ -32,6 +32,11 @@ $(function() {
       }
     });
 
+    $('#clear-data-btn').click(function () {
+      $('#clear-data-btn').removeClass('btn-info');
+      loadSampleData();
+    });
+
     //left name change
     $('#left-names').change(function(){
       summaryLeft = getSummaryObject($("#left-names").val());
