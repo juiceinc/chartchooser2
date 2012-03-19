@@ -55,18 +55,22 @@ $(function() {
 
     //absolute/percentage difference handler
     $('#absolute').click(function(){
-      $('#percentage').removeClass('btn-primary');
-      $('#absolute').addClass('btn-primary');
+      $('#percentage').removeClass('selected-diff-mode');
+      $('#absolute').addClass('selected-diff-mode');
 
       diffMode = DIFF_MODE_ABSOLUTE;
-      updateData();
+      updateChart();
+
+      return false;
      });
     $('#percentage').click(function(){
-      $('#absolute').removeClass('btn-primary');
-      $('#percentage').addClass('btn-primary');
+      $('#absolute').removeClass('selected-diff-mode');
+      $('#percentage').addClass('selected-diff-mode');
 
       diffMode = DIFF_MODE_PERCENTAGE;
-      updateData();
+      updateChart();
+
+      return false;
      });
   }
 
@@ -129,9 +133,12 @@ $(function() {
     });
 
     $('#left-names').html(html);
-    $("#left-names").trigger("liszt:updated");
-
     $('#right-names').html(html);
+
+    if(uniqueKeyValues.length > 1)
+      $('#right-names').val(uniqueKeyValues[1]);
+
+    $("#left-names").trigger("liszt:updated");
     $("#right-names").trigger("liszt:updated");
   }
 

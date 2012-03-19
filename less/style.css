@@ -3394,6 +3394,9 @@ h1 small a {
   border-bottom: 1px solid #CCC;
   height: 40px;
 }
+.header-row .column-header .selected-diff-mode {
+  background-color: #DEDEDE;
+}
 .header-row .column-header .select-container {
   text-align: justify;
   position: absolute;
