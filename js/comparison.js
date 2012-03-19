@@ -169,7 +169,7 @@ $(function() {
       }
       else if (diffMode === DIFF_MODE_PERCENTAGE) {
         diffFormat = '%';
-        obj.diff = obj.leftValue/obj.rightValue - 1;
+        obj.diff = ( obj.rightValue === 0 ) ? 1 : obj.leftValue/obj.rightValue - 1;
         relativeDiff = ( column.moreIsBetter ) ? obj.diff :  -1 * obj.diff;
       }
 
