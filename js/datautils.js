@@ -10,6 +10,7 @@
         SYMBOL_CURRENCY       : "$",
         SYMBOL_PERCENT        : "%",
         SYMBOL_STRING         : "s",
+        SYMBOL_PLAIN          : "p",
         SYMBOL_THOUSANDS      : "k",
         SYMBOL_MILLIONS       : "m",
         SYMBOL_NAN            : "--",
@@ -96,6 +97,9 @@
           //percentage
           else if(headerFormat.indexOf(settings.microformat.SYMBOL_PERCENT) > -1)
             columnFormat.format=settings.microformat.SYMBOL_PERCENT;
+          //plain number without formatting (eg. year)
+          else if(headerFormat.indexOf(settings.microformat.SYMBOL_PLAIN) > -1)
+            columnFormat.format=settings.microformat.SYMBOL_PLAIN;
           //default is integer
           else
             columnFormat.format = settings.microformat.SYMBOL_INT;
@@ -266,6 +270,7 @@
         case settings.microformat.SYMBOL_CURRENCY : return methods.NaNOrFormat(value, "$" + formatFx(sign + "0,.2f")(value));
         case settings.microformat.SYMBOL_FLOAT    : return methods.NaNOrFormat(value, formatFx(sign + "0,.2f"));
         case settings.microformat.SYMBOL_PERCENT  : return methods.NaNOrFormat(value, formatFx(sign + '%'));
+        case settings.microformat.SYMBOL_PLAIN  :   return value;
       }
       return value;
     }

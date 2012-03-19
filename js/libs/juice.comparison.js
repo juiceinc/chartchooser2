@@ -15,6 +15,7 @@ juice.comparison = function(conf){
         SYMBOL_INT            : "i",
         SYMBOL_CURRENCY       : "$",
         SYMBOL_PERCENT        : "%",
+        SYMBOL_PLAIN          : "p",
         SYMBOL_NAN            : "--"
       },
       dataSet = {} //a local dataset that will cache min/max values
@@ -133,6 +134,7 @@ juice.comparison = function(conf){
         case microformat.SYMBOL_CURRENCY : return "$" + d3.format( "0,.2f")(value);
         case microformat.SYMBOL_FLOAT    : return d3.format("0,.2f")(value);
         case microformat.SYMBOL_PERCENT  : return d3.format('%')(value);
+        case microformat.SYMBOL_PLAIN    : return value;
       }
       return value;
     }
