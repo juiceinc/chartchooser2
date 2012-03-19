@@ -16,20 +16,34 @@ juice.comparison = function(conf){
         SYMBOL_CURRENCY       : "$",
         SYMBOL_PERCENT        : "%",
         SYMBOL_NAN            : "--"
-      }
+      },
+      dataSet = {} //a local dataset that will cache min/max values
       ;
   var INVALID_VALUE_OPACITY = 0;
   var chart = comparisonChart();
 
 
-  comparison.update = function(data, metricColumn, summaryLeft, summaryRight, formatFx){
+  comparison.update = function(data, metricColumn, summaryLeft, summaryRight, dataSetID){
 
     var metric = metricColumn.name;
 
-    var minMax = [
-      d3.min(data, function(d) { return d[metric] ; }),
-      d3.max(data, function(d) { return d[metric] ; })
-      ];
+    //cache and reuse min/max for the dataset
+    var currentMinMax = {};
+    var dsID = dataSetID + metric;
+    if(!dataSet[dsID] ) {
+      currentMinMax = {
+        min: d3.min(data, function(d) { return d[metric]; }),
+        max: d3.max(data, function(d) { return d[metric]; })
+      };
+
+      dataSet[dsID] = currentMinMax;
+    }
+    else {
+      currentMinMax = dataSet[dsID];
+    }
+
+
+    var minMax = [ currentMinMax.min, currentMinMax.max ];
 
     //min and max takes into account if more is better
     var min = ( metricColumn.moreIsBetter ) ? minMax[0] : minMax[1];
@@ -122,7 +136,6 @@ juice.comparison = function(conf){
       }
       return value;
     }
-
   };
 
   function comparisonChart() {

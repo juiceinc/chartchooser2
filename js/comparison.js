@@ -14,7 +14,8 @@ $(function() {
       summaryLeft = {},
       summaryRight = {},
       du = $(this).datautils(),
-      matchUpChart //a d3 chart that matches the metric values on either sides
+      matchUpChart, //a d3 chart that matches the metric values on either sides
+      datasetID = -1
       ;
   //----------------------------------------------- handlers, util functions
 
@@ -72,6 +73,7 @@ $(function() {
 
     //group rawData by the key
     data = du.datautils('groupby', rawData, key, displayedColumns);
+    datasetID = new Date().getTime();
 
     //update key dropdown selectors
     if(oldKey !== key)
@@ -198,7 +200,7 @@ $(function() {
       var metricColumn = _.find(displayedColumns, function(column){return column.name === metricName; });
 
       //update chart
-      matchUpChart.update(data, metricColumn, summaryLeft, summaryRight);
+      matchUpChart.update(data, metricColumn, summaryLeft, summaryRight, datasetID);
     });
 
     $('.comparison-cell').on('mouseleave',function(){
