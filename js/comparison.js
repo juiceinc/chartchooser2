@@ -3,6 +3,8 @@
 $(function() {
 
   var SAMPLE_DATA_URL = 'data/nfl_combine.csv',
+      DIFF_MODE_ABSOLUTE = 'absolute',
+      DIFF_MODE_PERCENTAGE = 'percentage',
       MAX_ROWS_CSV = 500; //max number of rows to process from text input
 
   var
@@ -14,7 +16,8 @@ $(function() {
       summaryRight = {},
       du = $(this).datautils({numberOfColumnsToProcess: 10}),
       matchUpChart, //a d3 chart that matches the metric values on either sides
-      datasetID = -1
+      datasetID = -1,
+      diffMode = DIFF_MODE_ABSOLUTE
       ;
   //----------------------------------------------- handlers, util functions
 
@@ -42,11 +45,28 @@ $(function() {
     });
 
     // show/hide match-up
-    $('#chart').on('mouseenter',function(){
+    $('#chart').hover(
+      function(){
        $('#chart-match-up').fadeIn(500);
+      },
+      function(){
+       $('#chart-match-up').fadeOut(200);
      });
-    $('#chart').on('mouseleave',function(){
-       $('#chart-match-up').fadeOut(500);
+
+    //absolute/percentage difference handler
+    $('#absolute').click(function(){
+      $('#percentage').removeClass('btn-primary');
+      $('#absolute').addClass('btn-primary');
+
+      diffMode = DIFF_MODE_ABSOLUTE;
+      updateData();
+     });
+    $('#percentage').click(function(){
+      $('#absolute').removeClass('btn-primary');
+      $('#percentage').addClass('btn-primary');
+
+      diffMode = DIFF_MODE_PERCENTAGE;
+      updateData();
      });
   }
 
@@ -127,9 +147,20 @@ $(function() {
         'leftValue' : summaryLeft[column.name],
         'rightValue' : summaryRight[column.name]
       };
-      obj.diff = obj.leftValue - obj.rightValue;
 
-      var relativeDiff = (column.moreIsBetter) ? obj.diff : -1 * obj.diff;
+      var diffFormat;
+      var relativeDiff;
+      if(diffMode === DIFF_MODE_ABSOLUTE) {
+        diffFormat = column.format;
+        obj.diff = obj.leftValue - obj.rightValue;
+        relativeDiff = (column.moreIsBetter) ? obj.diff : -1 * obj.diff;
+      }
+      else if (diffMode === DIFF_MODE_PERCENTAGE) {
+        diffFormat = '%';
+        obj.diff = obj.leftValue/obj.rightValue - 1;
+        relativeDiff = ( column.moreIsBetter ) ? obj.diff :  -1 * obj.diff;
+      }
+
 
       if(relativeDiff > 0) {
         obj.leftClassName = 'winner' ;
@@ -149,7 +180,7 @@ $(function() {
       //format values
       obj.leftValue = du.datautils('format', obj.leftValue, column.format, d3.format);
       obj.rightValue = du.datautils('format', obj.rightValue, column.format, d3.format);
-      obj.diff = du.datautils('format', obj.diff, column.format, d3.format, true);
+      obj.diff = du.datautils('format', obj.diff, diffFormat, d3.format, true /*enforce the sign*/);
 
       comparisons.push( obj );
     });
@@ -178,7 +209,7 @@ $(function() {
         '<div class="title"> {{metricLabel}} </div>' +
         '<div class="value"> {{rightValue}} </div>' +
       '</div>' +
-
+      '<div class="span2"></div>' +
     '</div>';
 
     var template = _.template(temp);

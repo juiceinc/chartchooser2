@@ -3388,6 +3388,17 @@ h1 small a {
 .dark {
   background-color: #CCC;
 }
+.header-row .column-header {
+  text-align: center;
+  position: relative;
+  border-bottom: 1px solid #CCC;
+  height: 40px;
+}
+.header-row .column-header .select-container {
+  text-align: justify;
+  position: absolute;
+  bottom: 5px;
+}
 .chart-wrapper {
   position: relative;
 }
@@ -3401,11 +3412,7 @@ h1 small a {
   position: absolute;
   top: 0px;
   display: none;
-}
-.chart-wrapper .comprarison-row div {
-  /*padding-top: 5px;
-            padding-bottom: 5px;*/
-
+  pointer-events: none;
 }
 .chart-wrapper .comprarison-row .loser, .chart-wrapper .comprarison-row .negative {
   color: red;

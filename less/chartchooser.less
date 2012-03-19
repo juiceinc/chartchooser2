@@ -27,6 +27,23 @@ h1 small a{
 
 // --------- COMPARISON
 //-------------------------------------------------
+
+.header-row {
+    .column-header {
+        text-align: center;
+        position: relative;
+        border-bottom: 1px solid #CCC;
+        height : 40px;
+
+        .select-container {
+            text-align: justify;
+            position: absolute;
+            bottom: 5px;
+        }
+    }
+
+}
+
 .chart-wrapper {
     position: relative;
 
@@ -41,13 +58,10 @@ h1 small a{
         position: absolute;
         top: 0px;
         display: none;
+        pointer-events:none;
     }
 
     .comprarison-row {
-        div {
-            /*padding-top: 5px;
-            padding-bottom: 5px;*/
-        }
         .loser, .negative {
             color: red;
         }

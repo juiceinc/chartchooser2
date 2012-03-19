@@ -51,11 +51,11 @@
     <section id="chart-section">
 
       <!-- header row-->
-      <div class="row show-grid">
+      <div class="row header-row">
 
         <!-- left item -->
-        <div class="span3">
-          <div>
+        <div class="span3 column-header">
+          <div class="select-container">
             <select data-placeholder="Choose your item" class="chzn-select" id="left-names">
               <option value=""></option>
             </select>
@@ -64,12 +64,17 @@
 
 
         <!-- difference -->
-        <div class="span4 middle">
-          <div>Difference</div>
+        <div class="span4 middle column-header">
+          <div>
+            <h4>Difference</h4>
+            <a id="absolute" class="" href="#">absolute</a>
+            <span>|</span>
+            <a id="percentage" class="" href="#">percentage</a>
+          </div>
         </div>
         <!-- right item -->
-        <div class="span3">
-          <div>
+        <div class="span3 column-header">
+          <div class="select-container">
             <select data-placeholder="Choose your item" class="chzn-select" id="right-names">
               <option value=""></option>
             </select>
@@ -79,7 +84,9 @@
 
       <div class="chart-wrapper">
         <!-- chart -->
-        <div id="chart" class="comparison-chart"></div>
+        <div class="comparison-chart">
+          <div id="chart"></div>
+        </div>
         <!-- d3 match-up overlay -->
         <div id="chart-match-up" class="match-up-overlay offset3"></div>
       </div>
