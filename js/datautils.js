@@ -146,7 +146,7 @@
 
       //sort by order
       columns = _.sortBy(columns, function(column){ return column.order; });
-      return columns;
+      return columns.slice(0, settings.numberOfColumnsToProcess + 1);
     },
 
     //numeric value checker

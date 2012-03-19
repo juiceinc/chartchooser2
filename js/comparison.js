@@ -3,7 +3,6 @@
 $(function() {
 
   var SAMPLE_DATA_URL = 'data/nfl_combine.csv',
-      NUM_COLUMNS = 2, //minimum of metrics to display
       MAX_ROWS_CSV = 500; //max number of rows to process from text input
 
   var
@@ -13,7 +12,7 @@ $(function() {
       displayedColumns = [], //columns to be displayed
       summaryLeft = {},
       summaryRight = {},
-      du = $(this).datautils(),
+      du = $(this).datautils({numberOfColumnsToProcess: 10}),
       matchUpChart, //a d3 chart that matches the metric values on either sides
       datasetID = -1
       ;
