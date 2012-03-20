@@ -60,11 +60,16 @@ h1 small a{
         min-height: 350px;
     }
 
-    .match-up-overlay{
+    .match-up-overlay-container {
         position: absolute;
         top: 0px;
         display: none;
         pointer-events:none;
+        z-index: -1;
+
+        .match-up-overlay {
+            margin-left: -40px;
+        }
     }
 
     .comprarison-row {
