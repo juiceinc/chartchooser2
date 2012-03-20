@@ -1,3 +1,5 @@
+@import "../less/bootstrap/variables.less";
+
 // Chart Chooser
 // ---------
 
@@ -67,10 +69,10 @@ h1 small a{
 
     .comprarison-row {
         .loser, .negative {
-            color: red;
+            color: @red;
         }
         .winner, .positive {
-            color: green;
+            color: @green;
         }
         .left {
             text-align: left;
@@ -299,3 +301,27 @@ h1 small a{
     display: block;
 }
 
+/** Styles for the comparison d3 */
+.left-line, .right-line {
+    stroke-width: 3px;
+    stroke: #ccc;
+}
+.connector {
+    stroke-width: 5px;
+    stroke: steelblue;
+}
+.left-value-indicator, .right-value-indicator {
+    fill: steelblue;
+    stroke: #ffffff;
+    stroke-width: 2;
+}
+
+.axis-top, .axis-bottom {
+    font-size: 10px;
+    fill: #999;
+}
+.left-value, .right-value {
+    font-size: 20px;
+    font-weight: bold;
+    fill: #333;
+}

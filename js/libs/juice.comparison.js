@@ -7,8 +7,6 @@ juice.comparison = function(conf){
       height = _conf.height || 250,
       width = _conf.width || 300,
       margin = {'top': 30, 'right': 10, 'bottom': 10, 'left': 50},
-      boundaryLineColor = '#333',
-      connectorLineColor = '#999',
       comparison = {},
       microformat = {
         SYMBOL_FLOAT          : "d",
@@ -108,7 +106,6 @@ juice.comparison = function(conf){
           .attr('class', 'connector')
           .attr('x1', margin.left)
           .attr('x2', width - margin.left - margin.right)
-          .style("stroke", connectorLineColor)
           .call(updateConnector)
           ;
 
@@ -170,7 +167,6 @@ juice.comparison = function(conf){
           .attr('y1', margin.top)
           .attr('x2', x)
           .attr('y2', height - margin.top - margin.bottom)
-          .style("stroke", boundaryLineColor)
           ;
 
     //value indicators
@@ -179,10 +175,8 @@ juice.comparison = function(conf){
       .enter().append('circle')
         .attr('class', 'value-indicator')
         .attr('class', function (d, i) {return i === 0 ? 'left-value-indicator' : 'right-value-indicator';})
-        .attr('r', 3)
-        .style('fill', 'steelblue')
+        .attr('r', 6)
         .attr('cx', x)
-        .style("stroke", "#FF0000")
         ;
 
 
