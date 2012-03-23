@@ -52,10 +52,12 @@ $(function() {
     // show/hide match-up
     $('#chart').hover(
       function(){
-       $('#chart-match-up').fadeIn(500);
+       $('.match-up-overlay-container').fadeIn(500);
+       $('.diff').css('opacity', 0);
       },
       function(){
-       $('#chart-match-up').fadeOut(200);
+       $('.match-up-overlay-container').fadeOut(200);
+       $('.diff').css('opacity', 1);
      });
 
     //absolute/percentage difference handler
@@ -215,13 +217,12 @@ $(function() {
         '<div class="value"> {{leftValue}} </div>' +
       '</div>' +
 
-      '<div class="span4 value {{diffClassName}} center"> {{diff}} </div>' +
+      '<div class="span4 value {{diffClassName}} center diff"> {{diff}} </div>' +
 
       '<div class="span3 comparison-cell {{rightClassName}} center" data-metric="{{metricName}}">' +
         '<div class="title"> {{metricLabel}} </div>' +
         '<div class="value"> {{rightValue}} </div>' +
       '</div>' +
-      '<div class="span2"></div>' +
     '</div>';
 
     var template = _.template(temp);

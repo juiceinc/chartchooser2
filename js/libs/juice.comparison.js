@@ -5,8 +5,8 @@ juice.comparison = function(conf){
   var _conf = conf || {};
   var container = _conf.container || "#chart-match-up",
       height = _conf.height || 250,
-      width = _conf.width || 300,
-      margin = {'top': 30, 'right': 10, 'bottom': 10, 'left': 50},
+      width = _conf.width || 340,
+      margin = {'top': 30, 'right': 0, 'bottom': 10, 'left': 100},
       comparison = {},
       microformat = {
         SYMBOL_FLOAT          : "d",
@@ -146,12 +146,6 @@ juice.comparison = function(conf){
       .append("g")
        ;
 
-       chart.append('rect')
-       .attr('width', width)
-       .attr('height', height)
-       .style('fill', '#FFFFFF')
-       ;
-
 
     //add boundary lines
     //x position calculator for boundaries
@@ -184,11 +178,11 @@ juice.comparison = function(conf){
       {'className': 'axis-top axis-left', 'x': margin.left, 'y': margin.top -10, 'align': 'middle', 'value': 'top-left'},
       {'className': 'axis-bottom axis-left', 'x': margin.left, 'y': height - margin.top - margin.bottom +12, 'align': 'middle', 'value': 'bottom-left'},
 
-      {'className': 'axis-top axis-right', 'x': width - margin.left-10, 'y': margin.top - 10, 'align': 'middle', 'value': 'top-right'},
-      {'className': 'axis-bottom axis-right', 'x': width - margin.left-10, 'y': height - margin.top - margin.bottom + 12, 'align': 'middle', 'value': 'bottom-right'},
+      {'className': 'axis-top axis-right', 'x': width - margin.left- margin.right, 'y': margin.top - 10, 'align': 'middle', 'value': 'top-right'},
+      {'className': 'axis-bottom axis-right', 'x': width - margin.left - margin.right, 'y': height - margin.top - margin.bottom + 12, 'align': 'middle', 'value': 'bottom-right'},
 
       {'className': 'left-value', 'x': margin.left - 10, 'y': margin.top,  'align': 'end', 'value': 'left'},
-      {'className': 'right-value', 'x': width - margin.left, 'y':margin.top , 'align': 'left', 'value': 'right'}
+      {'className': 'right-value', 'x': width - margin.left - margin.right + 10, 'y':margin.top , 'align': 'left', 'value': 'right'}
     ];
 
     //boundary line (min/max) and left/right value labels

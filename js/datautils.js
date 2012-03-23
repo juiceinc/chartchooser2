@@ -59,7 +59,9 @@
         var headerFormat = col.substring(col.lastIndexOf('[')+1, col.lastIndexOf(']')).toLowerCase();
 
         var columnFormat = getBlankColumnMetadata(col, settings.microformat.SYMBOL_INT);
-        columnFormat.label = col.substring(0, col.lastIndexOf('['));
+
+        //column label - take up to 30 characters from beginning to the start of microformat
+        columnFormat.label = col.substring(0, Math.min(col.lastIndexOf('['), 30));
 
         //primary key
         if(headerFormat.indexOf(settings.microformat.SYMBOL_PRIMARY_KEY) > -1){
