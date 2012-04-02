@@ -1,0 +1,199 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Chart Chooser</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width">
+
+
+	<!-- Use SimpLESS (Win/Linux/Mac) or LESS.app (Mac) to compile your .less files
+	to style.css-->
+
+	<link rel="stylesheet" href="less/style.css">
+
+	<script src="js/libs/modernizr-2.5.2-respond-1.1.0.min.js"></script>
+</head>
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="#">Chart Chooser Redux</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active"><a href="#">Leaderboard</a></li>
+            <li><a href="sankey">Sankey</a></li>
+            <li><a href="comparison">Comparison</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Chart and its description -->
+    <div class="row">
+
+      <div class="span8">
+        <h1>Leaderboard</h1>
+          <div id="leaderboard-wrapper">
+              <div id="leaderboard-divider">
+                  below the <span class='divider-direction'>top</span> <span class='divider-visible-rows-number'>10</span>
+              </div>
+              <div id="leaderboard">
+              </div>
+          </div>
+      </div>
+
+      <div class="span4">
+        <div class="well">
+          <div id="toolbar">
+            <form id="filter-form" class="form-search">
+              <div>
+                Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
+                                                   data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
+                                                   data-original-title="How to filter your data">Learn how.</a>
+                <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
+                <button type="submit" class="btn">Filter</button></p>
+              </div>
+              <div id="applied-filters" class="row">
+              </div>
+            </form>
+
+            <form id="search-form" class="form-search">
+
+              <div>
+                Search:
+                <p><input type = "text" placeholder="search name" id="searchInput"/>
+                <button type="submit" class="btn">Search</button></p>
+              </div>
+
+              <br/>
+              <div>
+                <span>Show</span>
+                <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
+                  <span>Leaders</span>
+                  <span>Laggards</span>
+                </span>
+                <br/>
+                <br/> -->
+                <select id="leaderboard-direction">
+                  <option>top</option>
+                  <option>bottom</option>
+                </select>
+
+                <select id="leaderboard-visible-rows">
+                  <option>5</option>
+                  <option selected>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                </select>
+                <span id="total-population">out of 20</span>
+                <div style="clear:both"/>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Raw data -->
+    <div class="section span8">
+      <h1>Data
+        <small>Use your own data. <a class="popup" href="#" class="" rel="popover"
+                                   data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
+                                   data-original-title="Adding your own data">Learn how.</a></small>
+
+        <div style="float: right;">
+            <small> <a id="clear-data-btn" class="btn" href="#">Reset to sample data</a></small>
+        </div>
+      </h1>
+
+      <div class="row">
+        <div class="span8">
+
+          <div id="data-input">
+            <form action="#" id="input-form">
+              <div><textarea class="span8" rows="10" id="csv-data"></textarea></div>
+            </form>
+          </div>
+
+        </div>
+          </div>
+         <div class="span4">
+          <p>Nothing much here</p>
+         </div>
+      </div>
+    </div>
+
+
+    <footer>
+    </footer>
+
+  </div> <!-- /container -->
+
+  <div class="well">
+    <div class="container section">
+      <div class="row">
+        <div class="span3">
+          <div>FAQ</div>
+          <div>Troubleshooting</div>
+          <div>Contact us</div>
+          <div>Created by Juice inc, &copy; 2012 </div>
+        </div>
+        <div class="span3">
+          <div>You may also be interested in</div>
+          <div>Chart Chooser</div>
+          <div>Dashboard design services</div>
+          <div>Slice: easy as pie</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+<!-- scripts concatenated and minified via ant build script-->
+<!-- Bootstrap -->
+<script src="js/libs/bootstrap/transition.js"></script>
+<script src="js/libs/bootstrap/collapse.js"></script>
+<script src="js/libs/bootstrap/tooltip.js"></script>
+<script src="js/libs/bootstrap/popover.js"></script>
+
+<!-- d3 -->
+<script src="js/libs/d3/d3.js"></script>
+<script src="js/libs/d3/d3.csv.js"></script>
+
+<!-- underscore -->
+<script src="js/libs/underscore.js"></script>
+
+<script src="js/plugins.js"></script>
+
+<!-- leaderboard d3 plugin -->
+<script src="js/libs/juice.leaderboard.js"></script>
+<script src="js/leaderboard.js"></script>
+
+<script src="js/script.js"></script>
+<!-- end scripts-->
+
+
+</body>
+</html>
