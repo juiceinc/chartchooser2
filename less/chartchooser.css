@@ -1,11 +1,11 @@
 h1 {
   font-size: 20px;
-  font-weight: 200;
+  font-weight: 300;
 }
 h1 small {
   padding: 0 20px;
   font-size: 80%;
-  font-weight: 200;
+  font-weight: 300;
 }
 h1 small a {
   padding: 0 5px;
@@ -33,18 +33,38 @@ h1 small a {
 }
 .chart-wrapper {
   position: relative;
+  /*
+    .match-up-overlay {
+        position: absolute;
+        padding-left: 240px;
+        float: left;
+        margin-left: -40px;
+        top: 0px;
+        display: none;
+        pointer-events:none;
+        z-index: -1;
+    }
+*/
+
 }
 .chart-wrapper .comparison-chart {
-  font-family: 'Gudea', sans-serif;
-  font-size: 13px;
   color: #404040;
-  min-height: 350px;
+  min-height: 150px;
+  padding-bottom: 20px;
 }
 .chart-wrapper .match-up-overlay {
   position: absolute;
+  padding-left: 240px;
+  pointer-events: none;
+}
+.chart-wrapper .match-up-overlay-container {
+  position: absolute;
+  padding-left: 240px;
+  float: left;
   top: 0px;
   display: none;
   pointer-events: none;
+  z-index: -1;
 }
 .chart-wrapper .comprarison-row .loser,
 .chart-wrapper .comprarison-row .negative {
@@ -76,7 +96,6 @@ h1 small a {
   cursor: pointer;
   position: relative;
   height: 25px;
-  background-color: #FFF;
 }
 .chart-wrapper .comparison-cell div {
   /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
@@ -102,7 +121,7 @@ h1 small a {
   font-size: 12px;
   line-height: 12px;
   color: #666;
-  font-weight: 200;
+  font-weight: 300;
 }
 .chart-wrapper .comparison-cell .value {
   font-size: 18px;
@@ -177,7 +196,7 @@ h1 small a {
   font-size: 12px;
   line-height: 12px;
   color: #666;
-  font-weight: 200;
+  font-weight: 300;
 }
 .leaderboard-cell .value {
   font-size: 18px;

@@ -52,12 +52,12 @@ $(function() {
     // show/hide match-up
     $('#chart').hover(
       function(){
-       $('.match-up-overlay-container').fadeIn(500);
-       $('.diff').css('opacity', 0);
+          $('.diff').css('opacity', 0);
+       $('.match-up-overlay').fadeIn(500);
       },
       function(){
-       $('.match-up-overlay-container').fadeOut(200);
-       $('.diff').css('opacity', 1);
+          $('.diff').css('opacity', 1);
+       $('.match-up-overlay').fadeOut(300);
      });
 
     //absolute/percentage difference handler
@@ -212,14 +212,14 @@ $(function() {
     var temp =
     '<div class="row comprarison-row">' +
 
-      '<div class="span3 comparison-cell {{leftClassName}} center" data-metric="{{metricName}}">' +
+      '<div class="span4 comparison-cell {{leftClassName}} center" data-metric="{{metricName}}">' +
         '<div class="title"> {{metricLabel}} </div>' +
         '<div class="value"> {{leftValue}} </div>' +
       '</div>' +
 
       '<div class="span4 value {{diffClassName}} center diff"> {{diff}} </div>' +
 
-      '<div class="span3 comparison-cell {{rightClassName}} center" data-metric="{{metricName}}">' +
+      '<div class="span4 comparison-cell {{rightClassName}} center" data-metric="{{metricName}}">' +
         '<div class="title"> {{metricLabel}} </div>' +
         '<div class="value"> {{rightValue}} </div>' +
       '</div>' +
