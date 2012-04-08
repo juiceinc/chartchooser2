@@ -40,12 +40,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-          <a class="brand" href="index.html">Juice Labs</a>
+            <a class="brand" href="index.html">Juice Labs</a>
 
             <div class="nav-collapse">
                 <ul class="nav">
-                  <li><a href="leaderboard2.html">Leaderboard</a></li>
-                  <li class="active"><a href="comparison.html">Comparison</a></li>
+                    <li class="active"><a href="leaderboard2.html">Leaderboard</a></li>
+                    <li><a href="comparison.html">Comparison</a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -56,59 +56,79 @@
 <a href="#" id="github"><span>Want more?</span><span>Check out slice!</span>
 </a>
 
-
-
 <div class="slice-container">
 
     <!-- slice title and subtitle -->
-    <h1>Matchup <small>Compare two values</small></h1>
+    <h1>Leaderboard <small>Compare top performers</small></h1>
 
     <section id="chart-section">
         <!-- main section visualization goes here in rows -->
 
-        <!-- header row-->
-        <div class="row header-row">
-
-            <!-- left item -->
-            <div class="span4 column-header">
-                <div class="select-container">
-                    <select data-placeholder="Choose your item" class="chzn-select" id="left-names">
-                        <option value=""></option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- difference -->
-            <div class="span4 middle column-header">
+      <aside>
+        <div>
+            <div id="toolbar">
+              <form id="filter-form" class="form-search">
                 <div>
-                    <h4>Difference</h4>
-                    <a id="absolute" class="selected-diff-mode" href="#">absolute</a>
-                    <span>|</span>
-                    <a id="percentage" href="#">percentage</a>
+                  Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
+                                                     data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
+                                                     data-original-title="How to filter your data">Learn how.</a>
+                  <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
+                  <button type="submit" class="btn">Filter</button></p>
                 </div>
-            </div>
-            <!-- right item -->
-            <div class="span4 column-header">
-                <div class="select-container">
-                    <select data-placeholder="Choose your item" class="chzn-select" id="right-names">
-                        <option value=""></option>
-                    </select>
+                <div id="applied-filters" class="row">
+                </div>
+              </form>
+
+              <form id="search-form" class="form-search">
+
+                <div>
+                  Search:
+                  <p><input type = "text" placeholder="search name" id="searchInput"/>
+                  <button type="submit" class="btn">Search</button></p>
+                </div>
+
+                <br/>
+                <div>
+                  <span>Show</span>
+                  <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
+                    <span>Leaders</span>
+                    <span>Laggards</span>
+                  </span>
+                  <br/>
+                  <br/> -->
+                  <select id="leaderboard-direction">
+                    <option>top</option>
+                    <option>bottom</option>
+                  </select>
+
+                  <select id="leaderboard-visible-rows">
+                    <option>5</option>
+                    <option selected>10</option>
+                    <option>15</option>
+                    <option>20</option>
+                  </select>
+                  <span id="total-population">out of 20</span>
+                  <div style="clear:both"/>
+                </div>
+              </form>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Chart and its description -->
+      <div class="row">
+
+        <div class="span12">
+            <div id="leaderboard-wrapper">
+                <div id="leaderboard-divider">
+                    below the <span class='divider-direction'>top</span> <span class='divider-visible-rows-number'>10</span>
+                </div>
+                <div id="leaderboard">
                 </div>
             </div>
         </div>
 
-        <div class="row chart-wrapper">
-            <!-- d3 match-up overlay -->
-            <div id="chart-match-up" class="span12 match-up-overlay">
-
-            </div>
-
-            <!-- table -->
-            <div class="comparison-chart span12">
-                <div id="chart"></div>
-            </div>
-
-        </div>
+      </div>
 
     </section>
 
@@ -184,9 +204,9 @@
 <script src="js/plugins.js"></script>
 <script src="js/datautils.js"></script>
 
-<!-- comparison d3 plugin -->
-<script src="js/libs/juice.comparison.js"></script>
-<script src="js/comparison.js"></script>
+<!-- leaderboard d3 plugin -->
+<script src="js/libs/juice.leaderboard.js"></script>
+<script src="js/leaderboard.js"></script>
 
 <script src="js/script.js"></script>
 <!-- end scripts-->

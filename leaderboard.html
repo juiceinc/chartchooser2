@@ -46,10 +46,12 @@
 
   <div class="container">
 
+
+
     <!-- Chart and its description -->
     <div class="row">
 
-      <div class="span8">
+      <div class="span12">
         <h1>Leaderboard</h1>
           <div id="leaderboard-wrapper">
               <div id="leaderboard-divider">
@@ -58,57 +60,6 @@
               <div id="leaderboard">
               </div>
           </div>
-      </div>
-
-      <div class="span4">
-        <div class="well">
-          <div id="toolbar">
-            <form id="filter-form" class="form-search">
-              <div>
-                Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
-                                                   data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
-                                                   data-original-title="How to filter your data">Learn how.</a>
-                <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
-                <button type="submit" class="btn">Filter</button></p>
-              </div>
-              <div id="applied-filters" class="row">
-              </div>
-            </form>
-
-            <form id="search-form" class="form-search">
-
-              <div>
-                Search:
-                <p><input type = "text" placeholder="search name" id="searchInput"/>
-                <button type="submit" class="btn">Search</button></p>
-              </div>
-
-              <br/>
-              <div>
-                <span>Show</span>
-                <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
-                  <span>Leaders</span>
-                  <span>Laggards</span>
-                </span>
-                <br/>
-                <br/> -->
-                <select id="leaderboard-direction">
-                  <option>top</option>
-                  <option>bottom</option>
-                </select>
-
-                <select id="leaderboard-visible-rows">
-                  <option>5</option>
-                  <option selected>10</option>
-                  <option>15</option>
-                  <option>20</option>
-                </select>
-                <span id="total-population">out of 20</span>
-                <div style="clear:both"/>
-              </div>
-            </form>
-          </div>
-        </div>
       </div>
     </div>
 
