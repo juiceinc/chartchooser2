@@ -32,6 +32,23 @@
     to experience this site.</p><![endif]-->
 
 
+<!--Save data success notifier-->
+<div class="modal fade" id="save-succeed-alert">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Your leaderboard is ready for sharing!</h3>
+  </div>
+  <div class="modal-body">
+    <p>Share the URL from your address bar to return back later, we will keep your stuff!</p>
+
+    <textarea id="currentURL" style="width: 90%;"></textarea>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -191,6 +208,7 @@
 <script src="js/libs/bootstrap/collapse.js"></script>
 <script src="js/libs/bootstrap/tooltip.js"></script>
 <script src="js/libs/bootstrap/popover.js"></script>
+<script src="js/libs/bootstrap/modal.js"></script>
 
 <!-- d3 -->
 <script src="js/libs/d3/d3.js"></script>

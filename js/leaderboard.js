@@ -419,6 +419,9 @@ $(function() {
         dataType: 'json',
         success: function(data) {
           window.location.hash = data.id;
+
+          $('#currentURL').text(window.location.href);
+          $('#save-succeed-alert').modal('show');
         },
         error: function (data, textStatus, errorThrown) {
             alert('POST failed.');
