@@ -10,7 +10,8 @@ $(function() {
   //Styling and appearance
   var HOVER_DURATION = 1000;
   var CELL_WIDTH = 150;
-  var NUM_COLUMNS = 5;
+  var NUM_COLUMNS = 5,
+      MAX_HEADER_CHARS = 15;
 
   //header microformat symbols
   var microformat= {
@@ -234,7 +235,9 @@ $(function() {
       var headerFormat = col.substring(col.lastIndexOf('['), col.lastIndexOf(']'));
 
       var columnFormat = getBlankColumnMetadata(col);
-      columnFormat.label = col.substring(0, col.lastIndexOf('['));
+      columnFormat.label = col.substring(0, col.lastIndexOf('[')) //take only the part before []
+                               .substring(0, MAX_HEADER_CHARS) //limit number of characters
+                              ;
 
       //primary key
       if(headerFormat.indexOf(microformat.SYMBOL_PRIMARY_KEY) > -1){
