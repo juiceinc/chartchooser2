@@ -1,12 +1,16 @@
 //leaderboard.js
+
+// an AJAX callback function reference, will be defined before the AJAX call
+var onDataLoad;
+
 //when dom is ready
+
 $(function() {
 
   //Styling and appearance
   var HOVER_DURATION = 1000;
   var CELL_WIDTH = 150;
-  var NUM_COLUMNS = 4;
-  var DISPLAYED_ROWS = 5; //TODO: make dynamic
+  var NUM_COLUMNS = 5;
 
   //header microformat symbols
   var microformat= {
@@ -22,7 +26,10 @@ $(function() {
 
   //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=0&output=csv';
   //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=1&output=csv';
-  var SAMPLE_DATA_URL = 'data/nfl_combine.csv';
+  var FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
+      SAMPLE_DATA_HASH = '#7b42987e57dd070fa849b5899311ebb0',
+      SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload'
+    ;
 
   var displayedColumns = [],
       data = [],
@@ -45,7 +52,14 @@ $(function() {
 
     $('#clear-data-btn').click(function() {
         $('#clear-data-btn').removeClass('btn-info');
-        loadSampleData();
+        loadData();
+        return false; //prevent refresh
+    });
+
+    $('#save-data-btn').click(function() {
+        $('#clear-data-btn').removeClass('btn-info');
+        saveCurrentData();
+        return false; //prevent refresh
     });
   }
 
@@ -89,6 +103,7 @@ $(function() {
     var key = columns[0].name;
 
     displayedColumns = _.rest(columns, 1);
+
     //all displayedColumns should be numeric, just double checking
     var numericColumns = _.filter(displayedColumns, function(column){return column.format !== microformat.SYMBOL_STRING;});
 
@@ -99,7 +114,14 @@ $(function() {
         row[column.name] = (!row[column.name] || row[column.name] === '') ? NaN : row[column.name] * 1;
       });
     });
-    refreshLeaderboard({data: data, displayedColumns: displayedColumns, key: key});
+
+    var displayTop = $('#leaderboard-direction').val() == 'top';
+
+    refreshLeaderboard({"data": data,
+                        "displayedColumns": displayedColumns,
+                        "key": key,
+                        "numberOfDisplayedRows": $('#leaderboard-visible-rows').val(),
+                        "displayTop": displayTop});
   }
 
   function searchItems(){
@@ -107,10 +129,17 @@ $(function() {
     leaderboard.selectByKey(searchStr);
   }
 
+
+
   function filterItems(){
     var filterStr = $('#filterInput').val();
     $('#filterInput').val('');
 
+    addFilterItem(filterStr);
+    filterData();
+  }
+
+  function addFilterItem(filterStr){
     var input = filterStr.split(':');
     if(input.length != 2)
       return;
@@ -146,7 +175,6 @@ $(function() {
         filterData();
       });
     }
-    filterData();
   }
 
 
@@ -163,7 +191,8 @@ $(function() {
       newData = _.filter(newData, function(row){ return (_.include(cleanValues, row[column].toLowerCase()) );});
     });
 
-    refreshLeaderboard({data: newData, displayedColumns: displayedColumns});
+    refreshLeaderboard({data: newData, displayedColumns: displayedColumns
+        , "numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
   }
 
   function refreshLeaderboard(conf){
@@ -312,17 +341,91 @@ $(function() {
 
   //----------------------------------------------- Data
 
+
+  //override the global data callback handler
+  onDataLoad = function(data){
+    $('#csv-data').val(data.data);
+
+    //set top or bottom
+    if(data.topOrBottom)
+      $('#leaderboard-direction').val(data.topOrBottom);
+
+    //set number of displayed rows
+    if(data.numDisplayed)
+      $('#leaderboard-visible-rows').val(data.numDisplayed);
+
+    //update data
+    updateData();
+
+    //set filters (should be applied AFTER the data is loaded, filters only work for applicable columns)
+    if(data.filters) {
+      _.each(data.filters, function(filterStr){
+        addFilterItem(filterStr);
+      });
+      filterData();
+    }
+  };
+
+  function loadData(){
+
+    if(window.location.hash === '' || window.location.hash === '#')
+      window.location.hash = SAMPLE_DATA_HASH;
+
+    var hash = window.location.hash.replace('#', '');
+    var dataURL = hash.substr(0,1) + '/' + hash;
+
+    //onDataLoad will get triggered from JSONP
+    $.ajax({
+      type: "GET",
+      url: FETCH_DATA_URL + dataURL,
+      dataType : "jsonp",
+      jsonp: false,
+      error: function(err) { }
+    });
+  }
+
   function loadSampleData(){
     $.ajax({
-      url: SAMPLE_DATA_URL,
+      url: 'data/nfl_combine.csv',
+
       success: function(data) {
-          $('#csv-data').val(data);
-          updateData();
+        $('#csv-data').val(data);
+        updateData();
       },
       error: function(err) { }
     });
   }
 
+
+
+  function saveCurrentData(){
+
+    var data = $('#csv-data').val();
+    var topOrBottom = $('#leaderboard-direction').val();
+    var numDisplayed = $('#leaderboard-visible-rows').val();
+    var filters = [];
+
+    _.each($('.datafilter'), function(filterObj){
+      filters.push($(filterObj).attr('data-column') +':'+ $(filterObj).attr('data-value'));
+    });
+
+    var jsonData = JSON.stringify({"data": data, "topOrBottom": topOrBottom , "numDisplayed": numDisplayed, "filters": filters});
+
+    $.ajax({
+        type: 'POST',
+        url: SAVE_DATA_SERVICE_URL,
+        crossDomain: true,
+        data: jsonData,
+        dataType: 'json',
+        success: function(data) {
+          window.location.hash = data.id;
+        },
+        error: function (data, textStatus, errorThrown) {
+            alert('POST failed.');
+        }
+    });
+
+  }
   //-----------------------------------------------Start
   function start(){
     addHandlers();
@@ -337,7 +440,8 @@ $(function() {
       formats               : microformat
     });
 
-    loadSampleData();
+    loadData();
+    //loadSampleData(); //this is to load the local sample data
   }
 
   start();
