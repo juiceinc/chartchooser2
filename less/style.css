@@ -3943,3 +3943,6 @@ h1 small a {
   font-weight: bold;
   fill: #333;
 }
+#sankey {
+  min-height: 300px;
+}
