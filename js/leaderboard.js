@@ -8,30 +8,16 @@ var onDataLoad;
 $(function() {
 
   //Styling and appearance
-  var HOVER_DURATION = 1000;
-  var CELL_WIDTH = 150;
-  var NUM_COLUMNS = 5,
-      MAX_HEADER_CHARS = 15;
-
-  //header microformat symbols
-  var microformat= {
-    SYMBOL_PRIMARY_KEY    : "*",
-    SYMBOL_REVERSE_ORDER  : "-",
-    SYMBOL_FLOAT          : "d",
-    SYMBOL_INT            : "i",
-    SYMBOL_CURRENCY       : "$",
-    SYMBOL_PERCENT        : "%",
-    SYMBOL_STRING         : "s",
-    SYMBOL_NAN            : "--"
-  };
-
-  //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=0&output=csv';
-  //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=1&output=csv';
-  var FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
+  var CELL_WIDTH = 150,
+      MAX_ROWS_CSV = 500, //max number of rows to process from text input
+      du = $(this).datautils({'numberOfColumnsToProcess': 5, 'maxHeaderLength': 15}),
+      FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
       SAMPLE_DATA_HASH = '#7b42987e57dd070fa849b5899311ebb0',
-      SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload'
+      SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
+      SYMBOL_STRING = "s"
     ;
 
+  //variables
   var displayedColumns = [],
       data = [],
       leaderboard;
@@ -95,18 +81,15 @@ $(function() {
     var csv = $('#csv-data').val();
 
     data = d3.csv.parse(csv);
-    var originalLen = data.length;
-    if (originalLen > 500) {
-        data = data.slice(0,500);
-    }
+    data = data.slice(0, MAX_ROWS_CSV);
 
-    var columns = findColumns(data);
+    var columns = du.datautils('findColumns', data);
     var key = columns[0].name;
 
     displayedColumns = _.rest(columns, 1);
 
     //all displayedColumns should be numeric, just double checking
-    var numericColumns = _.filter(displayedColumns, function(column){return column.format !== microformat.SYMBOL_STRING;});
+    var numericColumns = _.filter(displayedColumns, function(column){return column.format !== SYMBOL_STRING;});
 
     //convert columns to numerics
     _.each(data, function(row){
@@ -211,137 +194,6 @@ $(function() {
     refreshLeaderboard({"numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
   }
 
-  function getBlankColumnMetadata(name){
-    return {
-      name          : name,
-      label         : name,
-      moreIsBetter  : true,
-      order         : 10000,
-      format        : microformat.SYMBOL_INT
-    };
-  }
-
-  function findColumns(data){
-    var columns = []; //array of {name: "abc[1-]", label:"abc",  }
-
-    var rawColumns = _.keys(data[0]);
-    var specialColumns = _.filter(rawColumns, function(col){
-      return col && col.indexOf('[') > -1 && col.indexOf(']') > -1;
-    });
-
-    //process special columns
-    _.each(specialColumns, function(col){
-      //parse header microformat, eg. myColumn[-3$]
-      var headerFormat = col.substring(col.lastIndexOf('['), col.lastIndexOf(']'));
-
-      var columnFormat = getBlankColumnMetadata(col);
-      columnFormat.label = col.substring(0, col.lastIndexOf('[')) //take only the part before []
-                               .substring(0, MAX_HEADER_CHARS) //limit number of characters
-                              ;
-
-      //primary key
-      if(headerFormat.indexOf(microformat.SYMBOL_PRIMARY_KEY) > -1){
-        columnFormat.order = -1;
-        columnFormat.format = microformat.SYMBOL_STRING;
-        columnFormat.moreIsBetter = false;
-      }
-      else {
-        //order
-        var numbers = headerFormat.match(/\d+/g); //get all the numbers, returned as array
-        if(numbers && !isNaN(numbers[0] * 1) ) //the first item is the order #
-          columnFormat.order = numbers[0] * 1;
-
-        //more is better ?
-        columnFormat.moreIsBetter = headerFormat.indexOf('-') == -1;
-
-        //money
-        if(headerFormat.indexOf(microformat.SYMBOL_CURRENCY) > -1)
-          columnFormat.format = microformat.SYMBOL_CURRENCY;
-        //float
-        else if(headerFormat.indexOf(microformat.SYMBOL_FLOAT) > -1)
-          columnFormat.format = microformat.SYMBOL_FLOAT;
-        //percentage
-        else if(headerFormat.indexOf(microformat.SYMBOL_PERCENT) > -1)
-          columnFormat.format=microformat.SYMBOL_PERCENT;
-        //default is integer
-        else
-          columnFormat.format = microformat.SYMBOL_INT;
-      }
-      columns.push(columnFormat);
-    });
-
-    //add non-special columns
-    var unprocessedColumns = _.difference(rawColumns, specialColumns);
-
-    //find primary key column first if not already set
-    var hasPrimaryKey = _.any(columns, function(column){return column.order === -1; /*only PK has order of -1*/});
-
-    //add primary key if doesn't exist
-    if(!hasPrimaryKey){
-      var primaryKeyColumnName = findSpecificColumn(unprocessedColumns, data, nonNumericChecker);
-      if(primaryKeyColumnName){
-        var columnMetaData = getBlankColumnMetadata(primaryKeyColumnName);
-        columnMetaData.moreIsBetter = false;
-        columnMetaData.order = -1;
-        columnMetaData.format = microformat.SYMBOL_STRING;
-
-        columns.push(columnMetaData);
-        unprocessedColumns = _.difference(unprocessedColumns, [primaryKeyColumnName]);
-      }
-      else{
-        //leaderboard can't function properly without primary key
-        return null;
-      }
-    }
-
-    var i = 0;
-    //fill in other numeric columns
-    while(unprocessedColumns.length > 0 && columns.length <= NUM_COLUMNS )
-    {
-      var numericColumnName = findSpecificColumn(unprocessedColumns, data, numericChecker);
-      if(numericColumnName)
-      {
-        var columnMetaData = getBlankColumnMetadata(numericColumnName);
-        columnMetaData.order += i++;
-        columns.push(columnMetaData);
-        unprocessedColumns = _.difference(unprocessedColumns, [numericColumnName]);
-      }
-      else{
-        //no more numeric columns left
-        unprocessedColumns = [];
-      }
-    }
-
-    //sort by order
-    columns = _.sortBy(columns, function(column){ return column.order; });
-    return columns.slice(0, NUM_COLUMNS+1);
-  }
-
-  //non numeric value checker
-  function nonNumericChecker(value){
-    return value ? isNaN(value * 1) : true;
-  }
-
-  //numeric value checker
-  function numericChecker(value){
-    return value ? !isNaN(value * 1) : true;
-  }
-
-  //finds the first column whose values (only a certain amount of) satisfy checkFunction
-  function findSpecificColumn(columnNames, data, checkFunction){
-    var SAMPLE_SIZE = 10;
-
-    //check only first SAMPLE_SIZE items
-    var sample = _.first(data, SAMPLE_SIZE);
-
-    //find the first column that matches criteria
-    return _.find(columnNames, function(columnName){
-      var values = _.pluck(sample, columnName); //column values
-      return _.any(values) /*at least one value should be valid*/ && _.all(values, checkFunction); //check if all values meet criteria
-    });
-  }
-
-
   //----------------------------------------------- Data
 
 
@@ -442,8 +294,7 @@ $(function() {
       key                   : "name",
       container             : "#leaderboard",
       displayedColumns      : [],
-      data                  : [],
-      formats               : microformat
+      data                  : []
     });
 
     loadData();
