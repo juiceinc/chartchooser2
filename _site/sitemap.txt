@@ -1,0 +1,6 @@
+
+http://username.github.com/atom.xml
+http://username.github.com/comparison.html
+http://username.github.com/index.html
+http://username.github.com/leaderboard.html
+http://username.github.com/sitemap.txt

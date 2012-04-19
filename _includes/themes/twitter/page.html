@@ -1,0 +1,67 @@
+
+
+    <!--Save data success notifier-->
+    <div class="modal fade" id="save-succeed-alert">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Your leaderboard is ready for sharing!</h3>
+      </div>
+      <div class="modal-body">
+        <p>Share the URL from your address bar to return back later, we will keep your stuff!</p>
+
+        <textarea id="currentURL" style="width: 90%;"></textarea>
+
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+      </div>
+    </div>
+
+
+    <div class="slice-container">
+
+      <!-- slice title -->
+      <h1><span id="report-title" class="editable" spellcheck="false" contenteditable="true">{{page.title}}</span></h1>
+
+      <section id="chart-section">
+        <!-- main section visualization goes here in rows -->
+
+        {{ content }}
+
+      </section>
+
+      {% if page.hasInputData %}
+
+
+      <!-- Raw data -->
+      <div class="slice-data-container" section="data-section">
+          <div class="row">
+              <div class="span12">
+                  <div class="pull-right">
+                      <small><a id="clear-data-btn" class="btn btn-small" href="#">Reset to original data</a></small>
+                      <small><a id="save-data-btn" class="btn btn-small" href="#">Remember this!</a></small>
+                  </div>
+                  <!--<aside>-->
+                      <!--<p>lorem ipsum dolorum</p>-->
+                  <!--</aside>-->
+                  <h1>Data
+                      <small>Use your own data. <a class="popup" href="#" class="" rel="popover"
+                                                   data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
+                                                   data-original-title="Adding your own data">Learn how.</a></small>
+
+                  </h1>
+                  <form action="#" id="input-form">
+                      <div><textarea style="width: 100%" rows="20" id="csv-data"></textarea></div>
+                  </form>
+              </div>
+          </div>
+      </div>
+
+
+      {% endif %}
+
+
+
+    </div> <!-- /container -->
+
+
