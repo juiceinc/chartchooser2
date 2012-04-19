@@ -32,6 +32,24 @@
     to experience this site.</p><![endif]-->
 
 
+
+<!--Save data success notifier-->
+<div class="modal fade" id="save-succeed-alert">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Your Match-up is ready for sharing!</h3>
+  </div>
+  <div class="modal-body">
+    <p>Share the URL from your address bar to return back later, we will keep your stuff!</p>
+
+    <textarea id="currentURL" style="width: 90%;"></textarea>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -62,7 +80,7 @@
 <div class="slice-container">
 
     <!-- slice title and subtitle -->
-    <h1>Matchup <small>Compare two values</small></h1>
+    <h1><span id="report-title" class="editable" spellcheck="false">Match-up: compare two values</span></h1>
 
     <section id="chart-section">
         <!-- main section visualization goes here in rows -->
@@ -119,7 +137,8 @@
         <div class="row">
             <div class="span12">
                 <div class="pull-right">
-                    <small><a id="clear-data-btn" class="btn btn-small" href="#">Reset to sample data</a></small>
+                    <small><a id="clear-data-btn" class="btn btn-small" href="#">Reset to original data</a></small>
+                    <small><a id="save-data-btn" class="btn btn-small" href="#">Remember this!</a></small>
                 </div>
                 <aside>
                     <p>lorem ipsum dolorum</p>

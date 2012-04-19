@@ -1,5 +1,7 @@
-var layout = {};
-layout.sankey = function() {
+if(juice === undefined)
+  var juice = {};
+
+juice.sankey = function() {
   var sankey = {},
       matrix,
       n,

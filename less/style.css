@@ -3661,6 +3661,12 @@ h1 small a {
 .dark {
   background-color: #CCC;
 }
+.editable {
+  width: 100%;
+}
+.editable:hover {
+  background-color: #ffffe0;
+}
 .header-row .column-header {
   text-align: center;
   position: relative;

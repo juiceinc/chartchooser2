@@ -48,6 +48,23 @@ $(function() {
         saveCurrentData();
         return false; //prevent refresh
     });
+
+    //unfocus editable title on enter
+    $('.editable').keypress(function(e){
+       var code = (e.keyCode ? e.keyCode : e.which);
+       if(code == 13) { //Enter keycode
+         e.preventDefault();
+         $('.editable').mouseout();
+       }
+    });
+
+    //unfocus editable title on mouse out
+    $('.editable').mouseout( function(){
+        if($(this).attr('contentEditable')){
+          $(this).attr('contentEditable',false);
+          $(this).blur();
+        }
+    });
   }
 
   //updates leaderboard divider text and position
@@ -209,6 +226,10 @@ $(function() {
     if(data.numDisplayed)
       $('#leaderboard-visible-rows').val(data.numDisplayed);
 
+    //set number of displayed rows
+    if(data.reportTitle)
+      $('#report-title').text(data.reportTitle);
+
     //update data
     updateData();
 
@@ -258,13 +279,15 @@ $(function() {
     var data = $('#csv-data').val();
     var topOrBottom = $('#leaderboard-direction').val();
     var numDisplayed = $('#leaderboard-visible-rows').val();
+    var reportTitle = $('#report-title').text();
     var filters = [];
 
     _.each($('.datafilter'), function(filterObj){
       filters.push($(filterObj).attr('data-column') +':'+ $(filterObj).attr('data-value'));
     });
 
-    var jsonData = JSON.stringify({"data": data, "topOrBottom": topOrBottom , "numDisplayed": numDisplayed, "filters": filters});
+    var jsonData = JSON.stringify({"data": data, "topOrBottom": topOrBottom , "numDisplayed": numDisplayed
+      , "filters": filters, "reportTitle": reportTitle});
 
     $.ajax({
         type: 'POST',
