@@ -60,10 +60,7 @@ $(function() {
 
     //unfocus editable title on mouse out
     $('.editable').mouseout( function(){
-        if($(this).attr('contentEditable')){
-          $(this).attr('contentEditable',false);
-          $(this).blur();
-        }
+      $(this).blur();
     });
   }
 
