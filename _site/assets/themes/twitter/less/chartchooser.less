@@ -1,0 +1,361 @@
+@import "../less/bootstrap/variables.less";
+
+// Chart Chooser
+// ---------
+
+h1 {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+h1 small {
+    padding: 0 20px;
+    font-size: 80%;
+    font-weight: 300;
+}
+
+h1 small a{
+    padding: 0 5px;
+}
+
+.section {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.dark {
+    background-color: #CCC;
+}
+
+.editable {
+  width: 100%;
+}
+
+.editable:hover {
+  background-color: #ffffe0;
+}
+
+// --------- COMPARISON
+//-------------------------------------------------
+
+.header-row {
+    .column-header {
+        text-align: center;
+        position: relative;
+        border-bottom: 1px solid #CCC;
+        height : 40px;
+
+        .selected-diff-mode {
+            background-color: #DEDEDE;
+        }
+
+        .select-container {
+            text-align: justify;
+            position: absolute;
+            bottom: 5px;
+        }
+    }
+
+}
+
+.chart-wrapper {
+    position: relative;
+
+    .comparison-chart {
+        color: #404040;
+        min-height: 150px;
+        padding-bottom: 20px;
+    }
+
+    .match-up-overlay {
+        position: absolute;
+        padding-left: 240px;
+        pointer-events:none;
+    }
+/*
+    .match-up-overlay {
+        position: absolute;
+        padding-left: 240px;
+        float: left;
+        margin-left: -40px;
+        top: 0px;
+        display: none;
+        pointer-events:none;
+        z-index: -1;
+    }
+*/
+    .match-up-overlay-container {
+        position: absolute;
+        padding-left: 240px;
+        float: left;
+        top: 0px;
+        display: none;
+        pointer-events:none;
+        z-index: -1;
+
+    }
+
+    .comprarison-row {
+        .loser, .negative {
+            color: @red;
+        }
+        .winner, .positive {
+            color: @green;
+        }
+        .left {
+            text-align: left;
+        }
+        .right {
+            text-align: right;
+        }
+        .center {
+            text-align: center;
+        }
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    }
+
+    .comparison-cell {
+        font-variant: normal;
+        padding: 0px;
+        /*border-left: 1px solid #D0D2D3;*/
+        text-align: left;
+        cursor: pointer;
+        position: relative;
+        height: 25px;
+
+        div {
+            /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
+            pointer-events: none;
+        }
+
+        .rank {
+            font-weight: normal;
+            display: none;
+            position: absolute;
+            left: 7px;
+            top: 0px;
+            font-size: 10px;
+            line-height: 10px;
+            height: 10px;
+            color: #787878;
+            padding: 1px;
+        }
+
+        .title {
+            position: absolute;
+            left: 7px;
+            bottom: 2px;
+            font-size: 12px;
+            line-height: 12px;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            position: absolute;
+            right: 5px;
+            bottom: 2px;
+        }
+    }
+    .comparison-cell.hovered {
+        background-color: #f2f3f4;
+        cursor: pointer;
+    }
+}
+
+
+
+// --------- LEADERBOARD
+//-------------------------------------------------
+#leaderboard {
+    font-family: 'Gudea', sans-serif;
+    font-size: 13px;
+    color: #404040;
+    position: relative;
+}
+
+#leaderboard-wrapper {
+    position: relative;
+}
+
+#leaderboard-divider {
+    position: absolute;
+    top: 150px;
+    text-align: right;
+    border-top: 1px dashed #d0d2d3;
+    width: 100%;
+    font-size: 10px;
+    line-height: 10px;
+    height: 10px;
+    color: #787878;
+}
+
+.leaderboard-column {
+    text-align: center;
+    position: absolute;
+    color: #787a7c;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+.leaderboard-cell {
+    font-variant: normal;
+    padding: 0px;
+    border-left: 1px solid #D0D2D3;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    height: 25px;
+    background-color: #FFF;
+
+
+    div{
+    	/*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
+    	pointer-events: none;
+    }
+
+
+    .rank {
+        font-weight: normal;
+        display: none;
+        position: absolute;
+        left: 7px;
+        top: 0px;
+        font-size: 10px;
+        line-height: 10px;
+        height: 10px;
+        color: #787878;
+        padding: 1px;
+    }
+
+    .title {
+        position: absolute;
+        left: 7px;
+        bottom: 2px;
+        font-size: 12px;
+        line-height: 12px;
+        color: #666;
+        font-weight: 300;
+    }
+
+    .value {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: right;
+        position: absolute;
+        right: 5px;
+        bottom: 2px;
+    }
+
+}
+
+.leaderboard-cell.hovered {
+    background-color: #f2f3f4;
+    cursor: pointer;
+}
+
+.leaderboard-cell.selected {
+    border-left: 0px solid #ea5156;
+    box-shadow: inset 1px 1px 4px white, inset -1px -1px 3px rgba(0.7,0.2,0.2,0.2);
+    background-color: #ea5156;
+    color: white !important;
+    .rank {
+        color: white;
+    }
+    .title {
+        color: white;
+    }
+    .value {
+        color: white;
+    }
+}
+
+.cell-out-of-range {
+    margin-top: 20px;
+    display: none;
+    height: 18px;
+
+    -webkit-transition: all 0s ease;
+    -moz-transition: all 0s ease;
+    -o-transition: all 0s ease;
+    transition: all 0s ease;
+    /*-webkit-transition: none;*/
+    /*-moz-transition: none;*/
+    /*-o-transition: all 0s ease;*/
+    /*transition: none;*/
+
+    .rank {
+        top: 3px;
+    }
+
+    .title {
+	    display:none;
+	}
+
+	.value {
+	    font-size: 13px;
+        bottom: 0px;
+	}
+}
+
+#toolbar select {
+    width: auto;
+}
+
+.format-choice {
+    font-family: "Courier New", Courier, fixed;
+}
+
+.no-data {
+    opacity: 0.4;
+    .rank {
+        display: none !important;
+    }
+}
+
+.leaderboard-cell.cell-out-of-range.selected, .leaderboard-cell.cell-out-of-range.hovered {
+    display: block;
+}
+
+.leaderboard-cell.hovered .rank, .leaderboard-cell.selected .rank{
+    display: block;
+}
+
+/** Styles for the comparison d3 */
+.left-line, .right-line {
+    stroke-width: 3px;
+    stroke: #ccc;
+}
+.connector {
+    stroke-width: 5px;
+    stroke: steelblue;
+}
+.left-value-indicator, .right-value-indicator {
+    fill: steelblue;
+    stroke: #ffffff;
+    stroke-width: 2;
+}
+
+.axis-top, .axis-bottom {
+    font-size: 10px;
+    fill: #999;
+}
+.left-value, .right-value {
+    font-size: 20px;
+    font-weight: bold;
+    fill: #333;
+}
+
+
+
+// --------- Sankey
+//-------------------------------------------------
+
+#sankey {
+  min-height: 300px;
+}
