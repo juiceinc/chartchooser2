@@ -6,7 +6,7 @@ juice.comparison = function(conf){
   var container = _conf.container || "#chart-match-up",
       height = _conf.height || 250,
       width = _conf.width || 340,
-      margin = {'top': 30, 'right': 0, 'bottom': 10, 'left': 100},
+      margin = {'top': 20, 'right': 0, 'bottom': 0, 'left': 100},
       comparison = {},
       microformat = {
         SYMBOL_FLOAT          : "d",
@@ -137,39 +137,37 @@ juice.comparison = function(conf){
     }
   };
 
-  function comparisonChart() {
-    //chart svg
-    var chart = d3.select(container).append("svg")
-        .attr("class", "chart")
+  comparison.dimensions = function(conf){
+    if(conf.height)
+      height = conf.height;
+
+    if(conf.width)
+      width = conf.width;
+
+    updateDimensions();
+  }
+
+
+  function updateDimensions () {
+    var chart = d3.select(container).select(".chart")
         .attr("width", width)
         .attr("height", height)
-      .append("g")
        ;
-
 
     //add boundary lines
     //x position calculator for boundaries
     var x = function (d, i) { return (i === 0) ? margin.left : width - margin.left - margin.right; };
 
     //boundary lines
-    chart.selectAll(".boundary-line")
-          .data([0,1])
-        .enter().append('line')
-          .attr('class', 'boundary-line')
-          .attr('class', function(d, i) { return i === 0 ? 'left-line' : 'right-line'; })
-          .attr('x1', x)
-          .attr('y1', margin.top)
-          .attr('x2', x)
-          .attr('y2', height - margin.top - margin.bottom)
-          ;
+      chart.selectAll(".boundary-line")
+            .attr('x1', x)
+            .attr('y1', margin.top)
+            .attr('x2', x)
+            .attr('y2', height - margin.top - margin.bottom)
+            ;
 
     //value indicators
     chart.selectAll(".value-indicator")
-        .data([0,1])
-      .enter().append('circle')
-        .attr('class', 'value-indicator')
-        .attr('class', function (d, i) {return i === 0 ? 'left-value-indicator' : 'right-value-indicator';})
-        .attr('r', 6)
         .attr('cx', x)
         ;
 
@@ -188,15 +186,65 @@ juice.comparison = function(conf){
     //boundary line (min/max) and left/right value labels
     chart.selectAll(".chart-label")
         .data(minMaxLabels)
-      .enter().append('text')
-        .attr('class', 'chart-label')
-        .attr('class', function (d, i) { return d.className ;})
         .attr('x', function (d, i) { return d.x; } )
         .attr('y', function (d, i) {return d.y; } )
+        ;
+  }
+
+
+  function comparisonChart() {
+    //chart svg
+    var chart = d3.select(container).append("svg")
+        .attr("class", "chart")
+      .append("g")
+       ;
+
+
+    //add boundary lines
+    //x position calculator for boundaries
+    var x = function (d, i) { return (i === 0) ? margin.left : width - margin.left - margin.right; };
+
+    //boundary lines
+    chart.selectAll(".boundary-line")
+          .data([0,1])
+        .enter().append('line')
+          .attr('class', function(d, i) { return i === 0 ? 'left-line' : 'right-line'; })
+          .classed('boundary-line', true)
+          ;
+
+    //value indicators
+    chart.selectAll(".value-indicator")
+        .data([0,1])
+      .enter().append('circle')
+        .attr('class', function (d, i) {return i === 0 ? 'left-value-indicator' : 'right-value-indicator';})
+        .classed('value-indicator', true)
+        .attr('fill-opacity', 0)
+        .attr('stroke-opacity', 0)
+        .attr('r', 6)
+        ;
+
+    var minMaxLabels = [
+      {'className': 'axis-top axis-left', 'x': margin.left, 'y': margin.top -10, 'align': 'middle', 'value': 'top-left'},
+      {'className': 'axis-bottom axis-left', 'x': margin.left, 'y': height - margin.top - margin.bottom +12, 'align': 'middle', 'value': 'bottom-left'},
+
+      {'className': 'axis-top axis-right', 'x': width - margin.left- margin.right, 'y': margin.top - 10, 'align': 'middle', 'value': 'top-right'},
+      {'className': 'axis-bottom axis-right', 'x': width - margin.left - margin.right, 'y': height - margin.top - margin.bottom + 12, 'align': 'middle', 'value': 'bottom-right'},
+
+      {'className': 'left-value', 'x': margin.left - 10, 'y': margin.top,  'align': 'end', 'value': 'left'},
+      {'className': 'right-value', 'x': width - margin.left - margin.right + 10, 'y':margin.top , 'align': 'left', 'value': 'right'}
+    ];
+
+    //boundary line (min/max) and left/right value labels
+    chart.selectAll(".chart-label")
+        .data(minMaxLabels)
+      .enter().append('text')
+        .attr('class', function (d, i) { return d.className ;})
+        .classed('chart-label', true)
         .attr('dy', 5 )
         .attr("text-anchor", function (d, i) { return d.align; })
-        //.text(function (d, i) { return d.value; })
         ;
+
+    updateDimensions();
 
     return chart;
 

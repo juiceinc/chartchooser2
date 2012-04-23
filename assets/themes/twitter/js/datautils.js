@@ -135,7 +135,8 @@
 
       var i = 0;
       //fill in other numeric columns
-      while(unprocessedColumns.length > 0 && columns.length <= settings.numberOfColumnsToProcess )
+      //only if user hasn't indicated which columns to pick
+      while(specialColumns.lenth === 0 && unprocessedColumns.length > 0 && columns.length <= settings.numberOfColumnsToProcess )
       {
         var numericColumnName = methods.findSpecificColumn(unprocessedColumns, data, methods.numericChecker);
         if(numericColumnName)

@@ -13,6 +13,7 @@ $(function() {
       SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
       DIFF_MODE_ABSOLUTE = 'absolute',
       DIFF_MODE_PERCENTAGE = 'percentage',
+      ROW_HEIGHT = 25,
       MAX_ROWS_CSV = 500; //max number of rows to process from text input
 
   var
@@ -263,6 +264,10 @@ $(function() {
       html +=  template(comparison);
     });
     $('#chart').html(html);
+
+
+    //set match up chart's height
+    matchUpChart.dimensions({height: comparisons.length * ROW_HEIGHT});
 
     //add mouse over/out handlers to add hovered effect
     $('.comparison-cell').on('mouseenter',function(){

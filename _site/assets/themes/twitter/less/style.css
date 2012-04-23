@@ -3706,6 +3706,7 @@ h1 small a {
   position: absolute;
   padding-left: 240px;
   pointer-events: none;
+  display: none;
 }
 .chart-wrapper .match-up-overlay-container {
   position: absolute;
