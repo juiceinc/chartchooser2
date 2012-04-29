@@ -3542,10 +3542,10 @@ body {
   position: relative;
   padding-top: 60px;
   padding-bottom: 40px;
-  background: url('../linen_background.jpg') repeat-x repeat-y;
+  background: url('../img/linen_background.jpg') repeat-x repeat-y;
   background-attachment: fixed;
   background-position: 800px 0px;
-  background-image: url('../linen_background.jpg');
+  background-image: url('../img/linen_background.jpg');
 }
 .container {
   margin-left: 20px;
@@ -3660,6 +3660,12 @@ h1 small a {
 }
 .dark {
   background-color: #CCC;
+}
+.editable {
+  width: 100%;
+}
+.editable:hover {
+  background-color: #ffffe0;
 }
 .header-row .column-header {
   text-align: center;
@@ -3942,4 +3948,7 @@ h1 small a {
   font-size: 20px;
   font-weight: bold;
   fill: #333;
+}
+#sankey {
+  min-height: 300px;
 }

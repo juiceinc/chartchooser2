@@ -1,29 +1,23 @@
 //leaderboard.js
+
+// an AJAX callback function reference, will be defined before the AJAX call
+var onDataLoad;
+
 //when dom is ready
+
 $(function() {
 
   //Styling and appearance
-  var HOVER_DURATION = 1000;
-  var CELL_WIDTH = 150;
-  var NUM_COLUMNS = 4;
-  var DISPLAYED_ROWS = 5; //TODO: make dynamic
+  var CELL_WIDTH = 150,
+      MAX_ROWS_CSV = 500, //max number of rows to process from text input
+      du = $(this).datautils({'numberOfColumnsToProcess': 5, 'maxHeaderLength': 15}),
+      FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
+      SAMPLE_DATA_HASH = '#7b42987e57dd070fa849b5899311ebb0',
+      SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
+      SYMBOL_STRING = "s"
+    ;
 
-  //header microformat symbols
-  var microformat= {
-    SYMBOL_PRIMARY_KEY    : "*",
-    SYMBOL_REVERSE_ORDER  : "-",
-    SYMBOL_FLOAT          : "d",
-    SYMBOL_INT            : "i",
-    SYMBOL_CURRENCY       : "$",
-    SYMBOL_PERCENT        : "%",
-    SYMBOL_STRING         : "s",
-    SYMBOL_NAN            : "--"
-  };
-
-  //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=0&output=csv';
-  //var SAMPLE_DATA_URL = 'https://docs.google.com/spreadsheet/pub?key=0AjfLl-FLMak1dE5rcDZNQWlvQmRDVWhXUmd2OGhqT1E&single=true&gid=1&output=csv';
-  var SAMPLE_DATA_URL = 'data/nfl_combine.csv';
-
+  //variables
   var displayedColumns = [],
       data = [],
       leaderboard;
@@ -45,7 +39,31 @@ $(function() {
 
     $('#clear-data-btn').click(function() {
         $('#clear-data-btn').removeClass('btn-info');
-        loadSampleData();
+        loadData();
+        return false; //prevent refresh
+    });
+
+    $('#save-data-btn').click(function() {
+        $('#clear-data-btn').removeClass('btn-info');
+        saveCurrentData();
+        return false; //prevent refresh
+    });
+
+    //unfocus editable title on enter
+    $('.editable').keypress(function(e){
+       var code = (e.keyCode ? e.keyCode : e.which);
+       if(code == 13) { //Enter keycode
+         e.preventDefault();
+         $('.editable').mouseout();
+       }
+    });
+
+    //unfocus editable title on mouse out
+    $('.editable').mouseout( function(){
+        if($(this).attr('contentEditable')){
+          $(this).attr('contentEditable',false);
+          $(this).blur();
+        }
     });
   }
 
@@ -80,17 +98,15 @@ $(function() {
     var csv = $('#csv-data').val();
 
     data = d3.csv.parse(csv);
-    var originalLen = data.length;
-    if (originalLen > 500) {
-        data = data.slice(0,500);
-    }
+    data = data.slice(0, MAX_ROWS_CSV);
 
-    var columns = findColumns(data);
+    var columns = du.datautils('findColumns', data);
     var key = columns[0].name;
 
     displayedColumns = _.rest(columns, 1);
+
     //all displayedColumns should be numeric, just double checking
-    var numericColumns = _.filter(displayedColumns, function(column){return column.format !== microformat.SYMBOL_STRING;});
+    var numericColumns = _.filter(displayedColumns, function(column){return column.format !== SYMBOL_STRING;});
 
     //convert columns to numerics
     _.each(data, function(row){
@@ -99,7 +115,14 @@ $(function() {
         row[column.name] = (!row[column.name] || row[column.name] === '') ? NaN : row[column.name] * 1;
       });
     });
-    refreshLeaderboard({data: data, displayedColumns: displayedColumns, key: key});
+
+    var displayTop = $('#leaderboard-direction').val() == 'top';
+
+    refreshLeaderboard({"data": data,
+                        "displayedColumns": displayedColumns,
+                        "key": key,
+                        "numberOfDisplayedRows": $('#leaderboard-visible-rows').val(),
+                        "displayTop": displayTop});
   }
 
   function searchItems(){
@@ -107,10 +130,17 @@ $(function() {
     leaderboard.selectByKey(searchStr);
   }
 
+
+
   function filterItems(){
     var filterStr = $('#filterInput').val();
     $('#filterInput').val('');
 
+    addFilterItem(filterStr);
+    filterData();
+  }
+
+  function addFilterItem(filterStr){
     var input = filterStr.split(':');
     if(input.length != 2)
       return;
@@ -146,7 +176,6 @@ $(function() {
         filterData();
       });
     }
-    filterData();
   }
 
 
@@ -163,7 +192,8 @@ $(function() {
       newData = _.filter(newData, function(row){ return (_.include(cleanValues, row[column].toLowerCase()) );});
     });
 
-    refreshLeaderboard({data: newData, displayedColumns: displayedColumns});
+    refreshLeaderboard({data: newData, displayedColumns: displayedColumns
+        , "numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
   }
 
   function refreshLeaderboard(conf){
@@ -181,148 +211,102 @@ $(function() {
     refreshLeaderboard({"numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
   }
 
-  function getBlankColumnMetadata(name){
-    return {
-      name          : name,
-      label         : name,
-      moreIsBetter  : true,
-      order         : 10000,
-      format        : microformat.SYMBOL_INT
-    };
-  }
-
-  function findColumns(data){
-    var columns = []; //array of {name: "abc[1-]", label:"abc",  }
-
-    var rawColumns = _.keys(data[0]);
-    var specialColumns = _.filter(rawColumns, function(col){
-      return col && col.indexOf('[') > -1 && col.indexOf(']') > -1;
-    });
-
-    //process special columns
-    _.each(specialColumns, function(col){
-      //parse header microformat, eg. myColumn[-3$]
-      var headerFormat = col.substring(col.lastIndexOf('['), col.lastIndexOf(']'));
-
-      var columnFormat = getBlankColumnMetadata(col);
-      columnFormat.label = col.substring(0, col.lastIndexOf('['));
-
-      //primary key
-      if(headerFormat.indexOf(microformat.SYMBOL_PRIMARY_KEY) > -1){
-        columnFormat.order = -1;
-        columnFormat.format = microformat.SYMBOL_STRING;
-        columnFormat.moreIsBetter = false;
-      }
-      else {
-        //order
-        var numbers = headerFormat.match(/\d+/g); //get all the numbers, returned as array
-        if(numbers && !isNaN(numbers[0] * 1) ) //the first item is the order #
-          columnFormat.order = numbers[0] * 1;
-
-        //more is better ?
-        columnFormat.moreIsBetter = headerFormat.indexOf('-') == -1;
-
-        //money
-        if(headerFormat.indexOf(microformat.SYMBOL_CURRENCY) > -1)
-          columnFormat.format = microformat.SYMBOL_CURRENCY;
-        //float
-        else if(headerFormat.indexOf(microformat.SYMBOL_FLOAT) > -1)
-          columnFormat.format = microformat.SYMBOL_FLOAT;
-        //percentage
-        else if(headerFormat.indexOf(microformat.SYMBOL_PERCENT) > -1)
-          columnFormat.format=microformat.SYMBOL_PERCENT;
-        //default is integer
-        else
-          columnFormat.format = microformat.SYMBOL_INT;
-      }
-      columns.push(columnFormat);
-    });
-
-    //add non-special columns
-    var unprocessedColumns = _.difference(rawColumns, specialColumns);
-
-    //find primary key column first if not already set
-    var hasPrimaryKey = _.any(columns, function(column){return column.order === -1; /*only PK has order of -1*/});
-
-    //add primary key if doesn't exist
-    if(!hasPrimaryKey){
-      var primaryKeyColumnName = findSpecificColumn(unprocessedColumns, data, nonNumericChecker);
-      if(primaryKeyColumnName){
-        var columnMetaData = getBlankColumnMetadata(primaryKeyColumnName);
-        columnMetaData.moreIsBetter = false;
-        columnMetaData.order = -1;
-        columnMetaData.format = microformat.SYMBOL_STRING;
-
-        columns.push(columnMetaData);
-        unprocessedColumns = _.difference(unprocessedColumns, [primaryKeyColumnName]);
-      }
-      else{
-        //leaderboard can't function properly without primary key
-        return null;
-      }
-    }
-
-    var i = 0;
-    //fill in other numeric columns
-    while(unprocessedColumns.length > 0 && columns.length <= NUM_COLUMNS )
-    {
-      var numericColumnName = findSpecificColumn(unprocessedColumns, data, numericChecker);
-      if(numericColumnName)
-      {
-        var columnMetaData = getBlankColumnMetadata(numericColumnName);
-        columnMetaData.order += i++;
-        columns.push(columnMetaData);
-        unprocessedColumns = _.difference(unprocessedColumns, [numericColumnName]);
-      }
-      else{
-        //no more numeric columns left
-        unprocessedColumns = [];
-      }
-    }
-
-    //sort by order
-    columns = _.sortBy(columns, function(column){ return column.order; });
-    return columns.slice(0, NUM_COLUMNS+1);
-  }
-
-  //non numeric value checker
-  function nonNumericChecker(value){
-    return value ? isNaN(value * 1) : true;
-  }
-
-  //numeric value checker
-  function numericChecker(value){
-    return value ? !isNaN(value * 1) : true;
-  }
-
-  //finds the first column whose values (only a certain amount of) satisfy checkFunction
-  function findSpecificColumn(columnNames, data, checkFunction){
-    var SAMPLE_SIZE = 10;
-
-    //check only first SAMPLE_SIZE items
-    var sample = _.first(data, SAMPLE_SIZE);
-
-    //find the first column that matches criteria
-    return _.find(columnNames, function(columnName){
-      var values = _.pluck(sample, columnName); //column values
-      return _.any(values) /*at least one value should be valid*/ && _.all(values, checkFunction); //check if all values meet criteria
-    });
-  }
-
-
   //----------------------------------------------- Data
+
+
+  //override the global data callback handler
+  onDataLoad = function(data){
+    $('#csv-data').val(data.data);
+
+    //set top or bottom
+    if(data.topOrBottom)
+      $('#leaderboard-direction').val(data.topOrBottom);
+
+    //set number of displayed rows
+    if(data.numDisplayed)
+      $('#leaderboard-visible-rows').val(data.numDisplayed);
+
+    //set number of displayed rows
+    if(data.reportTitle)
+      $('#report-title').text(data.reportTitle);
+
+    //update data
+    updateData();
+
+    //set filters (should be applied AFTER the data is loaded, filters only work for applicable columns)
+    if(data.filters) {
+      _.each(data.filters, function(filterStr){
+        addFilterItem(filterStr);
+      });
+      filterData();
+    }
+  };
+
+  function loadData(){
+
+    if(window.location.hash === '' || window.location.hash === '#')
+      window.location.hash = SAMPLE_DATA_HASH;
+
+    var hash = window.location.hash.replace('#', '');
+    var dataURL = hash.substr(0,1) + '/' + hash;
+
+    //onDataLoad will get triggered from JSONP
+    $.ajax({
+      type: "GET",
+      url: FETCH_DATA_URL + dataURL,
+      dataType : "jsonp",
+      jsonp: false,
+      error: function(err) { }
+    });
+  }
 
   function loadSampleData(){
     $.ajax({
-      url: SAMPLE_DATA_URL,
+      url: 'data/nfl_combine.csv',
+
       success: function(data) {
-          $('#csv-data').val(data);
-          updateData();
+        $('#csv-data').val(data);
+        updateData();
       },
       error: function(err) { }
     });
   }
 
+
+
+  function saveCurrentData(){
+
+    var data = $('#csv-data').val();
+    var topOrBottom = $('#leaderboard-direction').val();
+    var numDisplayed = $('#leaderboard-visible-rows').val();
+    var reportTitle = $('#report-title').text();
+    var filters = [];
+
+    _.each($('.datafilter'), function(filterObj){
+      filters.push($(filterObj).attr('data-column') +':'+ $(filterObj).attr('data-value'));
+    });
+
+    var jsonData = JSON.stringify({"data": data, "topOrBottom": topOrBottom , "numDisplayed": numDisplayed
+      , "filters": filters, "reportTitle": reportTitle});
+
+    $.ajax({
+        type: 'POST',
+        url: SAVE_DATA_SERVICE_URL,
+        crossDomain: true,
+        data: jsonData,
+        dataType: 'json',
+        success: function(data) {
+          window.location.hash = data.id;
+
+          $('#currentURL').text(window.location.href);
+          $('#save-succeed-alert').modal('show');
+        },
+        error: function (data, textStatus, errorThrown) {
+            alert('POST failed.');
+        }
+    });
+
+  }
   //-----------------------------------------------Start
   function start(){
     addHandlers();
@@ -333,11 +317,11 @@ $(function() {
       key                   : "name",
       container             : "#leaderboard",
       displayedColumns      : [],
-      data                  : [],
-      formats               : microformat
+      data                  : []
     });
 
-    loadSampleData();
+    loadData();
+    //loadSampleData(); //this is to load the local sample data
   }
 
   start();

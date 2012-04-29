@@ -1,8 +1,16 @@
 //comparison.js
+
+
+// an AJAX callback function reference, will be defined before the AJAX call
+var onDataLoad;
+
+
 //when dom is ready
 $(function() {
 
-  var SAMPLE_DATA_URL = 'data/nfl_combine.csv',
+  var FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
+      SAMPLE_DATA_HASH = '#7b42987e57dd070fa849b5899311ebb0',
+      SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
       DIFF_MODE_ABSOLUTE = 'absolute',
       DIFF_MODE_PERCENTAGE = 'percentage',
       MAX_ROWS_CSV = 500; //max number of rows to process from text input
@@ -35,6 +43,13 @@ $(function() {
     $('#clear-data-btn').click(function () {
       $('#clear-data-btn').removeClass('btn-info');
       loadSampleData();
+      return false; //prevent refresh
+    });
+
+    $('#save-data-btn').click(function() {
+        $('#clear-data-btn').removeClass('btn-info');
+        saveCurrentData();
+        return false; //prevent refresh
     });
 
     //left name change
@@ -79,6 +94,24 @@ $(function() {
 
       return false;
      });
+
+
+    //unfocus editable title on enter
+    $('.editable').keypress(function(e){
+       var code = (e.keyCode ? e.keyCode : e.which);
+       if(code == 13) { //Enter keycode
+         e.preventDefault();
+         $('.editable').mouseout();
+       }
+    });
+
+    //unfocus editable title on mouse out
+    $('.editable').mouseout( function(){
+        if($(this).attr('contentEditable')){
+          $(this).attr('contentEditable',false);
+          $(this).blur();
+        }
+    });
   }
 
   //input text with raw data has been updated
@@ -254,17 +287,72 @@ $(function() {
 
 
   //----------------------------------------------- Data
-  function loadSampleData(){
+
+  //override the global data callback handler
+  onDataLoad = function(data){
+    $('#csv-data').val(data.data);
+
+    //set number of displayed rows
+    if(data.reportTitle)
+      $('#report-title').text(data.reportTitle);
+
+    //update data
+    updateData();
+
+  };
+
+  function loadData(){
+
+    if(window.location.hash === '' || window.location.hash === '#')
+      window.location.hash = SAMPLE_DATA_HASH;
+
+    var hash = window.location.hash.replace('#', '');
+    var dataURL = hash.substr(0,1) + '/' + hash;
+
+    //onDataLoad will get triggered from JSONP
     $.ajax({
-      url: SAMPLE_DATA_URL,
-      success: function(data) {
-        $('#csv-data').val(data);
-          updateData();
-      },
+      type: "GET",
+      url: FETCH_DATA_URL + dataURL,
+      dataType : "jsonp",
+      jsonp: false,
       error: function(err) { }
     });
   }
 
+
+  function saveCurrentData(){
+
+    var data = $('#csv-data').val();
+    var topOrBottom = $('#leaderboard-direction').val();
+    var numDisplayed = $('#leaderboard-visible-rows').val();
+    var reportTitle = $('#report-title').text();
+    var filters = [];
+
+    _.each($('.datafilter'), function(filterObj){
+      filters.push($(filterObj).attr('data-column') +':'+ $(filterObj).attr('data-value'));
+    });
+
+    var jsonData = JSON.stringify({"data": data, "topOrBottom": topOrBottom , "numDisplayed": numDisplayed
+      , "filters": filters, "reportTitle": reportTitle});
+
+    $.ajax({
+        type: 'POST',
+        url: SAVE_DATA_SERVICE_URL,
+        crossDomain: true,
+        data: jsonData,
+        dataType: 'json',
+        success: function(data) {
+          window.location.hash = data.id;
+
+          $('#currentURL').text(window.location.href);
+          $('#save-succeed-alert').modal('show');
+        },
+        error: function (data, textStatus, errorThrown) {
+            alert('POST failed.');
+        }
+    });
+
+  }
   //-----------------------------------------------Start
   function start(){
 
@@ -280,7 +368,7 @@ $(function() {
     });
 
     addHandlers();
-    loadSampleData();
+    loadData();
   }
 
   start();

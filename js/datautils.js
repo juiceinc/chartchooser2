@@ -17,7 +17,8 @@
         AGGR_AVERAGE        : "avg",
         AGGR_SUM            : "sum"
       },
-      numberOfColumnsToProcess: 20
+      numberOfColumnsToProcess: 20,
+      maxHeaderLength: 15
     };
 
   var methods = {
@@ -60,8 +61,8 @@
 
         var columnFormat = getBlankColumnMetadata(col, settings.microformat.SYMBOL_INT);
 
-        //column label - take up to 30 characters from beginning to the start of microformat
-        columnFormat.label = col.substring(0, Math.min(col.lastIndexOf('['), 30));
+        //column label - take up to "settings.maxHeaderLength" characters from beginning to the start of microformat
+        columnFormat.label = col.substring(0, Math.min(col.lastIndexOf('['), settings.maxHeaderLength));
 
         //primary key
         if(headerFormat.indexOf(settings.microformat.SYMBOL_PRIMARY_KEY) > -1){
