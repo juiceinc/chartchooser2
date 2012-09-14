@@ -99,7 +99,11 @@ $(function() {
     //num of visible rows  and position of the leaderboard divider line
     var numberOfDisplayedRows = $('#leaderboard-visible-rows').val() * 1;
     $('.divider-visible-rows-number').text(numberOfDisplayedRows);
-    $('#leaderboard-divider').css('top', (numberOfDisplayedRows +1 /*header*/) * 25 /*row height*/);
+    $('#leaderboard-divider').css({'top': (numberOfDisplayedRows +1 /*header*/) * 25 /*row height*/});
+    if( conf.displayedColumns ) {
+      $('#leaderboard-divider').css({'width': conf.displayedColumns.length * 150 + 10,
+                                     'display': conf.displayedColumns.length ? 'block' : 'none'});
+    }
   }
 
   function resetFilters(){
