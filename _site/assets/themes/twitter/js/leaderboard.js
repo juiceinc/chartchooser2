@@ -63,8 +63,8 @@ $(function() {
           //pattern that matches the html file name in the URL
           var pattern = /\/([a-z]*)(\.html#[a-z0-9]+)/
 
-          //replace /leaderboard.html with /thin_leaderboard.html
-          $('.modal-body').html(shareTemplate({'url':url.replace(pattern, "/thin_$1$2")}));
+          //replace /leaderboard.html with /standalone_leaderboard.html
+          $('.modal-body').html(shareTemplate({'url':url.replace(pattern, "/standalone_$1$2")}));
         });
 
         return false; //prevent refresh

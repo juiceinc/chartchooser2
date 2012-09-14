@@ -4,4 +4,4 @@ http://juiceinc.github.com/comparison.html
 http://juiceinc.github.com/index.html
 http://juiceinc.github.com/leaderboard.html
 http://juiceinc.github.com/sitemap.txt
-http://juiceinc.github.com/thin_leaderboard.html
+http://juiceinc.github.com/standalone_leaderboard.html
