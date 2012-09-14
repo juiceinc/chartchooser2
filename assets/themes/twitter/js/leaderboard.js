@@ -9,12 +9,14 @@ $(function() {
 
   //Styling and appearance
   var CELL_WIDTH = 150,
-      MAX_ROWS_CSV = 500, //max number of rows to process from text input
+      MAX_ROWS_CSV = 500000, //max number of rows to process from text input
       du = $(this).datautils({'numberOfColumnsToProcess': 5, 'maxHeaderLength': 15}),
       FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
       SAMPLE_DATA_HASH = '#7b42987e57dd070fa849b5899311ebb0',
       SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
-      SYMBOL_STRING = "s"
+      SYMBOL_STRING = "s",
+      saveTemplate = ($('#save-template').length) ? _.template($('#save-template').html()) : '',
+      shareTemplate = ($('#share-template').length) ? _.template($('#share-template').html()) : ''
     ;
 
   //variables
@@ -45,7 +47,26 @@ $(function() {
 
     $('#save-data-btn').click(function() {
         $('#clear-data-btn').removeClass('btn-info');
-        saveCurrentData();
+        saveCurrentData(function(url)
+          {
+            $('.modal-body').html(saveTemplate({'url': url}));
+          }
+        );
+        return false; //prevent refresh
+    });
+
+    $('#share-data-btn').click(function() {
+        $('#clear-data-btn').removeClass('btn-info');
+
+        saveCurrentData(function(url)
+        {
+          //pattern that matches the html file name in the URL
+          var pattern = /\/([a-z]*)(\.html#[a-z0-9]+)/
+
+          //replace /leaderboard.html with /thin_leaderboard.html
+          $('.modal-body').html(shareTemplate({'url':url.replace(pattern, "/thin_$1$2")}));
+        });
+
         return false; //prevent refresh
     });
 
@@ -271,7 +292,7 @@ $(function() {
 
 
 
-  function saveCurrentData(){
+  function saveCurrentData(constructURLFx){
 
     var data = $('#csv-data').val();
     var topOrBottom = $('#leaderboard-direction').val();
@@ -295,7 +316,9 @@ $(function() {
         success: function(data) {
           window.location.hash = data.id;
 
-          $('#currentURL').text(window.location.href);
+          if (typeof(constructURLFx)==='function')
+            constructURLFx(window.location.href) ;
+
           $('#save-succeed-alert').modal('show');
         },
         error: function (data, textStatus, errorThrown) {

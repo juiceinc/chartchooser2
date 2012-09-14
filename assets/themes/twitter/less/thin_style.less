@@ -1,0 +1,38 @@
+@import "bootstrap/bootstrap.less";
+
+body {
+  position: relative;
+  background-color: white;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.container {
+    margin-left: 20px;
+}
+
+.navbar-inner {
+    opacity: 0.95;
+}
+
+.slice-container {
+    background-color: #fff;
+    padding: 10px;
+    padding-bottom: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-top: 0px;
+    width: @gridRowWidth;
+    max-width: @gridRowWidth;
+    .box-shadow(-1px 0px 8px 0px #666);
+}
+
+.slice-data-container {
+    display:none;
+}
+
+@import "chartchooser.less";
+
+#report-title {
+  display: none;
+}

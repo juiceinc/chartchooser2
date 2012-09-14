@@ -1,0 +1,73 @@
+---
+layout: thin_page
+title: Leaderboard
+header: Leaderboard
+plugin: leaderboard
+hasInputData: true
+---
+
+      <div>
+        <div class="row">
+          <div id="toolbar">
+            <form id="filter-form" class="form-search span6">
+              <div>
+                Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
+                                                   data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
+                                                   data-original-title="How to filter your data">Learn how.</a>
+                <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
+                <button type="submit" class="btn btn-small">Filter</button></p>
+              </div>
+
+              <div id="applied-filters" class="row">
+              </div>
+            </form>
+
+            <form id="search-form" class="form-search span6">
+
+              <div>
+                Search:
+                <p><input type = "text" placeholder="search name" id="searchInput"/>
+                <button type="submit" class="btn btn-small">Search</button></p>
+              </div>
+
+              <br/>
+              <div>
+                <span>Show</span>
+                <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
+                  <span>Leaders</span>
+                  <span>Laggards</span>
+                </span>
+                <br/>
+                <br/> -->
+                <select id="leaderboard-direction">
+                  <option>top</option>
+                  <option>bottom</option>
+                </select>
+
+                <select id="leaderboard-visible-rows">
+                  <option>5</option>
+                  <option selected>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                </select>
+                <span id="total-population">out of 20</span>
+                <div style="clear:both"/>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Chart and its description -->
+      <div class="row">
+
+        <div class="span12">
+            <div id="leaderboard-wrapper">
+                <div id="leaderboard-divider">
+                    below the <span class='divider-direction'>top</span> <span class='divider-visible-rows-number'>10</span>
+                </div>
+                <div id="leaderboard">
+                </div>
+            </div>
+        </div>
+
+      </div>

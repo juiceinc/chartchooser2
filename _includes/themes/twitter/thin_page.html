@@ -21,7 +21,7 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link rel="stylesheet" href="{{ASSET_PATH}}/less/style.css">
+    <link rel="stylesheet" href="{{ASSET_PATH}}/less/thin_style.css">
     <link rel="stylesheet" href="{{ASSET_PATH}}/js/libs/chosen/chosen.css"/>
     <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light|Open+Sans:300,600' rel='stylesheet' type='text/css'>
 
@@ -34,33 +34,56 @@
       to experience this site.</p><![endif]-->
 
 
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-                <a class="brand" href="index.html">Juice Labs</a>
 
-                <div class="nav-collapse">
-                    <ul class="nav">
-                      {% assign pages_list = site.pages %}
-                      {% assign group = 'navigation' %}
-                      {% include JB/pages_list %}
-                    </ul>
+
+
+  <div class="slice-container">
+
+    <!-- slice title -->
+    <h1><span id="report-title" class="editable" spellcheck="false" contenteditable="true">{{page.title}}</span></h1>
+
+    <section id="chart-section">
+      <!-- main section visualization goes here in rows -->
+
+      {{ content }}
+
+    </section>
+
+    {% if page.hasInputData %}
+
+
+    <!-- Raw data -->
+    <div class="slice-data-container" section="data-section">
+        <div class="row">
+            <div class="span12">
+                <div class="pull-right">
+                    <small><a id="clear-data-btn" class="btn btn-small" href="#">Reset to original data</a></small>
+                    <small><a id="save-data-btn" class="btn btn-small" href="#">Remember this!</a></small>
                 </div>
-                <!--/.nav-collapse -->
+                <!--<aside>-->
+                    <!--<p>lorem ipsum dolorum</p>-->
+                <!--</aside>-->
+                <h1>Data
+                    <small>Use your own data. <a class="popup" href="#" class="" rel="popover"
+                                                 data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
+                                                 data-original-title="Adding your own data">Learn how.</a></small>
+
+                </h1>
+                <form action="#" id="input-form">
+                    <div><textarea style="width: 100%" rows="20" id="csv-data"></textarea></div>
+                </form>
             </div>
         </div>
     </div>
 
-    <a href="#" id="github"><span>Want more?</span><span>Check out slice!</span></a>
+
+    <!--{% endif %}-->
 
 
 
-    {{ content }}
+  </div> <!-- /container -->
+
+
 
 
 
@@ -69,35 +92,14 @@
       <div class="container" style="padding: 20px 0;">
           <div class="row">
               <div class="span4">
-                  <div>FAQ</div>
-                  <div>Troubleshooting</div>
-                  <div>Contact us</div>
-                  <div>Created by Juice inc, &copy; 2012</div>
-              </div>
-              <div class="span4">
-                  <div>You may also be interested in</div>
-                  <div>Chart Chooser</div>
-                  <div>Dashboard design services</div>
-                  <div>Slice: easy as pie</div>
+                  <div class="text-info">Created by <a href="http://www.juiceanalytics.com/">Juice Inc</a>,
+                    &copy; 2012</div>
               </div>
           </div>
       </div>
     </footer>
 
 
-
-    <script type="text/template" id="save-template">
-      <p>Share the URL from your address bar to return back later, we will keep your stuff!</p>
-      <textarea id="save-url" style="width: 90%;"><%=url %></textarea>
-    </script>
-
-    <script type="text/template" id="share-template">
-      <p>Copy and paste the following script to your web page!</p>
-      <% var s =  _.escape( '<iframe name="_history" src="' + url + '" frameborder="0" scrolling="no" width="720" height="1500"></iframe>' ); %>
-      <pre>
-<%= s %>
-      </pre>
-    </script>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
@@ -142,6 +144,7 @@
     <!--{% include JB/analytics %}-->
   </body>
 </html>
+
 
 
 

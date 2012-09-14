@@ -81,6 +81,10 @@
       
     
   
+    
+      
+    
+  
 
 
 
@@ -105,9 +109,6 @@
         <h3>Your leaderboard is ready for sharing!</h3>
       </div>
       <div class="modal-body">
-        <p>Share the URL from your address bar to return back later, we will keep your stuff!</p>
-
-        <textarea id="currentURL" style="width: 90%;"></textarea>
 
       </div>
       <div class="modal-footer">
@@ -228,6 +229,19 @@
     </footer>
 
 
+
+    <script type="text/template" id="save-template">
+      <p>Share the URL from your address bar to return back later, we will keep your stuff!</p>
+      <textarea id="save-url" style="width: 90%;"><%=url %></textarea>
+    </script>
+
+    <script type="text/template" id="share-template">
+      <p>Copy and paste the following script to your web page!</p>
+      <% var s =  _.escape( '<iframe name="_history" src="' + url + '" frameborder="0" scrolling="no" width="720" height="1500"></iframe>' ); %>
+      <pre>
+<%= s %>
+      </pre>
+    </script>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
