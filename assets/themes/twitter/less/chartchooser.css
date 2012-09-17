@@ -164,19 +164,21 @@ h1 small a {
 .leaderboard-column {
   text-align: center;
   position: absolute;
-  color: #787a7c;
+  color: #485E65;
   font-variant: small-caps;
-  font-weight: bold;
+  font-weight: 300;
 }
 .leaderboard-cell {
   font-variant: normal;
   padding: 0px;
   border-left: 1px solid #D0D2D3;
   text-align: left;
+  line-height: 23px;
   cursor: pointer;
   position: relative;
   height: 25px;
   background-color: #FFF;
+  clear: both;
 }
 .leaderboard-cell div {
   /*FIXME: disabling mouse events on the cell children, who were firing mouseover/mouseout... use mouseenter/mouseleave instead */
@@ -186,50 +188,73 @@ h1 small a {
 .leaderboard-cell .rank {
   font-weight: normal;
   display: none;
-  position: absolute;
-  left: 7px;
-  top: 0px;
-  font-size: 10px;
-  line-height: 10px;
-  height: 10px;
-  color: #787878;
-  padding: 1px;
+  float: right;
+  background-color: #F5E6BE;
+  font-size: 11px;
+  line-height: 15px;
+  height: 15px;
+  padding: 2px 3px 2px 5px;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+  margin-top: -1px;
+}
+.leaderboard-cell .position {
+  padding-top: 12px;
+  height: 11px;
+  line-height: 11px;
+  letter-spacing: -1px;
+  vertical-align: bottom;
+  color: #839496;
+  padding-left: 3px;
+  float: left;
+  font-size: 11px;
+  max-width: 5px;
+  text-wrap: none;
 }
 .leaderboard-cell .title {
-  position: absolute;
-  left: 7px;
-  bottom: 2px;
-  font-size: 12px;
-  line-height: 12px;
-  color: #666;
-  font-weight: 300;
+  padding-top: 9px;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: bottom;
+  padding-left: 4px;
+  float: left;
+  font-size: 14px;
 }
 .leaderboard-cell .value {
-  font-size: 18px;
-  font-weight: bold;
+  padding: 3px 3px 0 5px;
+  float: right;
+  height: 20px;
+  line-height: 20px;
+  font-size: 20px;
   text-align: right;
-  position: absolute;
-  right: 5px;
-  bottom: 2px;
 }
 .leaderboard-cell.hovered {
-  background-color: #f2f3f4;
+  background-color: #FDF6E3;
   cursor: pointer;
 }
 .leaderboard-cell.selected {
   border-left: 0px solid #ea5156;
-  box-shadow: inset 1px 1px 4px #ffffff, inset -1px -1px 3px rgba(1, 0, 0, 0.2);
-  background-color: #ea5156;
+  background-color: #008ECE;
   color: white !important;
 }
 .leaderboard-cell.selected .rank {
+  background-color: #0075AA;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.75);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.75);
   color: white;
+}
+.leaderboard-cell.selected .position {
+  color: #eee;
 }
 .leaderboard-cell.selected .title {
   color: white;
+  font-weight: 500;
 }
 .leaderboard-cell.selected .value {
   color: white;
+  font-weight: 500;
 }
 .cell-out-of-range {
   margin-top: 20px;
@@ -252,11 +277,15 @@ h1 small a {
   top: 3px;
 }
 .cell-out-of-range .title {
+  padding-top: 3px;
+  font-size: 13px;
+}
+.cell-out-of-range .position {
   display: none;
 }
 .cell-out-of-range .value {
-  font-size: 13px;
-  bottom: 0px;
+  font-size: 15px;
+  padding-top: 0px;
 }
 #toolbar select {
   width: auto;
