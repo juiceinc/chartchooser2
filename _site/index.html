@@ -12,7 +12,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Chart Chooser 2</title>
+    <title>Leaderboard</title>
     
     <meta name="author" content="Juice Analytics">
 
@@ -22,8 +22,8 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link rel="stylesheet" href="assets/themes/twitter/less/style.css">
-    <link rel="stylesheet" href="assets/themes/twitter/js/libs/chosen/chosen.css"/>
+    <link rel="stylesheet" href="./assets/themes/twitter/less/style.css">
+    <link rel="stylesheet" href="./assets/themes/twitter/js/libs/chosen/chosen.css"/>
     <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light|Open+Sans:300,600' rel='stylesheet' type='text/css'>
 
   </head>
@@ -60,20 +60,28 @@
     
       
       	
-      	<li><a href="comparison.html">Comparison</a></li>
+      	<li><a href="/comparison.html">Comparison</a></li>
       	
       
     
   
     
       
+      	
+      	<li class="active"><a href="/index.html" class="active">Leaderboard</a></li>
+      	
+      
     
   
     
       
       	
-      	<li><a href="leaderboard.html">Leaderboard</a></li>
+      	<li><a href="/leaderboard.html">Leaderboard</a></li>
       	
+      
+    
+  
+    
       
     
   
@@ -120,81 +128,104 @@
     <div class="slice-container">
 
       <!-- slice title -->
-      <h1><span id="report-title" class="editable" spellcheck="false" contenteditable="true">Chart Chooser 2</span></h1>
+      <h1><span id="report-title" class="editable" spellcheck="false" contenteditable="true">Leaderboard</span></h1>
 
       <section id="chart-section">
         <!-- main section visualization goes here in rows -->
 
-            <div class="row">
-      <div class="span12">
-        <aside>
-          <p>Collectively, Juice owns 7 doggies.</p>
-        </aside>
-        <div class="hero-unit">
+              <aside>
+        <div>
+            <div id="toolbar">
+              <form id="filter-form" class="form-search">
+                <div>
+                  Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
+                                                     data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
+                                                     data-original-title="How to filter your data">Learn how.</a>
+                  <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
+                  <button type="submit" class="btn">Filter</button></p>
+                </div>
+                <div id="applied-filters" class="row">
+                </div>
+              </form>
 
-          <img style="float: right" src="http://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Endal_Dickin.jpg/170px-Endal_Dickin.jpg" alt="">
+              <form id="search-form" class="form-search">
 
-          <h2>Make something great today!</h2>
-          <p>Welcome to Juice Labs. We're building better tools to help you act on your data. </p>
+                <div>
+                  Search:
+                  <p><input type = "text" placeholder="search name" id="searchInput"/>
+                  <button type="submit" class="btn">Search</button></p>
+                </div>
 
-          <p>Have an idea? Want to see something new? Contact us at <a href="mailto:info@juiceanalytics.com">info@juiceanalytics.com</a>.</p>
-          <p>Want more? Contact us to learn about Slice, our all-that-and-more tool that lets everyday folks build great reports.</p>
+                <br/>
+                <div>
+                  <span>Show</span>
+
+                    <select id="leaderboard-show">
+                        <optgroup label="Top">
+                        <option value="top 10">top 10</option>
+                        <option selected value="top 20">top 20</option>
+                        <option value="top 40">top 40</option>
+                        </optgroup>
+                        <optgroup label="Bottom">
+                        <option value="bottom 10">bottom 10</option>
+                        <option value="bottom 20">bottom 20</option>
+                        <option value="bottom 40">bottom 40</option>
+                        </optgroup>
+                    </select>
+                  <span id="total-population">out of 20</span>
+                  <div style="clear:both"/>
+                </div>
+              </form>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Chart and its description -->
+      <div class="row">
+
+        <div class="span12">
+            <div id="leaderboard-wrapper">
+                <div id="leaderboard-divider">
+                    below the <span class='divider-direction'>top</span> <span class='divider-visible-rows-number'>10</span>
+                </div>
+                <div id="leaderboard">
+                </div>
+            </div>
         </div>
 
       </div>
-    </div>
-    <br>
-
-    <h1>Get started</h1>
-    <div class="row">
-
-      <div class="span12">
-
-        <aside>
-          <p>Chart chooser has been used by 590,052 people since we launched it in 2006. Wowza, that's a lot of easy-on-the-eyes charting.</p>
-        </aside>
-        <ul class="thumbnails">
-          <li class="span4">
-            <div class="thumbnail">
-              <img src="http://placehold.it/260x180" alt="">
-              <div class="caption">
-                <h5>Chart chooser</h5>
-                <p>Get your own advanced graphs and tables for Excel and PowerPoint</p>
-                <p><span class="label label-success">Download</span></p>
-                <p><a href="#" class="btn btn-primary">Get started</a></p>
-              </div>
-            </div>
-          </li>
-          <li class="span4">
-            <div class="thumbnail">
-              <img src="http://placehold.it/260x180" alt="">
-              <div class="caption">
-                <h5>Leaderboard</h5>
-                <p>Find the best and worst performers in your own data. </p>
-                <p><span class="label">Your-data</span></p>
-                <p><a href="#" class="btn btn-primary">Get started</a></p>
-              </div>
-            </div>
-          </li>
-          <li class="span4">
-            <div class="thumbnail">
-              <img src="http://placehold.it/260x180" alt="">
-
-              <div class="caption">
-                <h5>Comparison</h5>
-                <p>Go head-to-head and see how two groups compare across any set of metrics</p>
-                <p><span class="label">Your-data</span></p>
-                <p><a href="#" class="btn btn-primary">Get started</a></p>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-
 
 
       </section>
+
+      
+
+
+      <!-- Raw data -->
+      <div class="slice-data-container" section="data-section">
+          <div class="row">
+              <div class="span12">
+                  <div class="pull-right">
+                      <small><a id="clear-data-btn" class="btn btn-small" href="#">Reset to original data</a></small>
+                      <small><a id="save-data-btn" class="btn btn-small" href="#">Remember this!</a></small>
+                      <small><a id="share-data-btn" class="btn btn-small" href="#">Share this!</a></small>
+                  </div>
+                  <!--<aside>-->
+                      <!--<p>lorem ipsum dolorum</p>-->
+                  <!--</aside>-->
+                  <h1>Data
+                      <small>Use your own data. <a class="popup" href="#" class="" rel="popover"
+                                                   data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
+                                                   data-original-title="Adding your own data">Learn how.</a></small>
+
+                  </h1>
+                  <form action="#" id="input-form">
+                      <div><textarea style="width: 100%" rows="20" id="csv-data"></textarea></div>
+                  </form>
+              </div>
+          </div>
+      </div>
+
 
       
 
@@ -248,32 +279,38 @@
 
     <!-- scripts concatenated and minified via ant build script-->
     <!-- Bootstrap -->
-    <script src="assets/themes/twitter/js/libs/bootstrap/transition.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/collapse.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/tooltip.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/popover.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/modal.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/transition.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/collapse.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/tooltip.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/popover.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/modal.js"></script>
 
     <!-- d3 -->
-    <script src="assets/themes/twitter/js/libs/d3/d3.js"></script>
-    <script src="assets/themes/twitter/js/libs/d3/d3.csv.js"></script>
+    <script src="./assets/themes/twitter/js/libs/d3/d3.js"></script>
+    <script src="./assets/themes/twitter/js/libs/d3/d3.csv.js"></script>
 
     <!-- underscore -->
-    <script src="assets/themes/twitter/js/libs/underscore.js"></script>
+    <script src="./assets/themes/twitter/js/libs/underscore.js"></script>
 
 
     <!-- chosen plugin for drop downs https://github.com/harvesthq/chosen -->
-    <script src="assets/themes/twitter/js/libs/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="./assets/themes/twitter/js/libs/chosen/chosen.jquery.js" type="text/javascript"></script>
 
-    <script src="assets/themes/twitter/js/plugins.js"></script>
+    <script src="./assets/themes/twitter/js/plugins.js"></script>
 
     <!--common data utils plugin that deals with microformats-->
-    <script src="assets/themes/twitter/js/datautils.js"></script>
+    <script src="./assets/themes/twitter/js/datautils.js"></script>
 
 
     
+    <!-- d3 plugin -->
 
-    <script src="assets/themes/twitter/js/script.js"></script>
+    <script src="./assets/themes/twitter/js/libs/juice.leaderboard.js"></script>
+    <script src="./assets/themes/twitter/js/leaderboard.js"></script>
+
+    
+
+    <script src="./assets/themes/twitter/js/script.js"></script>
     <!-- end scripts-->
 
 

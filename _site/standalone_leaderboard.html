@@ -13,7 +13,7 @@
   <head>
     <meta charset="utf-8">
     <title>Leaderboard</title>
-    
+
     <meta name="author" content="Juice Analytics">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -22,9 +22,9 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link rel="stylesheet" href="assets/themes/twitter/less/standalone_style.css">
-    <link rel="stylesheet" href="assets/themes/twitter/js/libs/chosen/chosen.css"/>
-    <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light|Open+Sans:300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="./assets/themes/twitter/less/standalone_style.css">
+    <link rel="stylesheet" href="./assets/themes/twitter/js/libs/chosen/chosen.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600' rel='stylesheet' type='text/css'>
 
   </head>
 
@@ -46,76 +46,81 @@
     <section id="chart-section">
       <!-- main section visualization goes here in rows -->
 
-            <div>
-        <div class="row">
-          <div id="toolbar">
-            <form id="filter-form" class="form-search span5">
-              <div>
-                Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
-                                                   data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
-                                                   data-original-title="How to filter your data">Learn how.</a>
-                <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filterInput"/>
-                <button type="submit" class="btn btn-small">Filter</button></p>
-              </div>
+      <div>
+    <div class="row">
+        <div id="toolbar">
+            <form id="filter-form" class="form-search span3">
+                <div>
+                    Filter players: <a class="popupbottom" href="#" class=""
+                                       rel="popover"
+                                       data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>POSITION: QB</span><br/> limits you to rows with POSITION = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>POSITION: QB, RB</span><br/>  You can add more than one filter at a time."
+                                       data-original-title="How to filter your data">Learn
+                    how.</a>
 
-              <div id="applied-filters" class="row">
-              </div>
+                    <p><input type="text" title="filter"
+                              placeholder="try position: QB or team: PHI" id="filterInput"
+                              class="span3"/>
+                </div>
+
+                <div id="applied-filters" class="row">
+                </div>
             </form>
 
-            <form id="search-form" class="form-search span5">
+            <form id="search-form" class="form-search span7">
 
-              <div>
-                Search:
-                <p><input type = "text" placeholder="search name" id="searchInput"/>
-                <button type="submit" class="btn btn-small">Search</button></p>
-              </div>
+                <div class="row">
+                    <div class="span3">
+                        Search
+                        <p><input type="text" placeholder="search name"
+                                  id="searchInput" class="span3"/></p>
+                    </div>
 
-              <br/>
-              <div>
-                <span>Show</span>
-                <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
-                  <span>Leaders</span>
-                  <span>Laggards</span>
-                </span>
-                <br/>
-                <br/> -->
-                <select id="leaderboard-direction">
-                  <option>top</option>
-                  <option>bottom</option>
-                </select>
+                    <div class="span4">
+                        Show
+                        <p>
+                            <select id="leaderboard-show">
+                                <optgroup label="Top">
+                                <option value="top 10">top 10</option>
+                                <option selected value="top 20">top 20</option>
+                                <option value="top 40">top 40</option>
+                                </optgroup>
+                                <optgroup label="Bottom">
+                                <option value="bottom 10">bottom 10</option>
+                                <option value="bottom 20">bottom 20</option>
+                                <option value="bottom 40">bottom 40</option>
+                                </optgroup>
+                            </select>
 
-                <select id="leaderboard-visible-rows">
-                  <option>5</option>
-                  <option selected>10</option>
-                  <option>15</option>
-                  <option>20</option>
-                </select>
-                <span id="total-population">out of 20</span>
-                <div style="clear:both"/>
-              </div>
+                            <span id="total-population">out of __ players</span>
+                        <div style="clear:both"/>
+                        </p>
+                    </div>
+                </div>
+
             </form>
-          </div>
         </div>
-      </div>
-      <!-- Chart and its description -->
-      <div class="row">
+    </div>
+</div>
+<!-- Chart and its description -->
+<div class="row">
 
-        <div class="span12">
-            <div id="leaderboard-wrapper">
-                <div id="leaderboard-divider">
-                    below the <span class='divider-direction'>top</span> <span class='divider-visible-rows-number'>10</span>
-                </div>
-                <div id="leaderboard">
-                </div>
+    <div class="span12">
+        <div id="leaderboard-wrapper">
+            <div id="leaderboard-divider">
+                below the <span class='divider-direction'>top</span> <span
+                    class='divider-visible-rows-number'>10</span>
+            </div>
+            <div id="leaderboard">
             </div>
         </div>
+    </div>
 
-      </div>
+</div>
 
 
     </section>
 
-    
+
 
 
     <!-- Raw data -->
@@ -155,11 +160,14 @@
 
 
     <footer>
-      <div class="container" style="padding: 20px 0;">
+      <div class="container" style="padding: 20px 0; clear: both;">
           <div class="row">
               <div class="span4">
-                  <div class="text-info">Created by <a href="http://www.juiceanalytics.com/">Juice Inc</a>,
+                  <div class="text-info" style="float: left">Created by <a href="http://www.juiceanalytics.com/">Juice</a>,
                     &copy; 2012</div>
+              </div>
+              <div class="span4">
+                  <div class="text-info" style="float: right;">Want to create an interactive leaderboard visualization with your data?  <a href="http://labs.juiceanalytics.com/leaderboard/">Build your own.</a></div>
               </div>
           </div>
       </div>
@@ -172,38 +180,36 @@
 
     <!-- scripts concatenated and minified via ant build script-->
     <!-- Bootstrap -->
-    <script src="assets/themes/twitter/js/libs/bootstrap/transition.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/collapse.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/tooltip.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/popover.js"></script>
-    <script src="assets/themes/twitter/js/libs/bootstrap/modal.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/transition.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/collapse.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/tooltip.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/popover.js"></script>
+    <script src="./assets/themes/twitter/js/libs/bootstrap/modal.js"></script>
 
     <!-- d3 -->
-    <script src="assets/themes/twitter/js/libs/d3/d3.js"></script>
-    <script src="assets/themes/twitter/js/libs/d3/d3.csv.js"></script>
+    <script src="./assets/themes/twitter/js/libs/d3/d3.js"></script>
+    <script src="./assets/themes/twitter/js/libs/d3/d3.csv.js"></script>
 
     <!-- underscore -->
-    <script src="assets/themes/twitter/js/libs/underscore.js"></script>
+    <script src="./assets/themes/twitter/js/libs/underscore.js"></script>
 
 
     <!-- chosen plugin for drop downs https://github.com/harvesthq/chosen -->
-    <script src="assets/themes/twitter/js/libs/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="./assets/themes/twitter/js/libs/chosen/chosen.jquery.js" type="text/javascript"></script>
 
-    <script src="assets/themes/twitter/js/plugins.js"></script>
+    <script src="./assets/themes/twitter/js/plugins.js"></script>
 
     <!--common data utils plugin that deals with microformats-->
-    <script src="assets/themes/twitter/js/datautils.js"></script>
+    <script src="./assets/themes/twitter/js/datautils.js"></script>
 
 
-    
+
     <!-- d3 plugin -->
+    <script src="./assets/themes/twitter/js/libs/juice.standaloneleaderboard.js"></script>
+    <script src="./assets/themes/twitter/js/standaloneleaderboard.js"></script>
 
-    <script src="assets/themes/twitter/js/libs/juice.leaderboard.js"></script>
-    <script src="assets/themes/twitter/js/leaderboard.js"></script>
 
-    
-
-    <script src="assets/themes/twitter/js/script.js"></script>
+    <script src="./assets/themes/twitter/js/script.js"></script>
     <!-- end scripts-->
 
 

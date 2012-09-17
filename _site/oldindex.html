@@ -12,7 +12,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Comparison</title>
+    <title>Chart Chooser 2</title>
     
     <meta name="author" content="Juice Analytics">
 
@@ -60,7 +60,7 @@
     
       
       	
-      	<li class="active"><a href="/comparison.html" class="active">Comparison</a></li>
+      	<li><a href="/comparison.html">Comparison</a></li>
       	
       
     
@@ -128,86 +128,81 @@
     <div class="slice-container">
 
       <!-- slice title -->
-      <h1><span id="report-title" class="editable" spellcheck="false" contenteditable="true">Comparison</span></h1>
+      <h1><span id="report-title" class="editable" spellcheck="false" contenteditable="true">Chart Chooser 2</span></h1>
 
       <section id="chart-section">
         <!-- main section visualization goes here in rows -->
 
-                <!-- header row-->
-        <div class="row header-row">
+            <div class="row">
+      <div class="span12">
+        <aside>
+          <p>Collectively, Juice owns 7 doggies.</p>
+        </aside>
+        <div class="hero-unit">
 
-            <!-- left item -->
-            <div class="span4 column-header">
-                <div class="select-container">
-                    <select data-placeholder="Choose your item" class="chzn-select" id="left-names">
-                        <option value=""></option>
-                    </select>
-                </div>
-            </div>
+          <img style="float: right" src="http://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Endal_Dickin.jpg/170px-Endal_Dickin.jpg" alt="">
 
-            <!-- difference -->
-            <div class="span4 middle column-header">
-                <div>
-                    <h4>Difference</h4>
-                    <a id="absolute" class="selected-diff-mode" href="#">absolute</a>
-                    <span>|</span>
-                    <a id="percentage" href="#">percentage</a>
-                </div>
-            </div>
-            <!-- right item -->
-            <div class="span4 column-header">
-                <div class="select-container">
-                    <select data-placeholder="Choose your item" class="chzn-select" id="right-names">
-                        <option value=""></option>
-                    </select>
-                </div>
-            </div>
+          <h2>Make something great today!</h2>
+          <p>Welcome to Juice Labs. We're building better tools to help you act on your data. </p>
+
+          <p>Have an idea? Want to see something new? Contact us at <a href="mailto:info@juiceanalytics.com">info@juiceanalytics.com</a>.</p>
+          <p>Want more? Contact us to learn about Slice, our all-that-and-more tool that lets everyday folks build great reports.</p>
         </div>
 
-        <div class="row chart-wrapper">
-            <!-- d3 match-up overlay -->
-            <div id="chart-match-up" class="span12 match-up-overlay">
+      </div>
+    </div>
+    <br>
 
+    <h1>Get started</h1>
+    <div class="row">
+
+      <div class="span12">
+
+        <aside>
+          <p>Chart chooser has been used by 590,052 people since we launched it in 2006. Wowza, that's a lot of easy-on-the-eyes charting.</p>
+        </aside>
+        <ul class="thumbnails">
+          <li class="span4">
+            <div class="thumbnail">
+              <img src="http://placehold.it/260x180" alt="">
+              <div class="caption">
+                <h5>Chart chooser</h5>
+                <p>Get your own advanced graphs and tables for Excel and PowerPoint</p>
+                <p><span class="label label-success">Download</span></p>
+                <p><a href="#" class="btn btn-primary">Get started</a></p>
+              </div>
             </div>
-
-            <!-- table -->
-            <div class="comparison-chart span12">
-                <div id="chart"></div>
+          </li>
+          <li class="span4">
+            <div class="thumbnail">
+              <img src="http://placehold.it/260x180" alt="">
+              <div class="caption">
+                <h5>Leaderboard</h5>
+                <p>Find the best and worst performers in your own data. </p>
+                <p><span class="label">Your-data</span></p>
+                <p><a href="#" class="btn btn-primary">Get started</a></p>
+              </div>
             </div>
+          </li>
+          <li class="span4">
+            <div class="thumbnail">
+              <img src="http://placehold.it/260x180" alt="">
 
-        </div>
+              <div class="caption">
+                <h5>Comparison</h5>
+                <p>Go head-to-head and see how two groups compare across any set of metrics</p>
+                <p><span class="label">Your-data</span></p>
+                <p><a href="#" class="btn btn-primary">Get started</a></p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
 
 
       </section>
-
-      
-
-
-      <!-- Raw data -->
-      <div class="slice-data-container" section="data-section">
-          <div class="row">
-              <div class="span12">
-                  <div class="pull-right">
-                      <small><a id="clear-data-btn" class="btn btn-small" href="#">Reset to original data</a></small>
-                      <small><a id="save-data-btn" class="btn btn-small" href="#">Remember this!</a></small>
-                      <small><a id="share-data-btn" class="btn btn-small" href="#">Share this!</a></small>
-                  </div>
-                  <!--<aside>-->
-                      <!--<p>lorem ipsum dolorum</p>-->
-                  <!--</aside>-->
-                  <h1>Data
-                      <small>Use your own data. <a class="popup" href="#" class="" rel="popover"
-                                                   data-content="Put any comma delimited data in this box. The first row needs to contain the column names. Then, give the leaderboard some hints on how to use your data.<br/><span class='format-choice'>[*]</span> Use this column as the <em>name</em><br/><span class='format-choice'>[1]</span> Display this in the first column in the leaderboard. Use numbers between 1 and 5.<br/><span class='format-choice'>[-]</span> Smaller numbers are better. <br/><span class='format-choice'>[d]</span> Display numbers as a decimal (like 1.23). <br/><span class='format-choice'>[%]</span> Display numbers as a percentage (like 12.3%). <br/><em>Tip: you can combine the hints like <span class='format-choice'>[-3d]</span></em>"
-                                                   data-original-title="Adding your own data">Learn how.</a></small>
-
-                  </h1>
-                  <form action="#" id="input-form">
-                      <div><textarea style="width: 100%" rows="20" id="csv-data"></textarea></div>
-                  </form>
-              </div>
-          </div>
-      </div>
-
 
       
 
@@ -283,12 +278,6 @@
     <!--common data utils plugin that deals with microformats-->
     <script src="./assets/themes/twitter/js/datautils.js"></script>
 
-
-    
-    <!-- d3 plugin -->
-
-    <script src="./assets/themes/twitter/js/libs/juice.comparison.js"></script>
-    <script src="./assets/themes/twitter/js/comparison.js"></script>
 
     
 
