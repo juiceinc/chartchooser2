@@ -21,8 +21,8 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link rel="stylesheet" href="{{ASSET_PATH}}/less/style.css">
-    <link rel="stylesheet" href="{{ASSET_PATH}}/js/libs/chosen/chosen.css"/>
+    <link rel="stylesheet" href=".{{ASSET_PATH}}/less/style.css">
+    <link rel="stylesheet" href=".{{ASSET_PATH}}/js/libs/chosen/chosen.css"/>
     <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light|Open+Sans:300,600' rel='stylesheet' type='text/css'>
 
   </head>
@@ -104,38 +104,38 @@
 
     <!-- scripts concatenated and minified via ant build script-->
     <!-- Bootstrap -->
-    <script src="{{ASSET_PATH}}/js/libs/bootstrap/transition.js"></script>
-    <script src="{{ASSET_PATH}}/js/libs/bootstrap/collapse.js"></script>
-    <script src="{{ASSET_PATH}}/js/libs/bootstrap/tooltip.js"></script>
-    <script src="{{ASSET_PATH}}/js/libs/bootstrap/popover.js"></script>
-    <script src="{{ASSET_PATH}}/js/libs/bootstrap/modal.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/bootstrap/transition.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/bootstrap/collapse.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/bootstrap/tooltip.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/bootstrap/popover.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/bootstrap/modal.js"></script>
 
     <!-- d3 -->
-    <script src="{{ASSET_PATH}}/js/libs/d3/d3.js"></script>
-    <script src="{{ASSET_PATH}}/js/libs/d3/d3.csv.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/d3/d3.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/d3/d3.csv.js"></script>
 
     <!-- underscore -->
-    <script src="{{ASSET_PATH}}/js/libs/underscore.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/underscore.js"></script>
 
 
     <!-- chosen plugin for drop downs https://github.com/harvesthq/chosen -->
-    <script src="{{ASSET_PATH}}/js/libs/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/chosen/chosen.jquery.js" type="text/javascript"></script>
 
-    <script src="{{ASSET_PATH}}/js/plugins.js"></script>
+    <script src=".{{ASSET_PATH}}/js/plugins.js"></script>
 
     <!--common data utils plugin that deals with microformats-->
-    <script src="{{ASSET_PATH}}/js/datautils.js"></script>
+    <script src=".{{ASSET_PATH}}/js/datautils.js"></script>
 
 
     {% if page.plugin %}
     <!-- d3 plugin -->
 
-    <script src="{{ASSET_PATH}}/js/libs/juice.{{page.plugin}}.js"></script>
-    <script src="{{ASSET_PATH}}/js/{{page.plugin}}.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/juice.{{page.plugin}}.js"></script>
+    <script src=".{{ASSET_PATH}}/js/{{page.plugin}}.js"></script>
 
     {% endif %}
 
-    <script src="{{ASSET_PATH}}/js/script.js"></script>
+    <script src=".{{ASSET_PATH}}/js/script.js"></script>
     <!-- end scripts-->
 
 
