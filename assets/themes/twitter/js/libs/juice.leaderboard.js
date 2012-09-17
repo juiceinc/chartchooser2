@@ -217,32 +217,46 @@ juice.leaderboard = function(conf){
       cells.exit()
           .remove();
 
+
+
       //cell title
       cells.append('div')
           .classed("title", true)
           .text(function(d,i,j) {
             var title = d[key];
-            if(title.length > maxTitleLength)
-              title = title.substr(0, maxTitleLength-2);
+            title = title.split('|')[0];
+//            if(title.length > maxTitleLength)
+//              title = title.substr(0, maxTitleLength-2);
 
             return title;
           });
 
-          //rank
+
+          //position
           cells.append('div')
-              .classed("rank", true)
-              .text(function(d,i,j) {
-                  return rank(i+1);
+              .classed("position", true)
+              .html(function(d,i,j) {
+                var title = d[key];
+                title = title.split('|')[1];
+                title = title.split(',').join('&nbsp;');
+                return title;
           });
+
+
           //value
-          cells.append('div')
+    cells.append('div')
               .classed("value", true)
               .text(function(d,i,j) {
                 var myColumn = displayedColumns[j];
                 return getFormatter(myColumn.format).format(d[myColumn.name]);
-              })
-          ;
+          });
 
+          //rank
+    cells.append('div')
+              .classed("rank", true)
+              .text(function(d,i,j) {
+                  return rank(i+1);
+          });
 
       //------------------------Cell Event handlers
       //Cell click
@@ -321,6 +335,7 @@ juice.leaderboard = function(conf){
               })
               ;
 
+      window.cells = cells;
       cells.order();
   }
 

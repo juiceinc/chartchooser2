@@ -33,23 +33,19 @@ hasInputData: true
                 <br/>
                 <div>
                   <span>Show</span>
-                  <!-- <span data-var="leadersOrLaggards" class="TKToggle TKSwitch">
-                    <span>Leaders</span>
-                    <span>Laggards</span>
-                  </span>
-                  <br/>
-                  <br/> -->
-                  <select id="leaderboard-direction">
-                    <option>top</option>
-                    <option>bottom</option>
-                  </select>
 
-                  <select id="leaderboard-visible-rows">
-                    <option>5</option>
-                    <option selected>10</option>
-                    <option>15</option>
-                    <option>20</option>
-                  </select>
+                    <select id="leaderboard-show">
+                        <optgroup label="Top">
+                        <option value="top 10">top 10</option>
+                        <option selected value="top 20">top 20</option>
+                        <option value="top 40">top 40</option>
+                        </optgroup>
+                        <optgroup label="Bottom">
+                        <option value="bottom 10">bottom 10</option>
+                        <option value="bottom 20">bottom 20</option>
+                        <option value="bottom 40">bottom 40</option>
+                        </optgroup>
+                    </select>
                   <span id="total-population">out of 20</span>
                   <div style="clear:both"/>
                 </div>
