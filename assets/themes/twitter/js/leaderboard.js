@@ -8,11 +8,11 @@ var onDataLoad;
 $(function() {
 
   //Styling and appearance
-  var CELL_WIDTH = 150,
+  var CELL_WIDTH = 200,
       MAX_ROWS_CSV = 500000, //max number of rows to process from text input
       du = $(this).datautils({'numberOfColumnsToProcess': 5, 'maxHeaderLength': 15}),
       FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
-      SAMPLE_DATA_HASH = '#7b42987e57dd070fa849b5899311ebb0',
+      SAMPLE_DATA_HASH = '#fb16d423734257c7d5f332c62bdab58a',
       SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
       SYMBOL_STRING = "s",
       saveTemplate = ($('#save-template').length) ? _.template($('#save-template').html()) : '',
@@ -29,8 +29,10 @@ $(function() {
     $('#search-form').submit(function (e) { searchItems(); return false; });
     $('#filter-form').submit(function (e) { filterItems(); return false; });
 
-    $('#leaderboard-direction').change(function (e) {updateSort(); });
-    $('#leaderboard-visible-rows').change(function (e) {updateVisibleItems(); });
+    $('#leaderboard-show').change(function (e) {
+      updateSort();
+      updateVisibleItems();
+    });
     $('#csv-data').keyup(function(e) {
         // Arrow keys
         if (e.keyCode != 39 && e.keyCode != 37 && e.keyCode != 40 && e.keyCode != 38) {
@@ -89,19 +91,19 @@ $(function() {
   function updateLabels(conf){
     //total rows text
     if(conf && conf.data){
-      var totalText = conf.data.length > 0 ? 'out of '+ conf.data.length + ' items' : 'No data available';
+      var totalText = conf.data.length > 0 ? 'out of '+ conf.data.length + ' players' : 'No data available';
       $('#total-population').text(totalText);
     }
 
     //direction in the leaderboard divider line
-    $('.divider-direction').text($('#leaderboard-direction').val());
+    $('.divider-direction').text($('#leaderboard-show').val().split(' ')[0]);
 
     //num of visible rows  and position of the leaderboard divider line
-    var numberOfDisplayedRows = $('#leaderboard-visible-rows').val() * 1;
+    var numberOfDisplayedRows = $('#leaderboard-show').val().split(' ')[1] * 1;
     $('.divider-visible-rows-number').text(numberOfDisplayedRows);
     $('#leaderboard-divider').css({'top': (numberOfDisplayedRows +1 /*header*/) * 25 /*row height*/});
     if( conf.displayedColumns ) {
-      $('#leaderboard-divider').css({'width': conf.displayedColumns.length * 150 + 10,
+      $('#leaderboard-divider').css({'width': conf.displayedColumns.length * CELL_WIDTH + 10,
                                      'display': conf.displayedColumns.length ? 'block' : 'none'});
     }
   }
@@ -138,12 +140,12 @@ $(function() {
       });
     });
 
-    var displayTop = $('#leaderboard-direction').val() == 'top';
+    var displayTop = $('#leaderboard-show').val().split(' ')[0] == 'top';
 
     refreshLeaderboard({"data": data,
                         "displayedColumns": displayedColumns,
                         "key": key,
-                        "numberOfDisplayedRows": $('#leaderboard-visible-rows').val(),
+                        "numberOfDisplayedRows": +$('#leaderboard-show').val().split(' ')[1],
                         "displayTop": displayTop});
   }
 
@@ -215,7 +217,7 @@ $(function() {
     });
 
     refreshLeaderboard({data: newData, displayedColumns: displayedColumns
-        , "numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
+        , "numberOfDisplayedRows": +$('#leaderboard-show').val().split(' ')[1]});
   }
 
   function refreshLeaderboard(conf){
@@ -225,12 +227,13 @@ $(function() {
   }
 
   function updateSort(){
-    var displayTop = $('#leaderboard-direction').val() == 'top';
+    var displayTop = $('#leaderboard-show').val().split(' ')[0] == 'top';
     refreshLeaderboard({"displayTop": displayTop});
   }
 
   function updateVisibleItems(){
-    refreshLeaderboard({"numberOfDisplayedRows": $('#leaderboard-visible-rows').val()});
+    var rows = $('#leaderboard-show').val().split(' ')[1];
+    refreshLeaderboard({"numberOfDisplayedRows": rows});
   }
 
   //----------------------------------------------- Data
@@ -241,14 +244,18 @@ $(function() {
     $('#csv-data').val(data.data);
 
     //set top or bottom
+    var leaderboardval = ['top', '10'];
     if(data.topOrBottom)
-      $('#leaderboard-direction').val(data.topOrBottom);
+      leaderboardval[0] = data.topOrBottom;
 
     //set number of displayed rows
     if(data.numDisplayed)
-      $('#leaderboard-visible-rows').val(data.numDisplayed);
+      leaderboardval[1] = data.numDisplayed;
 
-    //set number of displayed rows
+
+    $('#leaderboard-show').val(leaderboardval.join(' '));
+
+    //set title
     if(data.reportTitle)
       $('#report-title').text(data.reportTitle);
 
@@ -299,8 +306,8 @@ $(function() {
   function saveCurrentData(constructURLFx){
 
     var data = $('#csv-data').val();
-    var topOrBottom = $('#leaderboard-direction').val();
-    var numDisplayed = $('#leaderboard-visible-rows').val();
+    var topOrBottom = $('#leaderboard-show').val().split(' ')[0];
+    var numDisplayed = $('#leaderboard-show').split(' ')[1];
     var reportTitle = $('#report-title').text();
     var filters = [];
 
@@ -334,9 +341,8 @@ $(function() {
   //-----------------------------------------------Start
   function start(){
     addHandlers();
-
     leaderboard = juice.leaderboard({
-      numberOfDisplayedRows : $('#leaderboard-visible-rows').val() * 1,
+      numberOfDisplayedRows : +$('#leaderboard-show').val().split(' ')[0],
       cellWidth             : CELL_WIDTH,
       key                   : "name",
       container             : "#leaderboard",
