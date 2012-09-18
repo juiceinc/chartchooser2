@@ -5074,6 +5074,12 @@ body {
 .slice-data-container {
   display: none;
 }
+.logo {
+  font-family: Lobster, "Helvetica Neue", Helvetica, Arial, sans !important;
+  font-weight: normal !important;
+  color: white !important;
+  font-size: 24px !important;
+}
 h1 {
   font-size: 20px;
   font-weight: 300;
@@ -5278,6 +5284,20 @@ h1 small a {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
   margin-top: -1px;
 }
+.leaderboard-cell .title {
+  padding-top: 9px;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: bottom;
+  padding-left: 4px;
+  float: left;
+  font-size: 14px;
+}
+.leaderboard-cell .metrics {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 .leaderboard-cell .position {
   padding-top: 12px;
   height: 11px;
@@ -5291,15 +5311,6 @@ h1 small a {
   max-width: 5px;
   text-wrap: none;
 }
-.leaderboard-cell .title {
-  padding-top: 9px;
-  height: 14px;
-  line-height: 14px;
-  vertical-align: bottom;
-  padding-left: 4px;
-  float: left;
-  font-size: 14px;
-}
 .leaderboard-cell .value {
   padding: 3px 3px 0 5px;
   float: right;
@@ -5311,6 +5322,9 @@ h1 small a {
 .leaderboard-cell.hovered {
   background-color: #FDF6E3;
   cursor: pointer;
+}
+.hide {
+  display: none !important;
 }
 .leaderboard-cell.selected {
   border-left: 0px solid #ea5156;

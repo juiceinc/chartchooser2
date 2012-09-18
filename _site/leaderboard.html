@@ -24,8 +24,8 @@
     <!-- Le styles -->
     <link rel="stylesheet" href="./assets/themes/twitter/less/style.css">
     <link rel="stylesheet" href="./assets/themes/twitter/js/libs/chosen/chosen.css"/>
-    <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light|Open+Sans:300,600' rel='stylesheet' type='text/css'>
-
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
   </head>
 
   <body>
@@ -36,17 +36,20 @@
 
 
     <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
+        <div class="navbar-inner" style="background-color: #222; background-image: none;">
             <div class="container">
                 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="index.html">Juice Labs</a>
+                <a class="brand" href="#"><span class="logo">Juice Labs</span></a>
 
                 <div class="nav-collapse">
                     <ul class="nav">
+                        <li><a href="/chartchooser.html">Chart Chooser</a></li>
+                        <li class="active"><a href="/leaderboard/">Leaderboard</a></li>
+                        <!--
                       
                       
                       
@@ -96,16 +99,18 @@
 
 
 
+                      -->
                     </ul>
                 </div>
+                <a class="pull-right btn btn-danger" href="http://www.juiceanalytics.com/slice/">Try interactive charts with Slice!</a>
                 <!--/.nav-collapse -->
             </div>
         </div>
     </div>
-
-    <a href="#" id="github"><span>Want more?</span><span>Check out slice!</span></a>
-
-
+    <div class="alert">
+          <button class="close" data-dismiss="alert">×</button>
+          <strong>Leaderboard lets you compare rankings across different categories.</strong>   You can enter your own data below and choose what categories you want to see. Hover over "Learn how." to find out more. Or check out some different leaderboards for inspiration: <a href="#">Education by state</a> <a href="#">Football offense</a>
+        </div>
 
     
 
@@ -251,7 +256,6 @@
               </div>
               <div class="span4">
                   <div>You may also be interested in</div>
-                  <div>Chart Chooser</div>
                   <div>Dashboard design services</div>
                   <div>Slice: easy as pie</div>
               </div>

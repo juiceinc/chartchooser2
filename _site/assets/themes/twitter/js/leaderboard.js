@@ -9,14 +9,15 @@ $(function() {
 
   //Styling and appearance
   var CELL_WIDTH = 200,
-      MAX_ROWS_CSV = 500000, //max number of rows to process from text input
+      MAX_ROWS_CSV = 5000, //max number of rows to process from text input
       du = $(this).datautils({'numberOfColumnsToProcess': 5, 'maxHeaderLength': 15}),
       FETCH_DATA_URL = 'http://chartchooser-files.s3-website-us-east-1.amazonaws.com/',
-      SAMPLE_DATA_HASH = '#fb16d423734257c7d5f332c62bdab58a',
+      SAMPLE_DATA_HASH = '#358df037b92be0e2bdf069061275e570',
       SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
       SYMBOL_STRING = "s",
       saveTemplate = ($('#save-template').length) ? _.template($('#save-template').html()) : '',
       shareTemplate = ($('#share-template').length) ? _.template($('#share-template').html()) : ''
+      numRows = 0
     ;
 
   //variables
@@ -91,17 +92,19 @@ $(function() {
   function updateLabels(conf){
     //total rows text
     if(conf && conf.data){
-      var totalText = conf.data.length > 0 ? 'out of '+ conf.data.length + ' players' : 'No data available';
+      var totalText = conf.data.length > 0 ? 'out of '+ conf.data.length + ' items' : 'No data available';
+      numRows = conf.data.length;
       $('#total-population').text(totalText);
     }
+
+    var numberOfDisplayedRows = $('#leaderboard-show').val().split(' ')[1] * 1;
+    $('.divider-visible-rows-number').text(numberOfDisplayedRows);
+    $('#leaderboard-divider').css({'top': (Math.min(numRows, numberOfDisplayedRows) /*header*/) * 25  + 25/*row height*/});
 
     //direction in the leaderboard divider line
     $('.divider-direction').text($('#leaderboard-show').val().split(' ')[0]);
 
     //num of visible rows  and position of the leaderboard divider line
-    var numberOfDisplayedRows = $('#leaderboard-show').val().split(' ')[1] * 1;
-    $('.divider-visible-rows-number').text(numberOfDisplayedRows);
-    $('#leaderboard-divider').css({'top': (numberOfDisplayedRows +1 /*header*/) * 25 /*row height*/});
     if( conf.displayedColumns ) {
       $('#leaderboard-divider').css({'width': conf.displayedColumns.length * CELL_WIDTH + 10,
                                      'display': conf.displayedColumns.length ? 'block' : 'none'});

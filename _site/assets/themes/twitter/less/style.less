@@ -1,16 +1,27 @@
 @import "bootstrap/bootstrap.less";
+@import "bootstrap/mixins.less";
 
 body {
   position: relative;
-  padding-top: 60px;
+  padding-top: 44px;
   padding-bottom: 40px;
   background-attachment: fixed;
   background-position: 800px 0px;
-  background-image: url('../img/linen_background.jpg');
+  background-color: #BDEBFE;
+  background-image: url('../img/projectionsBG1-1.png');
 }
 
 .container {
     margin-left: 20px;
+}
+
+.navbar {
+  margin-bottom: 0;
+}
+
+.alert {
+  border-radius: 0;
+  .box-shadow();
 }
 
 .navbar-inner {
@@ -24,12 +35,12 @@ body {
 aside {
     position: absolute;
     margin-left: 860px;
-    font-size: 20px;
-    font-family: "Shadows Into Light", cursive;
+    font-size: 15px;
+    font-family: Gudea, "Helvetica Neue", Helvetica, Arial, sans;
     color: @gray;
     p {
-        font-size: 20px;
-        font-family: "Shadows Into Light", cursive;
+        font-size: 15px;
+        font-family: Gudea, "Helvetica Neue", Helvetica, Arial, sans;
         color: @gray;
     }
 }

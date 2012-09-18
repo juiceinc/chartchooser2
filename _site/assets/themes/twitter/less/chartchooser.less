@@ -4,6 +4,13 @@
 
 // Chart Chooser
 // ---------
+.logo {
+  font-family: Lobster, "Helvetica Neue", Helvetica, Arial, sans !important;
+  font-weight: normal !important;
+  color: white !important;
+  font-size: 24px !important;
+}
+
 
 h1 {
   font-size: 20px;
@@ -234,6 +241,23 @@ h1 small a {
     margin-top: -1px;
   }
 
+  .title {
+    padding-top: 9px;
+    height: 14px;
+    line-height: 14px;
+    vertical-align: bottom;
+    padding-left: 4px;
+    float: left;
+    font-size: 14px;
+  }
+
+  .metrics {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+
   .position {
     padding-top: 12px;
     height: 11px;
@@ -246,16 +270,6 @@ h1 small a {
     font-size: 11px;
     max-width: 5px;
     text-wrap: none;
-  }
-
-  .title {
-    padding-top: 9px;
-    height: 14px;
-    line-height: 14px;
-    vertical-align: bottom;
-    padding-left: 4px;
-    float: left;
-    font-size: 14px;
   }
 
   .value {
@@ -272,6 +286,10 @@ h1 small a {
 .leaderboard-cell.hovered {
   background-color: #FDF6E3;
   cursor: pointer;
+}
+
+.hide {
+  display: none !important;
 }
 
 .leaderboard-cell.selected {
