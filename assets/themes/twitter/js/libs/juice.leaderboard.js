@@ -101,36 +101,16 @@ juice.leaderboard = function (conf) {
   //select cells by partially matching the first occurrence of keyValue
   leaderboard.selectByKey = function (keyValue) {
     cells.classed('selected', false);
-    selectedItem = null;
-    reloadBottomCells();
 
     if (!keyValue || keyValue.length === 0)
       return;
 
     keyValue = keyValue.toLowerCase();
 
-    var matchedValue = null;
+    selectedItem = _.find(data, function(d){ return d[key].toLowerCase().indexOf(keyValue) > -1; });
+    cells.filter(function(d, i) { return d===selectedItem; }).classed('selected', true);
+    reloadBottomCells();
 
-    //find the first occurrence of the searched keyValue
-    var selectedCells = cells.select(function (d, i) {
-      if (matchedValue) {
-        //enforce strict matching for others since we already found the first matched cell
-        return d[key] == matchedValue ? this : null;
-      }
-      else {
-        if (d[key].toLowerCase().indexOf(keyValue) > -1) {
-          matchedValue = d[key];
-          return this;
-        }
-        else return null;
-      }
-    });
-    if (selectedCells.length > 0) {
-      // FIXME: set the selected item
-      //      selectedItem = selectedCells[0];
-      //      reloadBottomCells();
-    }
-    selectedCells.classed('selected', true);
   };
 
   //removes styles attribute
