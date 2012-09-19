@@ -350,7 +350,7 @@ $(function() {
   }
 
   function addHashChangeHandler() {
-    $('#filterInput').attr('data-start','addHashChangeHandler');
+
     if ('onhashchange' in window) {
       $(window).bind('hashchange', checkUrl);
     }
@@ -359,8 +359,6 @@ $(function() {
   }
 
   function checkUrl(e) {
-
-    $('#filterInput').attr('data-hash', currentHash + ' vs ' +window.location.hash);
 
     if (currentHash == window.location.hash)
       return false;
