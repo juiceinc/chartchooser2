@@ -16,8 +16,9 @@ $(function() {
       SAVE_DATA_SERVICE_URL = 'http://ec2-23-20-53-61.compute-1.amazonaws.com/upload',
       SYMBOL_STRING = "s",
       saveTemplate = ($('#save-template').length) ? _.template($('#save-template').html()) : '',
-      shareTemplate = ($('#share-template').length) ? _.template($('#share-template').html()) : ''
-      numRows = 0
+      shareTemplate = ($('#share-template').length) ? _.template($('#share-template').html()) : '',
+      numRows = 0,
+      _checkUrlInterval, currentHash
     ;
 
   //variables
@@ -27,6 +28,10 @@ $(function() {
   //----------------------------------------------- handlers, util functions
 
   function addHandlers (){
+
+    addHashChangeHandler();
+
+
     $('#search-form').submit(function (e) { searchItems(); return false; });
     $('#filter-form').submit(function (e) { filterItems(); return false; });
 
@@ -279,6 +284,8 @@ $(function() {
     if(window.location.hash === '' || window.location.hash === '#')
       window.location.hash = SAMPLE_DATA_HASH;
 
+    currentHash = window.location.hash;
+
     var hash = window.location.hash.replace('#', '');
     var dataURL = hash.substr(0,1) + '/' + hash;
 
@@ -341,6 +348,25 @@ $(function() {
     });
 
   }
+
+  function addHashChangeHandler() {
+    $('#filterInput').attr('data-start','addHashChangeHandler');
+    if ('onhashchange' in window) {
+      $(window).bind('hashchange', checkUrl);
+    }
+    else
+      _checkUrlInterval = setInterval(checkUrl, 50 /*ms interval*/);
+  }
+
+  function checkUrl(e) {
+
+    $('#filterInput').attr('data-hash', currentHash + ' vs ' +window.location.hash);
+
+    if (currentHash == window.location.hash)
+      return false;
+    else loadData();
+  }
+
   //-----------------------------------------------Start
   function start(){
     addHandlers();
