@@ -47,7 +47,7 @@ juice.leaderboard = function (conf) {
         }};
       case formats.SYMBOL_CURRENCY :
         return {'format':function (d) {
-          return NaNOrFormat(d, "$" + d3.format("0,.2f")(d));
+          return NaNOrFormat(d, "$" + d3.format("0,.0f")(d));
         }};
       case formats.SYMBOL_FLOAT    :
         return {'format':function (d) {
