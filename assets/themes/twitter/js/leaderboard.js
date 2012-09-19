@@ -69,10 +69,10 @@ $(function() {
         saveCurrentData(function(url)
         {
           //pattern that matches the html file name in the URL
-          var pattern = /\/([a-z]*)(\.html#[a-z0-9]+)/
+          var pattern = /\/([a-z]*)(\.html)?(#[a-z0-9]+)/;
 
           //replace /leaderboard.html with /standalone_leaderboard.html
-          $('.modal-body').html(shareTemplate({'url':url.replace(pattern, "/standalone_$1$2")}));
+          $('.modal-body').html(shareTemplate({'url':url.replace(pattern, "/standalone_leaderboard.html$3")}));
         });
 
         return false; //prevent refresh
