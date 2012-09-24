@@ -113,6 +113,20 @@ juice.leaderboard = function (conf) {
 
   };
 
+
+  //select cells by object
+  leaderboard.selectByObject = function (obj) {
+    cells.classed('selected', false);
+
+    if ( !obj )
+      return;
+
+    selectedItem = _.find(data, function(d){ return d === obj; });
+    cells.filter(function(d, i) { return d===selectedItem; }).classed('selected', true);
+    reloadBottomCells();
+
+  };
+
   //removes styles attribute
   function removeStyles(el, properties) {
     if (properties)

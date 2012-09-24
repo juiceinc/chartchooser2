@@ -18,12 +18,13 @@ $(function() {
       saveTemplate = ($('#save-template').length) ? _.template($('#save-template').html()) : '',
       shareTemplate = ($('#share-template').length) ? _.template($('#share-template').html()) : '',
       numRows = 0,
-      _checkUrlInterval, currentHash
+      _checkUrlInterval, currentHash,
+      autoCompleteMap
     ;
 
   //variables
   var displayedColumns = [],
-      data = [],
+      data = [], datakey,
       leaderboard;
   //----------------------------------------------- handlers, util functions
 
@@ -34,6 +35,8 @@ $(function() {
 
     $('#search-form').submit(function (e) { searchItems(); return false; });
     $('#filter-form').submit(function (e) { filterItems(); return false; });
+    $('#searchInput').change(function (e) { searchItems(); });
+
 
     $('#leaderboard-show').change(function (e) {
       updateSort();
@@ -133,7 +136,7 @@ $(function() {
     data = data.slice(0, MAX_ROWS_CSV);
 
     var columns = du.datautils('findColumns', data);
-    var key = columns[0].name;
+    datakey = columns[0].name;
 
     displayedColumns = _.rest(columns, 1);
 
@@ -152,21 +155,66 @@ $(function() {
 
     refreshLeaderboard({"data": data,
                         "displayedColumns": displayedColumns,
-                        "key": key,
+                        "key": datakey,
                         "numberOfDisplayedRows": +$('#leaderboard-show').val().split(' ')[1],
                         "displayTop": displayTop});
+
+
+  }
+
+
+  //returns function that creates autocomplete label
+  function getAutoCompleteLabelFx() {
+    if(data && data.length > 0)
+    {
+      if( data[0]['TEAM'] && data[0]['POSITION'] )
+      {
+        return function(item, key){ return item[key] + ' (' + item['TEAM'] + '|' + item['POSITION'] + ') ';};
+      }
+      else
+        return function(item, key){ return item[key] };
+    }
+  }
+
+  //sets the autocomplete suggestion labels
+  function setAutoCompleteList(data) {
+    autoCompleteMap = {};
+    var keys = [],
+        autoCompleteLabelFunction = getAutoCompleteLabelFx();
+
+    _.each(data, function(item) {
+      var suggestedLabel = autoCompleteLabelFunction(item, datakey);
+
+      autoCompleteMap[suggestedLabel] = item;
+      keys.push(suggestedLabel);
+    });
+
+    // init bootstrap typeahead plugin
+    var autocomplete = $('#searchInput').typeahead({
+      items: 20,
+      minLength: 2
+    });
+
+    //set suggestion list
+    autocomplete.data('typeahead').source = keys;
   }
 
   function searchItems(){
     var searchStr = $('#searchInput').val();
-    leaderboard.selectByKey(searchStr);
+
+    if(autoCompleteMap[searchStr])
+      leaderboard.selectByObject(autoCompleteMap[searchStr]);
+    else
+      leaderboard.selectByKey(searchStr);
   }
 
 
 
   function filterItems(){
     var filterStr = $('#filterInput').val();
+
     $('#filterInput').val('');
+
 
     addFilterItem(filterStr);
     filterData();
@@ -221,7 +269,7 @@ $(function() {
       var cleanValues = [];
       _.each(values, function(value){cleanValues.push($.trim(value).toLowerCase()); });
 
-      newData = _.filter(newData, function(row){ return (_.include(cleanValues, row[column].toLowerCase()) );});
+      newData = _.filter(newData, function(row){ return _.include(cleanValues, row[column].toLowerCase()) ;});
     });
 
     refreshLeaderboard({data: newData, displayedColumns: displayedColumns
@@ -232,6 +280,8 @@ $(function() {
     leaderboard.refresh(conf);
 
     updateLabels(conf);
+
+    setAutoCompleteList(conf.data);
   }
 
   function updateSort(){
@@ -287,6 +337,8 @@ $(function() {
     currentHash = window.location.hash;
 
     var hash = window.location.hash.replace('#', '');
+    //data url is located under a separate folder that starts with the first letter of the hash
+    //eg: 358df037b92be0e2bdf069061275e570 is stored under 3/358df037b92be0e2bdf069061275e570
     var dataURL = hash.substr(0,1) + '/' + hash;
 
     //onDataLoad will get triggered from JSONP
