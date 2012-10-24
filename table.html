@@ -1,0 +1,26 @@
+---
+layout: page
+title: Table
+header: Table
+plugin: table
+group: navigation
+hasInputData: true
+---
+        <aside>
+          <div id="toolbar">
+              <form id="filter-form" class="form-search">
+                <div>
+                  Filter your data: <a class="popupbottom" href="#" class="" rel="popover"
+                                                     data-content="Type the name of a column followed by a colon and the values you want to see. For instance, <br/><span class='format-choice'>pos: QB</span><br/> limits you to rows with POS = 'QB' in the football data. To filter on multiple items, use commas: <br/><span class='format-choice'>pos: QB, RB</span><br/>  You can add more than one filter at a time."
+                                                     data-title="How to filter your data">Learn how.</a>
+                  <p><input type = "text" title="filter" placeholder="column: value1, value2, value3" id="filter-grid" data-provide="typeahead"/>
+                  <button type="submit" class="btn invisible"></button></p>
+                </div>
+                <div id="applied-filters">
+                </div>
+              </form>
+          </div>
+        </aside>
+
+
+        <div class="leaderboard-table" id="table"></div>
