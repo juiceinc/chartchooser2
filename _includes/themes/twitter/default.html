@@ -21,6 +21,7 @@
     <![endif]-->
 
     <!-- Le styles -->
+    <link rel="stylesheet" href=".{{ASSET_PATH}}/js/libs/slick/slick.grid.css" type='text/css'/>
     <link rel="stylesheet" href=".{{ASSET_PATH}}/less/style.css">
     <link rel="stylesheet" href=".{{ASSET_PATH}}/js/libs/chosen/chosen.css"/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600' rel='stylesheet' type='text/css'>
@@ -61,13 +62,13 @@
 
                 <div class="nav-collapse">
                     <ul class="nav">
-                        <li><a href="/chartchooser.html">Chart Chooser</a></li>
-                        <li class="active"><a href="/leaderboard/">Leaderboard</a></li>
-                        <!--
+                        <!--<li><a href="/chartchooser.html">Chart Chooser</a></li>
+                        <li class="active"><a href="/leaderboard/">Leaderboard</a></li>   -->
+
                       {% assign pages_list = site.pages %}
                       {% assign group = 'navigation' %}
                       {% include JB/pages_list %}
-                      -->
+
                     </ul>
                 </div>
                 <a class="pull-right btn btn-danger" href="http://www.juiceanalytics.com/slice/">Try interactive charts with Slice!</a>
@@ -143,6 +144,12 @@
 
     <!--common data utils plugin that deals with microformats-->
     <script src=".{{ASSET_PATH}}/js/datautils.js"></script>
+
+      <!-- slickgrid -->
+    <script src=".{{ASSET_PATH}}/js/libs/slick/jquery.event.drag-2.0.min.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/slick/slick.core.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/slick/slick.grid.js"></script>
+    <script src=".{{ASSET_PATH}}/js/libs/slick/slick.dataview.js"></script>
 
 
     {% if page.plugin %}
