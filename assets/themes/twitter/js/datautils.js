@@ -4,6 +4,7 @@
   var settings = {
       'microformat' : {
         SYMBOL_PRIMARY_KEY    : "*",
+        SYMBOL_SORTABLE       : "^",
         SYMBOL_REVERSE_ORDER  : "-",
         SYMBOL_FLOAT          : "d",
         SYMBOL_INT            : "i",
@@ -18,7 +19,8 @@
         AGGR_SUM            : "sum"
       },
       numberOfColumnsToProcess: 20,
-      maxHeaderLength: 15
+      maxHeaderLength: 15,
+      minTableColWidth: 120
     };
 
   var methods = {
@@ -179,6 +181,158 @@
         var values = _.pluck(sample, columnName); //column values
         return _.any(values) /*at least one value should be valid*/ && _.all(values, checkFunction); //check if all values meet criteria
       });
+    },
+
+    numericOrNot: function(column, data){
+      var col = methods.findSpecificColumn([column], data, methods.numericChecker);
+
+      return col ? true : false;
+    },
+
+
+    findTableColumns: function(data) {
+      if(!data || data.length < 1)
+        return [];
+
+      var columns = [];
+
+      var rawColumns = _.keys(data[0]);
+      var specialColumns = methods.findSpecialColumns(rawColumns);
+
+      _.each(specialColumns, function(col){
+          //grab header microformat, eg. myColumn[-3$]
+          var formatOptions = col.substring(col.lastIndexOf('[')+1, col.lastIndexOf(']')).toLowerCase();
+          var isNumeric = methods.numericOrNot(col, data);
+          if(!isNumeric) formatOptions += settings.microformat.SYMBOL_STRING; //string format
+          else formatOptions += settings.microformat.SYMBOL_SORTABLE;       //by default, all numeric cols are sortable
+
+          //process the format options
+          var columnMetaData = methods.processColumn(col, formatOptions);
+          columns.push(columnMetaData);
+      });
+
+        //add non-special columns
+      var unprocessedColumns = _.difference(rawColumns, specialColumns);
+      //find primary key column first if not already set
+      var hasPrimaryKey = _.any(columns, function(column){return column.order === -1; /*only PK has order of -1*/});
+
+      //add primary key if doesn't exist
+      if(!hasPrimaryKey){
+        var primaryKeyColumnName = methods.findSpecificColumn(unprocessedColumns, data, methods.nonNumericChecker);
+        if(primaryKeyColumnName){
+          var columnMetaData = methods.tableColumnMetaData(primaryKeyColumnName, settings.microformat.SYMBOL_STRING);
+          columnMetaData.moreIsBetter = false;
+          columnMetaData.order = -1;
+
+          columns.push(columnMetaData);
+          unprocessedColumns = _.difference(unprocessedColumns, [primaryKeyColumnName]);
+        }
+        else{
+          return null;
+        }
+      }
+
+      var i = 0;
+      //fill in other columns if user hasn't indicated which columns to pick
+      while(specialColumns.length === 0 && unprocessedColumns.length > 0 && columns.length <= settings.numberOfColumnsToProcess )
+      {
+        var columnName = unprocessedColumns[i],
+            metadata,
+            fmt = settings.microformat.SYMBOL_INT,
+            isNumeric = methods.numericOrNot(columnName, data);
+
+        if(!isNumeric)
+          fmt = settings.microformat.SYMBOL_STRING;
+
+        metadata = methods.tableColumnMetaData(columnName, fmt);
+        metadata.order += (i+1);
+        columns.push(metadata);
+        unprocessedColumns = _.difference(unprocessedColumns, [columnName]);
+      }
+
+      //sort by order
+      columns = _.sortBy(columns, function(column){ return column.order; });
+      return columns.slice(0, settings.numberOfColumnsToProcess + 1);
+    },
+
+    tableColumnMetaData: function(col, format){
+      if(!format) format = settings.microformat.SYMBOL_INT;
+      var name = col.substring(0, col.indexOf('['));
+
+       return {
+          id            : col,
+          name          : name,     //display text
+          field         : col,
+          moreIsBetter  : true,
+          order         : 10000,
+          format        : format,
+          aggregation   : settings.microformat.AGGR_AVERAGE,
+          minWidth      : settings.minTableColWidth,
+          headerCssClass: 'table-header'
+        };
+    },
+
+    findSpecialColumns: function(columns){
+       return _.filter(columns, function(col){
+        return col && col.indexOf('[') > -1 && col.indexOf(']') > -1 && col.substring(col.lastIndexOf('[')+1, col.lastIndexOf(']')).length > 0;
+      });
+    },
+
+    processColumn: function(col, headerFormat){
+      var metaData = methods.tableColumnMetaData(col);
+
+      //metaData.field = col.substring(0, col.indexOf('['));
+      metaData.sortable = headerFormat.indexOf(settings.microformat.SYMBOL_SORTABLE) > -1 || headerFormat.indexOf(settings.microformat.SYMBOL_PRIMARY_KEY) > -1; // ? true : false;
+
+       //primary key
+        if(headerFormat.indexOf(settings.microformat.SYMBOL_PRIMARY_KEY) > -1){
+          metaData.order = -1;
+          metaData.format = settings.microformat.SYMBOL_STRING;
+          metaData.moreIsBetter = false;
+          metaData.resizable = true;
+        }
+        else
+        {
+          //order
+          var numbers = headerFormat.match(/\d+/g); //get all numbers, returned as array
+          if(numbers && !isNaN(numbers[0] * 1) ) //the first item is the order #
+            metaData.order = numbers[0] * 1;
+
+
+          //aggregation function
+          if(headerFormat.indexOf(settings.microformat.AGGR_AVERAGE) > -1)
+            metaData.aggregation = settings.microformat.AGGR_AVERAGE;
+          else if(headerFormat.indexOf(settings.microformat.AGGR_SUM) > -1)
+            metaData.aggregation = settings.microformat.AGGR_SUM;
+
+          //remove from header format the aggregation symbols so they are not coincided
+          //with the data formats
+          headerFormat = headerFormat.replace(settings.microformat.AGGR_AVERAGE, '');
+          headerFormat = headerFormat.replace(settings.microformat.AGGR_SUM, '');
+
+          //money
+          if(headerFormat.indexOf(settings.microformat.SYMBOL_CURRENCY) > -1)
+            metaData.format = settings.microformat.SYMBOL_CURRENCY;
+          //float
+          else if(headerFormat.indexOf(settings.microformat.SYMBOL_FLOAT) > -1)
+            metaData.format = settings.microformat.SYMBOL_FLOAT;
+          //percentage
+          else if(headerFormat.indexOf(settings.microformat.SYMBOL_PERCENT) > -1)
+            metaData.format=settings.microformat.SYMBOL_PERCENT;
+          //plain number without formatting (eg. year)
+          else if(headerFormat.indexOf(settings.microformat.SYMBOL_PLAIN) > -1)
+            metaData.format=settings.microformat.SYMBOL_PLAIN;
+          else if(headerFormat.indexOf(settings.microformat.SYMBOL_STRING) > -1)
+            metaData.format=settings.microformat.SYMBOL_STRING;
+          //default is integer
+          else
+            metaData.format = settings.microformat.SYMBOL_INT;
+
+          //more is better ?
+          metaData.moreIsBetter = metaData.format !== settings.microformat.SYMBOL_STRING && headerFormat.indexOf('-') === -1;
+        }
+
+      return metaData;
     },
 
     subset : function (data, filterFx, key) {
