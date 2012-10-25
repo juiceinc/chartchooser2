@@ -27,21 +27,17 @@ juice.table = function (conf) {
   function init(){
     dataView = new Slick.Data.DataView();
     slickgrid = new Slick.Grid(container, dataView, columns, options);
-    slickgrid.setSelectionModel(new Slick.RowSelectionModel());
+    //slickgrid.setSelectionModel(new Slick.RowSelectionModel());
 
     // wire up model events to drive the grid
     dataView.onRowCountChanged.subscribe(function (e, args) {
       slickgrid.updateRowCount();
       slickgrid.render();
-
-      //console.log("current row count: "+args.current);
     });
 
     dataView.onRowsChanged.subscribe(function (e, args) {
       slickgrid.invalidateRows(args.rows);
       slickgrid.render();
-
-      //console.log("rows: "+args.rows);
     });
 
 
@@ -71,34 +67,7 @@ juice.table = function (conf) {
 
   }
 
-
-  /*function dataFilter(item, args) {
-    if(args && args.column !== "" && args.values !== ""){
-
-      //extract keys of item to see if there is any match for column
-      var cols = _.keys(item),
-          filterCol;
-
-      filterCol = _.find(cols, function(col){
-        return col.toLowerCase().indexOf(args.column.toLowerCase()) > -1;
-      });
-
-      if(filterCol){
-        var values = args.values.split(',');
-        values = _.without(values, "");
-        var match = _.find(values, function(val){
-          return item[filterCol].toLowerCase().indexOf($.trim(val).toLowerCase()) > -1
-        });
-      }
-
-      return match !== undefined;
-    }
-
-    return true;
-  }
- */
-
-  //filter function for multiple column filters
+  //filter function
   function dataFilter(item, args){
     var filters = args.filters,
         columns = _.keys(filters);
@@ -162,8 +131,6 @@ juice.table = function (conf) {
     slickgrid.setColumns(columns);
 
     resetSortIndicator();
-
-    console.log("data after filter: "+dataView.getLength());
   };
 
   grid.getColumnByName = function(colStr){
@@ -178,17 +145,31 @@ juice.table = function (conf) {
     }
   };
 
-  //TODO: implement 'more is better' functionality, if needed
-  //is rank based on 'more is better' flag
+  grid.getFilteredRows = function(){
+    //console.log("Filtered rows: "+dataView.getLength());
+
+    var rowCount = dataView.getLength(),
+        rows = [];
+
+    for(var idx=0; idx < rowCount; idx+=1){
+      rows.push(dataView.getItem(idx));
+    }
+
+    return rows;
+  };
+
+  //Rank is based on 'more is better' flag
   function calculateRanks(data){
     var processedData = data.slice();
 
     _.each(columns, function(col){
       if(col.format !== formats.SYMBOL_STRING){
-        var field = col.field;
+        var field = col.field,
+            moreIsBetter = col.moreIsBetter;
+
         //sort data by column
         processedData = _.sortBy(processedData, function(d){
-                          return -d[field];
+                          return moreIsBetter ? -d[field] : d[field];
                       });
         //TODO: exclude null values from processed data?
 

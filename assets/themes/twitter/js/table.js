@@ -16,6 +16,7 @@ $(function(){
       },
 
       appliedFilters = {},
+      filteredRows = [],
       autocomplete,
       du = $(this).datautils();
 
@@ -56,7 +57,6 @@ $(function(){
     var columns = du.datautils('findTableColumns', data);
 
     if(columns.length > 0){
-      //console.log("num of cols: "+columns.length);
       var cWidth = columns[0].minWidth || colWidth;
       $('#table').css('width', cWidth * columns.length + 20);
     }
@@ -127,8 +127,10 @@ $(function(){
         appliedColVal = currentFilters[colFilter] || "";
 
     currentFilters[colFilter] = values + ',' +  appliedColVal;
-
     grid.updateFilter(currentFilters);
+
+    //grab the filtered rows, this will be used by the bootstrap typeahead to show the available options as user is applying filters.
+    filteredRows = grid.getFilteredRows();
   }
 
 
@@ -238,6 +240,7 @@ $(function(){
           var filterColValues = filterColValueStr.split(',');
 
           var colValues = _.uniq(_.pluck(data, filterColName));
+          //var colValues = _.uniq(_.pluck(filteredRows, filterColName));
 
           return _.filter(colValues, function(val){
             if(val === undefined) return false;
